@@ -1,0 +1,837 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Software Reliability Theory and Practice &#8212; SWEN90006 Software &amp; Security Testing</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/book-style.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Software-Reliability-Theory-and-Practice';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/uom.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/uom.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Subject Introduction
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">LECTURE NOTES</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Introduction-to-Testing.html">1. Introduction to Software Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-Partitioning.html">2. Input Partitioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Boundary-Value.html">3. Boundary-Value Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Coverage-Based-Testing.html">4. Coverage-Based Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Testing-Modules.html">5. Testing Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Property-based-testing.html">6. Property-based Testing and Test Oracles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Testing-and-Integration.html">7. Testing-and-Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Security-Testing.html">8. Security Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Coverage-Guided-Fuzzing.html">9. Code Coverage-Guided Fuzzing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Symbolic-Execution.html">10. Automated test generation using symbolic execution</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">APPENDIX</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Probabilities.html">A Brief Review of Some Probability Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Maximum.html">Maximum Likelihood Estimation</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/Software-Reliability-Theory-and-Practice.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Software Reliability Theory and Practice</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-of-this-chapter">Learning outcomes of this chapter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-introduction">Chapter Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-reliability">What is Reliability?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classifying-failures">Classifying Failures</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#software-reliability-engineering">Software Reliability Engineering</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#random-testing">Random Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reliability-block-diagrams">Reliability Block Diagrams</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#series-parallel-systems">Series—Parallel Systems</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reliability-and-failure-logic-for-serial-blocks">Reliability and Failure Logic for Serial Blocks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reliability-logic-for-parallel-blocks">Reliability Logic for Parallel Blocks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-reliability-block-diagrams-from-system-architectures">Creating Reliability Block Diagrams from System Architectures</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#back-to-the-reader-writer-example">Back to the Reader/Writer Example</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="software-reliability-theory-and-practice">
+<h1>Software Reliability Theory and Practice<a class="headerlink" href="#software-reliability-theory-and-practice" title="Permalink to this heading">#</a></h1>
+<section id="learning-outcomes-of-this-chapter">
+<h2>Learning outcomes of this chapter<a class="headerlink" href="#learning-outcomes-of-this-chapter" title="Permalink to this heading">#</a></h2>
+<p>At the end of this chapter, you should be able to:</p>
+<ul class="simple">
+<li><p>Explain the difference between testing for reliability and testing for functional correctness.</p></li>
+<li><p>Construct a reliability block diagram from a system architecture.</p></li>
+<li><p>Given reliability estimates for the sub-systems in a reliability block diagram, calculate an estimate for the overall system using reliability and failure logic.</p></li>
+<li><p>Construct a Markov model from a system description.</p></li>
+<li><p>Calculate the Markov state of a model after a specified number of transitions.</p></li>
+<li><p>Explain reliability growth.</p></li>
+<li><p>Critique the basic execution time model.</p></li>
+<li><p>Given some initial failure data, use the formula of the basic time execution model to provide reliability and failure estimates.</p></li>
+<li><p>Describe the process of error seeding for fault estimation.</p></li>
+<li><p>Motivate the use of the four models (reliability block diagrams, Markov models, basic execution time model, error seeding model) in this chapter in engineering software and systems.</p></li>
+</ul>
+</section>
+<section id="chapter-introduction">
+<h2>Chapter Introduction<a class="headerlink" href="#chapter-introduction" title="Permalink to this heading">#</a></h2>
+<p>So far we have looked at testing methods based that are aimed at finding the faults in programs. This leaves open some big questions such as when to stop testing and what sort of assurances can you give when you do stop testing.</p>
+<p>More on that later. For now, we will begin this chapter by taking a different view of testing; one that is more consistent with system reliability and its measurement.</p>
+<p>We have already made the point that software is part of a much larger <em>system</em> consisting of hardware and communications as well as programs. Often one is required to build a system that is far more <em>reliable</em> than any one of its components. For example, safety standards and high integrity systems standards often demand the reliability of systems to have a failure probability in the order of <span class="math notranslate nohighlight">\(10^{-9}\)</span>(but we will talk at some length about numbers later). This means a failure every 114,000 years on average!</p>
+<p>Similar kinds of numbers are required for many commercial systems as well, such as web-servers. For example, how reliable/available must a web-server be to handle the number of transactions the site receives? In fact, software is invading many new areas. With these areas comes a demand for reliability that must be quantifiable and often justifiable. Examples of such domains include, but are not limited to:</p>
+<ul class="simple">
+<li><p><strong>The automotive industry</strong> — electronics and computers now feature in many new cars and include systems such as ABS, Traction Control, Electronic Stability Control, or Engine Management Systems.</p></li>
+<li><p><strong>The avionics (aeroplanes) industry</strong> — where <em>fly-by-wire</em>, that is flying planes by computer is becoming common-place.</p></li>
+<li><p><strong>Process control industries</strong> — such as the food and beverage industry, or chemical plants, where automation is playing a larger role. Here robots and computer systems need to be operating for long lengths of time without maintenance.</p></li>
+<li><p><strong>The Internet</strong> — where web-sites or ISPs hosting data ware-houses and providing other services need to be operational for long periods of time in in order to provide high qualities of service.</p></li>
+</ul>
+<p>Software reliability can be used in a number of ways in development.</p>
+<div class="admonition-definition admonition">
+<p class="admonition-title">Definition</p>
+<p><strong>Evaluation of New Systems</strong>: Software reliability can be used to evaluate systems by <em>testing</em> the system and gathering reliability measures. The measures can be useful in deciding what third party software, such as libraries, to use in a project.</p>
+<p><strong>Evaluation of Development Status</strong>: Software reliability can be used to evaluate development status during testing. This is often done by comparing current failure rates with desired failure rates. Large discrepancies may indicate the need for action.</p>
+<p><strong>Monitor the Operational Profile</strong>: Software reliability can be used to monitor the operational profile of systems and evaluate the effects of changes or new features as they they are added to the system.</p>
+<p><strong>Understanding Quality Attributes for the System</strong>: Provided that we adopt appropriate definitions of a <em>failure</em> then software reliability can be used to explore quality attributes of a project and the factors affecting it by functional testing.</p>
+</div>
+<p>Viewed from a certain philosophical perspective, reliability is interesting not for its theory and methods, but what it says about programs. So far, we have conducted a meticulous analysis of input/output domains, the specifications of units and components in order to derive test cases that will detect systematically detect failures.</p>
+<p>In reliability growth models, the aim is to select tens of thousands of test inputs and see how many of them <em>fail</em>. In reliability assessment and modelling, we treat components as black boxes and perform <em>experiments</em> on them to assess their reliability.</p>
+<p>In this chapter we will look at the following topics to gain an appreciation of the scope and methods for software reliability.</p>
+<ol class="arabic simple">
+<li><p><strong>Software Reliability Engineering Methods</strong></p></li>
+<li><p><strong>Random Testing</strong></p></li>
+<li><p><strong>Reliability Evaluation Methods</strong></p></li>
+<li><p><strong>Reliability Growth Models</strong></p></li>
+</ol>
+<p>The aim is for you to have a good appreciation of the ideas behind reliability, how to distinguish between system and software reliability, and to gain an appreciation of what reliability engineering can contribute to a project.</p>
+<p>Along the way we will need to review our basic probability theory, stochastic processes and Markov models. The mathematical theory serves to justify the results that we will present but in practice we can often ignore the mathematical theory provided we understand how to interpret the results.</p>
+</section>
+<section id="what-is-reliability">
+<h2>What is Reliability?<a class="headerlink" href="#what-is-reliability" title="Permalink to this heading">#</a></h2>
+<p>Reliability is one of a number of dependability attributes of a program. Dependability is usually analysed in terms of:</p>
+<p>The attributes of dependability: are not like the attributes of quality where dependability is broken down into a set of measurable attributes. Rather, it is a collective name for a set of attributes that have been discussed in the literature for a number of years. The attributes themselves are shown in Figure
+ <a class="reference internal" href="#f-8-1"><span class="std std-ref">8.1</span></a>.</p>
+<p>The means for achieving dependability: are approaches, techniques and methods, for improving the outcomes for a particular attribute. For example, <em>Fault Tolerance</em> is the means for improving reliability.</p>
+<p>The threats to dependability: are the things act against the attribute, for example, faults actively lower system reliability.</p>
+<p>The taxonomy for dependability attributes, the means for achieving it and the threats to it are given in Figure <a class="reference internal" href="#f-8-1"><span class="std std-ref">8.1</span></a>.</p>
+<p>In the specific case of reliability, we have the following definition.</p>
+<div class="admonition-definition admonition" id="d-52">
+<p class="admonition-title">Definition</p>
+<p>Reliability is the probability that a system will operate without failure for a specified
+time in a specified environment.</p>
+</div>
+<figure class="align-center" id="f-8-1">
+<a class="reference internal image-reference" href="_images/Reliability-Dependability-Taxonomy.png"><img alt="_images/Reliability-Dependability-Taxonomy.png" src="_images/Reliability-Dependability-Taxonomy.png" style="width: 50%;" /></a>
+</figure>
+<p style="text-align: center;">Figure 8.1: The dependability attributes of a system (not just a program) according to Laprie.</p>
+<p>We need to look into this definition in some more detail. To see how it works, consider the two simple systems consisting of two writers and a reader communicating via a shared memory on a bus in Figure <a class="reference internal" href="#f-8-2"><span class="std std-ref">8.2</span></a>.</p>
+<figure class="align-center" id="f-8-2">
+<a class="reference internal image-reference" href="_images/Reliability-Single-Channel-Bus-Example.png"><img alt="_images/Reliability-Single-Channel-Bus-Example.png" src="_images/Reliability-Single-Channel-Bus-Example.png" style="width: 70%;" /></a>
+</figure>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/Reliability-Two-Channel-Bus-Example.png"><img alt="_images/Reliability-Two-Channel-Bus-Example.png" src="_images/Reliability-Two-Channel-Bus-Example.png" style="width: 70%;" /></a>
+</figure>
+<p style="text-align: center;">Figure 8.2: Two bus architectures for communicating between reader and writer.</p>
+<p>Suppose that the probability of failure of each channel of the bus is <span class="math notranslate nohighlight">\(10^{-5}\)</span> per operational hour. For the single channel bus therefore, the probability of a bus failure, such a message becoming corrupt or the bus failing to transmit a message, is <span class="math notranslate nohighlight">\(10^{-5}\)</span> per operational hour, or one failure every 11.4 years. If we add the second channel then the failure probability decreases to <span class="math notranslate nohighlight">\(10^{-10}\)</span>, or one failure in every 1,114,552 years, because both channels must fail at the same time for this to occur.</p>
+<p>We have to be careful in not over interpreting these numbers. While the improvement is significant it is, after all, only a <em>probability</em>.</p>
+<p>Note that the definition of reliability that we have used depends heavily on determining, and in practice detecting, failures.</p>
+<div class="admonition-definition admonition">
+<p class="admonition-title">Definition</p>
+<p>A <em>failure</em> is the departure of the results of a program from requirements.</p>
+</div>
+<div class="admonition-remark admonition">
+<p class="admonition-title">Remark</p>
+<p>The definition of failure is extremely general and can include performance failures such as excessive response times. Also note that the definition of failure is a <em>dynamic concept</em>: we must execute the program for a failure to occur. Intuitively, the ways in which a program may fail are by:</p>
+<ul class="simple">
+<li><p>activating a single fault, or even a series of faults, within the program itself that results in a failure; or</p></li>
+<li><p>interacting with the environment in such a way that the interaction causes a failure of the program.</p></li>
+</ul>
+<p>Such failures are typically caused by design faults.</p>
+<p>In their book on software reliability, Musa define reliability as follows:</p>
+<blockquote>
+<div><p>“<em>Software reliability concerns itself with how well the software functions to meet the customer requirements. … [Reliability] is the probability that the software will work without failure for a specified period of time.</em>”</p>
+</div></blockquote>
+<p>Thus, we think of reliability as a <em>dynamic</em> concept that relates to an executing program. You can contrast Definition <a class="reference internal" href="#d-52"><span class="std std-ref">52</span></a> with the more <em>static</em> concept of defect counts that try and determine quality from the software design or other statically determined artifacts.</p>
+</div>
+<section id="classifying-failures">
+<h3>Classifying Failures<a class="headerlink" href="#classifying-failures" title="Permalink to this heading">#</a></h3>
+<p>Our definition of reliability depends quite critically on the interpretation of <em>failures</em>. Examples of failures include:</p>
+<ul class="simple">
+<li><p><em>functional failures</em> where the actual behaviour of the system deviates from the specified functional behaviour;</p></li>
+<li><p><em>timing failures</em> where the program may deliver correct results but the program fails to meet its timing requirements;</p></li>
+<li><p><em>safety failures</em> where an accident resulting in harm or injury is deemed to be a failure of the system;</p></li>
+</ul>
+<p>In practice we will need a way of <em>observing</em> failures and logging each failure as it arises. We also need a way of determining the time at which a failure occurs, called the <em>failure time</em>, or the rate at which failures occur, called the <em>failure rate</em>. From the failure times or the failure rates we can estimate a system’s reliability. We will also need assurance that the estimates are accurate with respect to the program we are measuring.</p>
+<p>The definition also implies that we should understand the environment in which the system must operate and that the reliability of the system may, and often will, be effected if it is used in different environments.</p>
+<p>We can discern a number of different types of failure and our program, as well as our methods for observing failures, must account for them.</p>
+<p><strong>Transient Failure</strong> – In this case the program gives and incorrect result, but the &gt; program continues to execute.
+<strong>Hard Failure</strong> – In this case the program crashes (stack overrun, heap overrun, broken thread).
+<strong>Cascaded Failure</strong> – In this case the program crashes and takes down other programs.
+<strong>Catastrophic Failure</strong> – In this case the program crashes and takes down the operating  system or the entire system; a total system failure</p>
+</section>
+<section id="software-reliability-engineering">
+<h3>Software Reliability Engineering<a class="headerlink" href="#software-reliability-engineering" title="Permalink to this heading">#</a></h3>
+<p>Software reliability engineering is our first real engineering method. The general phases and activities of SRE are set out in Table <a class="reference internal" href="#t-8-1"><span class="std std-ref">8.1</span></a>.</p>
+<table class="table" id="t-8-1">
+<thead>
+<tr class="row-odd"><th class="head"><p>Phase</p></th>
+<th class="head"><p>SRE Activities</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Requirements</p></td>
+<td><p>Determine the functional profile of the system.</p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p>Determine and classify important failures.</p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p>Identify client reliability needs.</p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p>Conduct trade-off studies.</p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p>Set reliability objectives.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Design</p></td>
+<td><p>Design and evaluate systems to meet reliability goals.</p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p>Allocate reliability targets to components.</p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p>(Reliability Evaluation Methods here!)</p></td>
+</tr>
+<tr class="row-even"><td><p>Implementation</p></td>
+<td><p>Measure and monitor the reliability during implementation.</p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p>Manage fault introduction and propagation.</p></td>
+</tr>
+<tr class="row-even"><td><p>System and Field Testing</p></td>
+<td><p>Measure reliability growth (using reliability growth models).</p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p>Track testing progress against reliability growth.</p></td>
+</tr>
+<tr class="row-even"><td><p>Post-delivery and Maintenance</p></td>
+<td><p>Monitor field reliability against reliability objectives.</p></td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: center;">Table 8.1: The phases and activities for Software Reliability Engineering.</p>
+<p>We can make some general observations that apply to many software engineering methods.</p>
+<ul class="simple">
+<li><p>The activities of software reliability engineering span the entire software development process but the activities themselves do not constitute a development process.</p></li>
+<li><p>The activities themselves need to be supported by theoretical tools for the analysis steps. The analytical tools take the form of <em>reliability models</em> and evaluations methods such as <em>Markov models</em>.</p></li>
+<li><p>Further, design and implementation of reliable systems is supported by design principles and algorithms such as those that we take from the discipline of <em>fault tolerant systems</em>.</p></li>
+</ul>
+<p>In the remainder of this chapter we will begin by taking a brief look at reliability block models, and then at Markov models as a model of reliability. From Markov models we proceed to the reliability growth models of Musa . In the final section of this chapter, we discuss error seeding as a means of measuring reliability.</p>
+</section>
+</section>
+<section id="random-testing">
+<h2>Random Testing<a class="headerlink" href="#random-testing" title="Permalink to this heading">#</a></h2>
+<p>As one can derive from the name, in random testing, the test inputs are chosen at random. The main applications of random testing are reliability measurement and security testing (Chapter 9), because it gives a good statistical spread of the inputs to a program. Random testing has also been used with some success for testing functional correctness.</p>
+<p>Random testing does not mean abandoning the analysis of the input and output domain and the word “random” does not mean that the test cases are chosen completely <em>arbitrarily</em>. What it means is that the test inputs are chosen with a particular distribution over the input domain that somehow reflects the actual usage of the program.</p>
+<p>For random testing the distribution of inputs comes from an <em>operational profile</em> for the program. The operational profile of a program is the probability distribution of its input domain when the program is used in actual operation. Put another way it is the probability that an element in the input domain will be chosen if the program is actually being used.</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>[4]: R. Denney, Succeeding with use cases: working smart to deliver quality, Pearson Education India, 2005.</p>
+</div>
+</aside>
+<p>Figure <a class="reference internal" href="#f-8-3"><span class="std std-ref">8.3</span></a> shows a use case diagram, taken from [4], for an order handling system. The diagram contains six base cases, three inclusions, and three extensions.</p>
+<figure class="align-center" id="f-8-3">
+<a class="reference internal image-reference" href="_images/use-case-overview-diagram.png"><img alt="_images/use-case-overview-diagram.png" src="_images/use-case-overview-diagram.png" style="width: 80%;" /></a>
+</figure>
+<p style="text-align: center;">Figure 8.3: A use case diagram for an order handling system</p>
+<p>Figure <a class="reference internal" href="#f-8-4"><span class="std std-ref">8.4</span></a> shows an operational profile for the use case model from Figure <a class="reference internal" href="#f-8-3"><span class="std std-ref">8.3</span></a>. Clearly, this was derived with additional information not presented here, so this operational profile is for illustrative purposed only. A cell in the matrix estimates the probability that the included or extended use case is invoked for the given base case; e.g. when a local order is placed, 80% of the time, the customer details must be entered.</p>
+<figure class="align-center" id="f-8-4">
+<a class="reference internal image-reference" href="_images/operational-profile-with-matrix.png"><img alt="_images/operational-profile-with-matrix.png" src="_images/operational-profile-with-matrix.png" style="width: 90%;" /></a>
+</figure>
+<p style="text-align: center;">Figure 8.4: An example operational profile for the system described in Figure 8.3</p>
+<p>In these notes, we do not cover how to generate operational profiles, however, clearly there are several ways, including: looking at historical data; estimation based on personal usage; surveys; and looking at probability distributions in similar systems.</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>For a discussion of good random number generator, see, e.g., D.E. Knuth, The Art of Computer Programming, vol. 2: Semi-numerical Algorithms, 2nd Ed., Addison Wesley, 1981.</p>
+</div>
+</aside>
+<p>In random testing, test inputs are randomly generated according to the operational profile[*], and data, such as failure times, are recorded when a random sample of test cases are executed. The data obtained from random testing is then be used to estimate reliability (see Chapter 8). No other testing method can be used in this way to estimate reliability. However, we need to take care with operational profiles – the distribution of inputs taken from an operational profile will effect reliability predictions.</p>
+<p>To generate a random test input for an operational profile, <em>Place Local Order</em> would be selected with a probability of 3%, and then <em>Enter Customer Details</em> would be selected with a probability of 80% of these times (so a total probability of 2.4% of the time).</p>
+</section>
+<section id="reliability-block-diagrams">
+<h2>Reliability Block Diagrams<a class="headerlink" href="#reliability-block-diagrams" title="Permalink to this heading">#</a></h2>
+<p>What is clear from the reliability engineering process in Table <a class="reference internal" href="#t-8-1"><span class="std std-ref">8.1</span></a> is that we need some way of predicting and evaluating the reliability of our designs. For systems there are well established modelling methods:</p>
+<ol class="arabic simple">
+<li><p>Reliability block diagrams; and</p></li>
+<li><p>Markov models.</p></li>
+</ol>
+<p>These models are <em>stochastic</em> in nature. A stochastic process is one in which there is a sequence of events in time where each event is part of a probability distribution.</p>
+<section id="series-parallel-systems">
+<h3>Series—Parallel Systems<a class="headerlink" href="#series-parallel-systems" title="Permalink to this heading">#</a></h3>
+<p>Reliability block diagrams seek to decompose systems into parallel and serial blocks where each block interacts with other blocks to effect the reliability of the system as a whole.</p>
+<p>Consider again the example of the dual channel bus in Figure <a class="reference internal" href="#f-8-5"><span class="std std-ref">8.5</span></a> where a redundant pair of writers put values from the source onto the bus, and a reader that reads the values from the bus. The system fails if no message is received by the reader in the given time interval.</p>
+<figure class="align-center" id="f-8-5">
+<a class="reference internal image-reference" href="_images/Reliability-Reader-Writer.png"><img alt="_images/Reliability-Reader-Writer.png" src="_images/Reliability-Reader-Writer.png" style="width: 50%;" /></a>
+</figure>
+<p style="text-align: center;">Figure 8.5: The dual channel bus.</p>
+<p>If we consider a message starting at the source then it is passed to both writers and both writers pass the message to both channels. We might model this situation as in Figure <a class="reference internal" href="#f-8-6"><span class="std std-ref">8.6</span></a></p>
+<figure class="align-center" id="f-8-6">
+<a class="reference internal image-reference" href="_images/Reliability-Reader-Writer-Block.png"><img alt="_images/Reliability-Reader-Writer-Block.png" src="_images/Reliability-Reader-Writer-Block.png" style="width: 70%;" /></a>
+</figure>
+<p style="text-align: center;">Figure 8.6: A reliability block model for the readers and writers in Figure 8.5.</p>
+<p>In the model, each writer acts in serial with the bus and both</p>
+<p>channels of the bus act in serial with the reader. Thus, to analyse this situation we must calculate the reliabilities for the <em>serial</em> and <em>parallel</em> blocks in the model.</p>
+</section>
+<section id="reliability-and-failure-logic-for-serial-blocks">
+<h3>Reliability and Failure Logic for Serial Blocks<a class="headerlink" href="#reliability-and-failure-logic-for-serial-blocks" title="Permalink to this heading">#</a></h3>
+<figure class="align-center" id="f-8-7">
+<a class="reference internal image-reference" href="_images/Reliability-Serial-Parallel.png"><img alt="_images/Reliability-Serial-Parallel.png" src="_images/Reliability-Serial-Parallel.png" style="width: 60%;" /></a>
+</figure>
+<p style="text-align: center;">Figure 8.7: The serial composition of three blocks.</p>
+<p>Consider the serial system in Figure <a class="reference internal" href="#f-8-7"><span class="std std-ref">8.7</span></a>. For this system to function without failure at a given time <span class="math notranslate nohighlight">\(T\)</span>, each of the components <span class="math notranslate nohighlight">\(B_1\)</span>, <span class="math notranslate nohighlight">\(B_2\)</span>, and <span class="math notranslate nohighlight">\(B_3\)</span> must function independently without failure for the time period <span class="math notranslate nohighlight">\(T\)</span>. Therefore, for the system to fail in the time <span class="math notranslate nohighlight">\(T\)</span> either <strong>Block 1</strong> must not fail in time <span class="math notranslate nohighlight">\(T\)</span>, <strong>Block 2</strong> must not fail in time <span class="math notranslate nohighlight">\(T\)</span>, and <strong>Block 3</strong> must not fail in time <span class="math notranslate nohighlight">\(T\)</span>.</p>
+<p>If the reliability of each block is independent of the other blocks then a direct application of the law of conditional probability yields</p>
+<div class="math notranslate nohighlight">
+\[P\{  B_1~{\rm functions}~ \land~ B_2~ {\rm functions}~ \land~ B_3~{\rm functions}\} = R(B_1) R(B_2) R(B_3)\]</div>
+<p>where <span class="math notranslate nohighlight">\(R(B_i)\)</span> denotes the probability of <strong>Block i</strong> functioning without failure for time <span class="math notranslate nohighlight">\(T\)</span>. Put another way, <span class="math notranslate nohighlight">\(R(B_i)\)</span> is the probability that the first failure occurs <em>after</em> time <span class="math notranslate nohighlight">\(T\)</span>, or not at all. <span class="math notranslate nohighlight">\(R(B_i)\)</span> is the reliability of <strong>Block i</strong>.</p>
+<div class="admonition-definition admonition">
+<p class="admonition-title">Definition</p>
+<p>In general, for systems in series, <span class="math notranslate nohighlight">\(R(B) = \prod_{n} R(B_i)\)</span> using reliability logic.</p>
+</div>
+<p>Failure logic is the converse to reliability logic. For the system to fail in the time period <span class="math notranslate nohighlight">\(T\)</span> only one of the components needs to fail. Thus the probability of of failure is</p>
+<div class="math notranslate nohighlight">
+\[ P\{ B_1~{\rm fails}~ \lor ~ B_2~{\rm fails}~ \lor~ B_3~{\rm fails}\}. \]</div>
+<p>The law of additive law of probability gives us:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+  \begin{array}{lll}
+  F(B) &amp; = &amp; F(B_1) + F(B_2) + F(B_3) - F(B_1) F(B_2) - F(B_1)F(B_3)  - F(B2)F(B_3) \\
+       &amp; + &amp; F(B_1)F(B_2)F(B_3)
+  \end{array}
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(F(B_i)\)</span> is the probability that the first failure in <span class="math notranslate nohighlight">\(B_i\)</span> will occur before time <span class="math notranslate nohighlight">\(T\)</span>. This equation says that the probability of the parallel block failing is the probability of any of the blocks failing independently (<span class="math notranslate nohighlight">\(F(B_1) + F(B_2) + F(B_3)\)</span>), minus the chance that any of the blocks fail simultaneously (because one failing will mean that all fail).</p>
+<div class="admonition-definition admonition">
+<p class="admonition-title">Definition</p>
+<p>In general, for systems in series, <span class="math notranslate nohighlight">\(F(B) = 1 - \prod_{n} (1 - F(B_i))\)</span> using failure logic.</p>
+</div>
+</section>
+<section id="reliability-logic-for-parallel-blocks">
+<h3>Reliability Logic for Parallel Blocks<a class="headerlink" href="#reliability-logic-for-parallel-blocks" title="Permalink to this heading">#</a></h3>
+<p>For parallel systems <em>all</em> blocks must fail before the system fails and only one block needs to function for the system to function. Parallel blocks, it turns out, work almost inversely to serial blocks.</p>
+<p>For a parallel block above to fail in a time <span class="math notranslate nohighlight">\(T\)</span> we need all of the blocks to fail within the time <span class="math notranslate nohighlight">\(T\)</span> and so</p>
+<div class="math notranslate nohighlight">
+\[ F(B) \begin{array}[t]{l} =  P\{B_1~{\rm fails}~ \land ~ B_2~ {\rm fails} ~ \land
+  ~B_3~ {\rm fails}\} =  F(B_1)  F(B_2)  F(B_3)\end{array}\]</div>
+<p>provided that <span class="math notranslate nohighlight">\(B_1\)</span>, <span class="math notranslate nohighlight">\(B_2\)</span> and <span class="math notranslate nohighlight">\(B_3\)</span> fail independently.</p>
+<div class="admonition-definition admonition">
+<p class="admonition-title">Definition</p>
+<p>In general for a parallel system to fail <span class="math notranslate nohighlight">\(F(B) = \prod_n F(B_i)\)</span> using failure logic.</p>
+</div>
+<p>For parallel blocks to be reliable for a time <span class="math notranslate nohighlight">\(T\)</span> we have must experience no failure in time <span class="math notranslate nohighlight">\(T\)</span> and therefore, to be reliable, a parallel block only requires that a single block is functioning. This gives us the following formula for reliability.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{array}{lll}
+  R(B) &amp; = &amp;  P\{B_1~ {\rm functions}~
+    \lor ~ B_2 ~ {\rm functions} ~ \lor ~B_3 ~ {\rm functions}\}\\
+     &amp; = &amp;   R(B_1) + R(B_2) + R(B_3) -R(B_1)R(B_2) - R(B_1)R(B_3) - R(B_2)R(B_3)\\
+     &amp; + &amp;   R(B_1)R(B_2)R(B_3).
+  \end{array}
+\end{split}\]</div>
+<p>This comes from the additive law of probabilities.</p>
+<div class="admonition-definition admonition">
+<p class="admonition-title">Definition</p>
+<p>In general for parallel blocks we have <span class="math notranslate nohighlight">\(R(B) = 1 - \prod_n ( 1 - R(B_i))\)</span> using reliability logic.</p>
+</div>
+<p>The key relationships between failure logic and reliability (or success) logic lay in the equation $<span class="math notranslate nohighlight">\(\label{eq:reliability} R(B) = 1 - F(B)\)</span>$</p>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[R(B) = P\{ {\rm First~Failure~at~time}~\tau +&gt;+ T\}\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[F(B) = P\{ {\rm First~Failure~at~time}~\tau +&lt;+ T\}.\]</div>
+</section>
+<section id="creating-reliability-block-diagrams-from-system-architectures">
+<h3>Creating Reliability Block Diagrams from System Architectures<a class="headerlink" href="#creating-reliability-block-diagrams-from-system-architectures" title="Permalink to this heading">#</a></h3>
+<p>Here are some general guidelines for creating reliability block models from system architecture, especially if presented as a set of function block diagrams.</p>
+<p><strong>Guideline 1</strong>: Determine what constitutes a <em>system</em> failure. This in turn determines which component failures cause a system to fail.</p>
+<p><strong>Guideline 2</strong>: Determine which components need to fail in order to cause a system failure. Some guidelines for constructing reliability block models is to consider how messages, signals or data flows through the system and the consequence of what happens if these are corrupted or interrupted.</p>
+<p><strong>Guideline 3</strong>: Try to ensure that each block in the reliability block model captures one function of the system.</p>
+<p><strong>Guideline 4</strong>: Try to ensure that you capture the parallel/serial connections from the system accurately in your reliability block model.</p>
+<p><strong>Guideline 5</strong>: There may be more than one mode for the system — you will need to create a reliability block diagram for each mode of the system. For example, Windows operating systems can operate in a <em>safe mode</em>, which is more reliable because it is limited to basic functionality.</p>
+</section>
+<section id="back-to-the-reader-writer-example">
+<h3>Back to the Reader/Writer Example<a class="headerlink" href="#back-to-the-reader-writer-example" title="Permalink to this heading">#</a></h3>
+<p>Each writer acts independently of the other writer and then communicates via the bus to the reader. So now we use the guidelines above to get the reliability block model in Figure <a class="reference internal" href="#f-8-8"><span class="std std-ref">8.8</span></a>.</p>
+<figure class="align-center" id="f-8-8">
+<a class="reference internal image-reference" href="_images/Reliability-Reader-Writer-Block.png"><img alt="_images/Reliability-Reader-Writer-Block.png" src="_images/Reliability-Reader-Writer-Block.png" style="width: 70%;" /></a>
+</figure>
+<p style="text-align: center;">Figure 8.8: The reader/writer example revisited.</p>
+<p>Suppose we measure the failure probabilities by and arrive at the estimates in Table <a class="reference internal" href="#t-8-2"><span class="std std-ref">8.2</span></a>.</p>
+<table class="table" id="t-8-2">
+<thead>
+<tr class="row-odd"><th class="head"><p>Component</p></th>
+<th class="head"><p>Failure Probability in Time (T)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Writers</p></td>
+<td><p><span class="math notranslate nohighlight">\(F(W) = 10^{-4}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Bus Channels</p></td>
+<td><p><span class="math notranslate nohighlight">\(F(B) = 10^{-2}\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>Reader</p></td>
+<td><p><span class="math notranslate nohighlight">\(F(R) = 10^{-4}\)</span></p></td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: center;">Table 8.2: Failure times for the reader/writer in Figure 8.8.</p>
+<p>Firstly, we have only failure probabilities but we are after reliability figures. So, note that the reliability of a writer is <span class="math notranslate nohighlight">\(R(W) = 1 - F(W)\)</span>. Now, using reliability logic for parallel blocks as in Block 1 we calculate the reliability of two writers as follows.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+ \begin{array}{lll}
+  R(B_1)  &amp; = &amp;  1 - (1 - R(W))(1 - R(W))\\
+          &amp; = &amp;  1 -(1 -(1 - F(W)) )(1 - ( 1 - F(W))) \\
+          &amp; = &amp;  1 - F(W)^2
+  \end{array}
+\end{split}\]</div>
+<p>With the square deriving from the fact that there are two writers in that block, so the probability of the block failing is the product of the probabilities of the either writer failing.</p>
+<p>For Block 2 we likewise calculate the reliability of two channels in parallel:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{array}{lll}
+ R(B_2) &amp; = &amp;  1 -(1 - (1 - F(B)))(1 - (1 -  F(B)))  \\
+        &amp; = &amp;  1 - F(B)^2
+\end{array}
+\end{split}\]</div>
+<p>Finally we have a system in series so to calculate the reliability of the system we need to apply reliability logic again:</p>
+<div class="math notranslate nohighlight">
+\[R(System) = R(B_1) R(B_2) R(B _3)\]</div>
+<p>which gives:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{array}{lll}
+  R(System) &amp; = &amp;  (1 - F(W)^2)( 1 - F(B)^2)(1 - F(R)) \\
+            &amp; = &amp;  (1 - 10^{-8})( 1 - 10^{-4})(1 - 10^{-4})) \\
+            &amp; \approx &amp; 0.998
+\end{array}
+\end{split}\]</div>
+<p>The system reliability is the probability of failure free operation over a fixed time period <span class="math notranslate nohighlight">\(T\)</span>. It does not tell us how reliability changes over time. Determining how the reliability of a system changes over time is a stochastic property.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-of-this-chapter">Learning outcomes of this chapter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-introduction">Chapter Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-reliability">What is Reliability?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classifying-failures">Classifying Failures</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#software-reliability-engineering">Software Reliability Engineering</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#random-testing">Random Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reliability-block-diagrams">Reliability Block Diagrams</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#series-parallel-systems">Series—Parallel Systems</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reliability-and-failure-logic-for-serial-blocks">Reliability and Failure Logic for Serial Blocks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reliability-logic-for-parallel-blocks">Reliability Logic for Parallel Blocks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-reliability-block-diagrams-from-system-architectures">Creating Reliability Block Diagrams from System Architectures</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#back-to-the-reader-writer-example">Back to the Reader/Writer Example</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By SWEN90006
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

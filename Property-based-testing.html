@@ -1,0 +1,822 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>6. Property-based Testing and Test Oracles &#8212; SWEN90006 Software &amp; Security Testing</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/book-style.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Property-based-testing';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="7. Testing-and-Integration" href="Testing-and-Integration.html" />
+    <link rel="prev" title="5. Testing Modules" href="Testing-Modules.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/uom.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/uom.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Subject Introduction
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">LECTURE NOTES</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Introduction-to-Testing.html">1. Introduction to Software Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-Partitioning.html">2. Input Partitioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Boundary-Value.html">3. Boundary-Value Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Coverage-Based-Testing.html">4. Coverage-Based Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Testing-Modules.html">5. Testing Modules</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">6. Property-based Testing and Test Oracles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Testing-and-Integration.html">7. Testing-and-Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Security-Testing.html">8. Security Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Coverage-Guided-Fuzzing.html">9. Code Coverage-Guided Fuzzing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Symbolic-Execution.html">10. Automated test generation using symbolic execution</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">APPENDIX</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Probabilities.html">A Brief Review of Some Probability Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Maximum.html">Maximum Likelihood Estimation</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/Property-based-testing.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Property-based Testing and Test Oracles</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-of-this-chapter">6.1. Learning outcomes of this chapter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-introduction">6.2. Chapter Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#active-and-passive-test-oracles">6.3. Active and Passive Test Oracles</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#types-of-test-oracle">6.4. Types of Test Oracle</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#formal-executable-specifications">6.4.1. Formal, executable specifications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solved-examples">6.4.2. Solved examples</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metamorphic-oracles">6.4.3. Metamorphic oracles</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alternate-implementations">6.4.4. Alternate implementations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#heuristic-oracles">6.4.5. Heuristic oracles</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-golden-program">6.4.6. The Golden Program!</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#oracle-derivation">6.4.7. Oracle derivation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#property-based-testing">6.5. Property-based testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#defining-property-based-templates">6.5.1. Defining property-based templates</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tool-support">6.5.2. Tool support</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#strengths-and-weaknesses-of-property-based-testing">6.5.3. Strengths and weaknesses of property-based testing</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="property-based-testing-and-test-oracles">
+<h1><span class="section-number">6. </span>Property-based Testing and Test Oracles<a class="headerlink" href="#property-based-testing-and-test-oracles" title="Permalink to this heading">#</a></h1>
+<section id="learning-outcomes-of-this-chapter">
+<h2><span class="section-number">6.1. </span>Learning outcomes of this chapter<a class="headerlink" href="#learning-outcomes-of-this-chapter" title="Permalink to this heading">#</a></h2>
+<p>At the end of this chapter, you should be able to:</p>
+<ul class="simple">
+<li><p>Define the terms “property-based testing” and  “test oracle”.</p></li>
+<li><p>Contrast the different types of test oracle.</p></li>
+<li><p>Choose the correct type of test oracle for a given problem.</p></li>
+<li><p>Design an oracle for a program from a specification.</p></li>
+<li><p>Apply property-based testing to test a non-trivial piece of software</p></li>
+<li><p>Describe the strengths and weaknesses of property-based testing</p></li>
+</ul>
+</section>
+<section id="chapter-introduction">
+<h2><span class="section-number">6.2. </span>Chapter Introduction<a class="headerlink" href="#chapter-introduction" title="Permalink to this heading">#</a></h2>
+<p>In this chapter, we will discuss <em>test oracles</em> and <em>property-based testing</em>. Recall from Section <a class="reference internal" href="Introduction-to-Testing.html#black-box-and-white-box-testing"><span class="std std-ref">Black-Box and White-Box Testing</span></a> that a test case consist of three elements:</p>
+<ul class="simple">
+<li><p>a test input or sequence of test inputs;</p></li>
+<li><p>an expected output or sequence of expected outputs; and</p></li>
+<li><p>the testing environment.</p></li>
+</ul>
+<p>The normal procedure for executing a test case is to execute the program using the inputs in the test case, record the results, and then to determine if the outputs obtained are failures or not.</p>
+<p>Who or what determines if the results produced by a program are failures? One way is for a human tester to look at the input and manually calculate that they believe the output should be. In this case the human tester is playing the role of a <em>test oracle</em>.</p>
+<p>A test oracle is someone or something that determines whether or not the program has passed or failed the test case. Of course, it can be another program that returns a “yes” if the actual results are not failures and “no” if they are.</p>
+<div class="admonition-definition admonition">
+<p class="admonition-title">Definition</p>
+<p>A <em>test oracle</em> is:</p>
+<ul class="simple">
+<li><p>a program;</p></li>
+<li><p>a process;</p></li>
+<li><p>a body of data;</p></li>
+</ul>
+<p>that determines if actual output from a program has failed or not.</p>
+</div>
+<p>Ideally an oracle should be automated (no human intervention at runtime) because then we can execute a larger volume of test cases and gain greater coverage of the program, <strong>but</strong> this is often non-trivial in practice.</p>
+<p>However, what we can do is to define <strong>properties</strong> that should hold in our program for specific inputs. For example, if we test a sorting algorithm, one property that should hold is that, for each element <span class="math notranslate nohighlight">\(i\)</span> in the list, the element at <span class="math notranslate nohighlight">\(i+1\)</span> should be greater than or equal to this: for all <span class="math notranslate nohighlight">\(i \in [0..length(list)-1], list[i] \leq list[i+1]\)</span>.</p>
+</section>
+<section id="active-and-passive-test-oracles">
+<h2><span class="section-number">6.3. </span>Active and Passive Test Oracles<a class="headerlink" href="#active-and-passive-test-oracles" title="Permalink to this heading">#</a></h2>
+<p>An automated oracle can be placed into one of two categories:</p>
+<p><strong>Active oracle</strong>: A program that, given an input for a program-under-test, can generate the expected output of that input.</p>
+<p><strong>Passive oracle</strong>: A program that, given an input for a program-under-test, and the actual output produced by that program-under-test, verifies whether the actual output is correct.</p>
+<p>Passive oracles are generally preferred. This is for two main reasons.</p>
+<p>Firstly, passive oracles are typically easier to implement than active oracles. For example, consider testing a program that sorts a list of numbers. It is considerably easier to check that an output produced by the is a sorted list, than it is to sort this list. This not only saves the tester some time, but also means that there is less chance of introducing a fault into the oracle itself. If the active oracle is required to simulate the entire program-under-test, it may be as difficult to implement, and therefore, is just as likely to contain faults of its own.</p>
+<p>The second reason that passive oracles are preferred is because they can handle <em>non-determinism</em>. Recall from Section <a class="reference internal" href="Introduction-to-Testing.html#programs"><span class="std std-ref">Programs</span></a>, that a program is non-deterministic if it can return more than one output for a single input. If an active oracle is used, there is a good chance that the output produced by the  will be different to the output produced by the active oracle. However, if we use a passive oracle, which simply checks whether the output is correct, then non-determinism is not an issue.</p>
+</section>
+<section id="types-of-test-oracle">
+<h2><span class="section-number">6.4. </span>Types of Test Oracle<a class="headerlink" href="#types-of-test-oracle" title="Permalink to this heading">#</a></h2>
+<p>In general, to design a test oracle, there are several types of oracle that can be produce, which are categorised by the way their are derived, or the way they run.</p>
+<section id="formal-executable-specifications">
+<h3><span class="section-number">6.4.1. </span>Formal, executable specifications<a class="headerlink" href="#formal-executable-specifications" title="Permalink to this heading">#</a></h3>
+<p>Formal specifications written in a tight mathematical notation are better for selecting and creating testing oracles than informal specification written in a natural language. They can be used as active oracles by generating expected output using a simulation tool, or as passive oracle, by proving that the specification is satisfied by the input and the actual output. These are unlikely in practice, and are mostly reserved by high integrity applications such as safety-, security-, or mission-critical systems.</p>
+</section>
+<section id="solved-examples">
+<h3><span class="section-number">6.4.2. </span>Solved examples<a class="headerlink" href="#solved-examples" title="Permalink to this heading">#</a></h3>
+<p>Solved examples are developed by hand, or the results from a test input can be obtained from texts and other reference works. This is especially useful for complex domains, in which deriving the expected output automatically requires a process as complicated as the program itself, and deriving it manually requires expertise in a specific area that a test engineer is unlikely to have.</p>
+<p>Data in the form of tables, documents, graphs or other recorded results are a good form of testing oracle. The test input and actual results can be looked up in a table or data-base to see if they are correct or not.</p>
+<p>These types of oracles have the disadvantage that the inputs chosen are restricted to the examples that we have access to. Despite this, they are common due to their abundance in many fields.</p>
+</section>
+<section id="metamorphic-oracles">
+<span id="sec-property-based-test-oracles-metamorphic-oracles"></span><h3><span class="section-number">6.4.3. </span>Metamorphic oracles<a class="headerlink" href="#metamorphic-oracles" title="Permalink to this heading">#</a></h3>
+<p>In some cases, we can use certain <em>metamorphic</em> properties between tests to check each other. By ‘metamorphic’, we mean that, given two different inputs that are related by some property <span class="math notranslate nohighlight">\(p\)</span>, if we run them both through our program, their outputs will be related by some other property <span class="math notranslate nohighlight">\(q\)</span>. The metamorphic relation is the relationship between <span class="math notranslate nohighlight">\(p\)</span> and <span class="math notranslate nohighlight">\(q\)</span>.</p>
+<p>For example, if we want to test a function that sorts a list of numbers, then we can make use of the fact that, given a list, any permutation of that list will result in the same output of the sort function (assuming a non-stable sort).</p>
+<p>To do metamorphic testing, we generate an input for a program, execute this input, and then generate another input whose output will be related to the first.</p>
+<p>Formally, metamorphic testing follows the following pattern to test a function <span class="math notranslate nohighlight">\(f\)</span>:</p>
+<ol class="arabic simple">
+<li><p>Given input <span class="math notranslate nohighlight">\(i\)</span>, generate another input <span class="math notranslate nohighlight">\(j\)</span>, such that property <span class="math notranslate nohighlight">\(p(i, j)\)</span> holds between <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span>.</p></li>
+<li><p>Obtain outputs <span class="math notranslate nohighlight">\(o_i = f(i)\)</span> and <span class="math notranslate nohighlight">\(o_j = f(j)\)</span>.</p></li>
+<li><p>Check whether <span class="math notranslate nohighlight">\(q(o_i, o_j)\)</span> holds between <span class="math notranslate nohighlight">\(o_i\)</span> and <span class="math notranslate nohighlight">\(o_j\)</span>, raising an error if it fails.</p></li>
+</ol>
+<div class="tip admonition">
+<p class="admonition-title">Example – Metamorphic testing for a <span class="math notranslate nohighlight">\(sort\)</span> function</p>
+<p>In the sorting example, we can generate a test input as a list of numbers, and then randomly permute the elements of the list to get a new list. Then, we execute <em>both</em> tests on the sort function, and compare their output. If their output is different, then we have produced a failure. A test for this could be written as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">testSortMetamorphic</span><span class="p">(</span><span class="nb">int</span> <span class="p">[]</span> <span class="nb">list</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="nb">int</span> <span class="p">[]</span> <span class="n">permutatedList</span> <span class="o">=</span> <span class="n">permutate</span><span class="p">(</span><span class="nb">list</span><span class="p">);</span>
+    <span class="n">output1</span> <span class="o">=</span> <span class="n">sort</span><span class="p">(</span><span class="nb">list</span><span class="p">);</span>
+    <span class="n">output2</span> <span class="o">=</span> <span class="n">sort</span><span class="p">(</span><span class="n">permutatedList</span><span class="p">);</span>
+    <span class="n">assertEquals</span><span class="p">(</span><span class="n">output1</span><span class="p">,</span> <span class="n">output2</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In this case, the property <span class="math notranslate nohighlight">\(p(i,j)\)</span> is that the <code class="docutils literal notranslate"><span class="pre">list</span></code> and <code class="docutils literal notranslate"><span class="pre">permutatedList</span></code> have the same items, but in a different order. The property <span class="math notranslate nohighlight">\(q(o_i,o_j)\)</span> is the equality relation: <code class="docutils literal notranslate"><span class="pre">output1</span></code> and <code class="docutils literal notranslate"><span class="pre">output2</span></code> have the same elements in the same order.</p>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">Example — Metamorphic testing for a <span class="math notranslate nohighlight">\(shortestPath\)</span> function</p>
+<p>Another example is a program for finding the shortest path between two nodes on a graph for a GPS-enabled device. If the algorithm finds the shortest path between the start point and the destination, a complete oracle would need to check that this is indeed the shortest path. However, to check this fully, our oracle would have to re-calculate the shortest path as well, which would likely be as complicated as the original algorithm, and therefore just as prone to faults.</p>
+<p>A metamorphic testing approach would be as follows. We can select any two nodes on the graph and run the program, returning a path <span class="math notranslate nohighlight">\(P_1\)</span>. To check if this path is correct, we can select any two nodes on the path <span class="math notranslate nohighlight">\(P_1\)</span> and run the shortest path program on those two nodes. This will return a new path <span class="math notranslate nohighlight">\(P_2\)</span>. Path <span class="math notranslate nohighlight">\(P_2\)</span> should be a sub-path of <span class="math notranslate nohighlight">\(P_1\)</span>.</p>
+<p>For example, consider the following driving path from the Melbourne Connect building at the University of Melbourne, to Edinburgh Gardens in Fitzroy:</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/metamorphic-testing-shortest-path.png"><img alt="_images/metamorphic-testing-shortest-path.png" src="_images/metamorphic-testing-shortest-path.png" style="width: 100%;" /></a>
+</figure>
+<p>The blue path represents <span class="math notranslate nohighlight">\(P_1\)</span>, the output of the algorithm on the two original points, while the red path represents <span class="math notranslate nohighlight">\(P_2\)</span>, the output of the algorithm for two random points <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(A\)</span> along that path. Then, <span class="math notranslate nohighlight">\(P_2\)</span> should be a sub-path of the original path <span class="math notranslate nohighlight">\(P_1\)</span>.</p>
+<p>An implementation of such an approach would be as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">testShortestPathMetamorphic</span><span class="p">(</span><span class="n">Graph</span> <span class="n">graph</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Node</span> <span class="n">node1</span> <span class="o">=</span> <span class="n">selectRandomNode</span><span class="p">(</span><span class="n">graph</span><span class="p">);</span>
+    <span class="n">Node</span> <span class="n">node2</span> <span class="o">=</span> <span class="n">selectRandomNode</span><span class="p">(</span><span class="n">graph</span><span class="p">);</span>
+    <span class="n">Path</span> <span class="n">path1</span> <span class="o">=</span> <span class="n">shortestPath</span><span class="p">(</span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">,</span> <span class="n">graph</span><span class="p">);</span>
+    <span class="n">Node</span> <span class="n">node3</span> <span class="o">=</span> <span class="n">selectRandomNode</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+    <span class="n">Node</span> <span class="n">node4</span> <span class="o">=</span> <span class="n">selectRandomNode</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+    <span class="n">Path</span> <span class="n">path2</span> <span class="o">=</span> <span class="n">shortestPath</span><span class="p">(</span><span class="n">node3</span><span class="p">,</span> <span class="n">node4</span><span class="p">,</span> <span class="n">graph</span><span class="p">);</span>
+    <span class="n">assertTrue</span><span class="p">(</span><span class="n">isSubPath</span><span class="p">(</span><span class="n">path2</span><span class="p">,</span> <span class="n">path1</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Here, the property <span class="math notranslate nohighlight">\(p(i,j)\)</span> is that the <code class="docutils literal notranslate"><span class="pre">node3</span></code> and <code class="docutils literal notranslate"><span class="pre">node4</span></code> are two nodes on the shortest path of <code class="docutils literal notranslate"><span class="pre">graph</span></code>. The property <span class="math notranslate nohighlight">\(q(o_i,o_j)\)</span> is the sub-path relation: <code class="docutils literal notranslate"><span class="pre">path2</span></code> is a sub-path of <code class="docutils literal notranslate"><span class="pre">path2</span></code>.</p>
+</div>
+<p>In these tests, we can loop around the code in the body of <code class="docutils literal notranslate"><span class="pre">testSortMetamorphic</span></code> and <code class="docutils literal notranslate"><span class="pre">testShortestPathMetamorphic</span></code> hundreds or thousands of times to run multiple tests on the same property.</p>
+<p>The existence of metamorphic properties for programs is surprisingly common, and metamorphic oracles have been used to test many numerical programs, but also many applications in non-numerical domains as well, including bioinformatics, search engines, machine learning, medical imaging, and web services.</p>
+</section>
+<section id="alternate-implementations">
+<h3><span class="section-number">6.4.4. </span>Alternate implementations<a class="headerlink" href="#alternate-implementations" title="Permalink to this heading">#</a></h3>
+<p>An alternate implementation of a program, which can be executed to get the expected output. This is not ideal because experience has shown that faults in different implementations of the same specification tend to be located on the same inputs. Therefore, an alternate implementation is likely to have the same faults as the program-under-test, and some faults would not be detected via testing as a result.</p>
+<p>One approach that has shown to be useful is to provide a <em>partial</em>, <em>simplified</em> version of the implementation, which does not implement the full behaviour of the program-under-test, and does not consider efficiency or memory.</p>
+<div class="tip admonition">
+<p class="admonition-title">Example — Partial oracle for a <span class="math notranslate nohighlight">\(sort\)</span> algorithm</p>
+<p>If we have an efficient sorting algorithm, then we can restrict the oracle (the alternative implementation) to only working on lists of integers whose values, when sorted, form a complete integer sequence; e.g., <span class="math notranslate nohighlight">\(10, 11, 12, 13, 14, 15\)</span>. To perform the sort, the oracle needs to know the lowest and highest element of the list, and then return a list with the lowest element at the first index, the highest element at the last, and the corresponding elements in between. This is partial, and perhaps not efficient, but it results in a list that is a sorted version of the inputs, and is less likely to contain a fault than the original sorting algorithm due to its reduced complexity.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/**</span>
+ <span class="o">*</span> <span class="nd">@assumption</span><span class="p">:</span> <span class="n">elements</span> <span class="ow">in</span> <span class="nb">list</span> <span class="n">form</span> <span class="n">a</span> <span class="n">complete</span> <span class="n">integer</span> <span class="n">sequence</span><span class="p">,</span> 
+ <span class="o">*</span> <span class="ow">not</span> <span class="n">necessarily</span> <span class="ow">in</span> <span class="n">order</span>
+ <span class="o">*</span> <span class="o">/</span>
+<span class="n">void</span> <span class="n">testSort</span><span class="p">(</span><span class="nb">int</span> <span class="n">minimum</span><span class="p">,</span> <span class="nb">int</span> <span class="n">maximum</span><span class="p">)</span>
+<span class="p">{</span>   
+    <span class="nb">int</span> <span class="p">[]</span> <span class="n">expectedOutput</span> <span class="o">=</span> <span class="n">new</span> <span class="nb">int</span> <span class="p">[</span><span class="nb">list</span><span class="o">.</span><span class="n">length</span><span class="p">];</span> 
+    <span class="k">for</span> <span class="p">(</span><span class="nb">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">minimum</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">list</span><span class="o">.</span><span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">expectedOutput</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">minimum</span> <span class="o">+</span> <span class="n">i</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nb">int</span> <span class="p">[]</span> <span class="nb">input</span> <span class="o">=</span> <span class="n">permutate</span><span class="p">(</span><span class="n">expectedOutput</span><span class="p">);</span>
+    <span class="nb">int</span> <span class="p">[]</span> <span class="n">actualOutput</span> <span class="o">=</span> <span class="n">sort</span><span class="p">(</span><span class="nb">list</span><span class="p">);</span>
+
+    <span class="n">assertEquals</span><span class="p">(</span><span class="n">actualOutput</span><span class="p">,</span> <span class="n">expectedOutput</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p>Such an approach restricts the test inputs that can be used, but is often sufficient to find many faults in a system.</p>
+</section>
+<section id="heuristic-oracles">
+<h3><span class="section-number">6.4.5. </span>Heuristic oracles<a class="headerlink" href="#heuristic-oracles" title="Permalink to this heading">#</a></h3>
+<p>Another type of widely-used oracle are <em>heuristic oracles</em>. These are oracles that provide <em>approximate</em> results for inputs, and tests that “fail” must be scrutinised closely to check whether they are a true or false positive.</p>
+<p>The trick with heuristic oracles is to find patterns in complex programs — that is, patterns between the inputs and outputs — and exploit them. For example, a  simple heuristic of databases is that, when a new record is inserted into a table, the number of records in that table should increase by 1. We can run thousands of tests inserting single records, and checking that the number of rows in table increases by 1. This is not complete though, because we are not checking that the contents of the row are accurate.</p>
+<div class="tip admonition">
+<p class="admonition-title">Example — Testing a GPS path search algorithm</p>
+<p>Let’s return to the GPS shortest path algorithm example from earlier.
+We can use the heuristic that the shortest path cannot possibly be shorter than a straight line between the two points. For example, consider again the driving path from the Melbourne Connect building at the University of Melbourne, to Edinburgh Gardens in Fitzroy:</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/shortest-path.png"><img alt="_images/shortest-path.png" src="_images/shortest-path.png" style="width: 100%;" /></a>
+</figure>
+<p>The red line represents the shortest straight line (“as the crow flies”) between the two points. This red line cannot be longer than the driving path between the two points.  Any path that is reported shorter than the red line must indicate a fault.</p>
+<p>This is useful because the calculation of the shortest line is quite different to the calculation of the shortest path: it ignores the roads and is a simple mathematical calculation given the coordinates of the two points.</p>
+<p>This heuristic is <em>sound</em>, but not <em>complete</em>. By ‘sound’, we mean that, if the heuristic raises an error, we know that we have a failure. By ‘complete’, we mean that, if there is a failure, the heuristic will raise an error. This oracle is not complete because it is possible that faults in the software will lead to incorrect paths that are longer than the red line. However, it may still be <em>useful</em> for finding some faults.</p>
+<p>So, this heuristic, while correct, may not find many faults if the algorithm is pretty good, but not great. We can tighten up the heurstic to say that the shortest path should be within, e.g. 1.5 times the distance of the straight line between the two points. Anything outside of this could signal a fault. This is clearly not complete, as before, however, it is also not sound: the distance between two points may be small, while the shortest path via a road network may have to go around a body of water, such as the following route from Sorrento beach to Queenscliff:</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/shortest-path-heuristic-2-failure.png"><img alt="_images/shortest-path-heuristic-2-failure.png" src="_images/shortest-path-heuristic-2-failure.png" style="width: 100%;" /></a>
+</figure>
+<p>Here, the red line is much shorter than the recommended path, but the recommended path is the best line (unless you take the ferry!).</p>
+</div>
+<p>In reality, most oracles are heuristic, in that none of them really replicates the expected behaviour of the corresponding program. However, we use the term <em>heuristic oracle</em> to refer to oracles that are designed based on some heuristics that are not complete, maybe not sound, but test some properties of software under test.</p>
+</section>
+<section id="the-golden-program">
+<h3><span class="section-number">6.4.6. </span>The Golden Program!<a class="headerlink" href="#the-golden-program" title="Permalink to this heading">#</a></h3>
+<p>The ultimate source for a testing oracle but rare in practice. The golden program is an executable specification, a previous versions of the same program, or test in parallel with a trusted system that delivers the same functionality.</p>
+<p>Still, the golden program is not a pipedream. In industry, it is not uncommon to use the previous release of a piece of software as a test oracle.</p>
+</section>
+<section id="oracle-derivation">
+<h3><span class="section-number">6.4.7. </span>Oracle derivation<a class="headerlink" href="#oracle-derivation" title="Permalink to this heading">#</a></h3>
+<p>In these notes, we will not consider how to derive oracles. Current industry practice leaves much of the test case generation, including the oracle, up to human testers, who typically derive the oracles by looking at the specification and design of the artifact that are testing. In many unfortunate cases, the tester is left to guess what the behaviour of the software should be.</p>
+<p>State-of-the-art testing includes <em>model-based testing</em>, which is used to automate both input and oracle generation. Using model-based testing, rather than the test engineer deriving test cases, he/she derives a <em>model</em> of the expected behaviour of the program-under-test, using some formal, executable language. From this model, test inputs are generated automatically (using the types of criteria that we discuss in these notes), and the expected outputs for those inputs are calculated by simulating the model. This can be seen as a cross between the first and last types of oracle. The model can be seen as an abstract alternative of the implementation, which is both formal and executable. However, unlike other alternate implementations, the higher level of abstract means that the likelihood of faults being located on the same inputs is reduced. Empirical evidence demonstrates that model-based testing is, in general, no more expensive than manual test case generation, and in many cases, is significantly more efficient, and is as successful for locating faults.</p>
+</section>
+</section>
+<section id="property-based-testing">
+<h2><span class="section-number">6.5. </span>Property-based testing<a class="headerlink" href="#property-based-testing" title="Permalink to this heading">#</a></h2>
+<p>Once we have an oracle for a program, even a partial oracle, we can use <strong>property-based testing</strong> to execute a large volume  of tests on our program.</p>
+<p>A weakness of functional testing using techniques such as equivalence partitioning is that it is time consuming to find good tests; and further, we aim to select only a small number. This is not so good for testing the robustness of software.</p>
+<p>Property-based testing combines the idea of (usually passive) test oracles with techniques such as  <a class="reference internal" href="Security-Testing.html#sec-security-testing-random-testing"><span class="std std-ref">random testing</span></a> to run a large amount of test inputs, and check their output against certain properties.</p>
+<section id="defining-property-based-templates">
+<h3><span class="section-number">6.5.1. </span>Defining property-based templates<a class="headerlink" href="#defining-property-based-templates" title="Permalink to this heading">#</a></h3>
+<p>The general template of a property-based test is as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="nb">all</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+
+<span class="n">such</span> <span class="n">that</span> <span class="n">condition</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span> <span class="n">holds</span>
+
+<span class="nb">property</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="o">...</span><span class="p">))</span> <span class="ow">is</span> <span class="n">true</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>,  <code class="docutils literal notranslate"><span class="pre">z</span></code>, <code class="docutils literal notranslate"><span class="pre">...</span></code> are input variables, and <code class="docutils literal notranslate"><span class="pre">f</span></code> is a function that we are testing. <code class="docutils literal notranslate"><span class="pre">condition</span></code> is a predicate that returns true if some property is true for <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code>, <code class="docutils literal notranslate"><span class="pre">...</span></code>, while <code class="docutils literal notranslate"><span class="pre">property</span></code> is a test oracle that returns true if the some property holds true between the inputs in <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>,  <code class="docutils literal notranslate"><span class="pre">z</span></code>, <code class="docutils literal notranslate"><span class="pre">...</span></code> and the output of the program <code class="docutils literal notranslate"><span class="pre">f(x,</span> <span class="pre">y,</span> <span class="pre">z,</span> <span class="pre">...)</span></code>.</p>
+<p>We can then write a test driver that generates random inputs for our variables <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code>, etc., filters out those that do not hold for the condition (alternatively we can generate inputs that only hold for the condition), run those tests on <code class="docutils literal notranslate"><span class="pre">f</span></code>, observe the output, and then check that the property holds.</p>
+<p><a class="reference internal" href="#sec-property-based-test-oracles-metamorphic-oracles"><span class="std std-ref">Metamorphic testing</span></a> is one form of property-based testing. In metamorphic testing, <code class="docutils literal notranslate"><span class="pre">condition</span></code> is the  relation, <span class="math notranslate nohighlight">\(p(i,j)\)</span>, on the input, and <code class="docutils literal notranslate"><span class="pre">property</span></code> is the  relation, <span class="math notranslate nohighlight">\(q(o_i, o_j)\)</span>, on the outputs.</p>
+<p>However, we can test properties other than metamorphic properties.</p>
+<div class="tip admonition">
+<p class="admonition-title">Example</p>
+<p>Consider the example of the <a class="reference internal" href="Input-Partitioning.html#example-8"><span class="std std-ref">triangle program</span></a> in the <a class="reference internal" href="Input-Partitioning.html#chapter-input-partitioning"><span class="std std-ref">Input partitioning</span></a>. What are some properties that hold for triangles?</p>
+<p>First, if any side is negative, then the triangle is invalid. We can generate random side lengths between [1, 100] for two sides and [-100, 0] for others, and then test this a number of times:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Test</span>
+<span class="n">void</span> <span class="n">testNegativeSides</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">Random</span> <span class="n">r</span> <span class="o">=</span> <span class="n">new</span> <span class="n">java</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">Random</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nb">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">iterations</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nb">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">nextInt</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+        <span class="nb">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">nextInt</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+        <span class="nb">int</span> <span class="n">z</span> <span class="o">=</span> <span class="o">-</span><span class="n">r</span><span class="o">.</span><span class="n">nextInt</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+    
+        <span class="n">assertEquals</span><span class="p">(</span><span class="n">categoriseTriangle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">),</span> <span class="n">Triangle</span><span class="o">.</span><span class="n">invalid</span><span class="p">);</span>
+        <span class="n">assertEquals</span><span class="p">(</span><span class="n">categoriseTriangle</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">Triangle</span><span class="o">.</span><span class="n">invalid</span><span class="p">);</span>
+        <span class="n">assertEquals</span><span class="p">(</span><span class="n">categoriseTriangle</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">Triangle</span><span class="o">.</span><span class="n">invalid</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In the code above, we randomly generate only inputs such that one side of the triangle is non-positive, rather than generating any set of random numbers and then filtering based on the condition.</p>
+<p>A second property is that one size cannot be larger than the sum of the other two sizes. Again, we can generate random inputs that violate this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Test</span>
+<span class="n">void</span> <span class="n">testLongSide</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">Random</span> <span class="n">r</span> <span class="o">=</span> <span class="n">new</span> <span class="n">java</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">Random</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nb">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">iterations</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nb">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">nextInt</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="nb">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">nextInt</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="nb">int</span> <span class="n">z</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">nextInt</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+    
+        <span class="n">assertEquals</span><span class="p">(</span><span class="n">categoriseTriangle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">),</span> <span class="n">Triangle</span><span class="o">.</span><span class="n">invalid</span><span class="p">);</span>
+        <span class="n">assertEquals</span><span class="p">(</span><span class="n">categoriseTriangle</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">Triangle</span><span class="o">.</span><span class="n">invalid</span><span class="p">);</span>
+        <span class="n">assertEquals</span><span class="p">(</span><span class="n">categoriseTriangle</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">Triangle</span><span class="o">.</span><span class="n">invalid</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>We can implement similar checks for equivalence and isosceles classes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Test</span>
+<span class="n">void</span> <span class="n">testEquilateral</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">Random</span> <span class="n">r</span> <span class="o">=</span> <span class="n">new</span> <span class="n">java</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">Random</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nb">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">iterations</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nb">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">nextInt</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+      
+        <span class="n">assertEquals</span><span class="p">(</span><span class="n">categoriseTriangle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">Triangle</span><span class="o">.</span><span class="n">equilateral</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nd">@Test</span>
+<span class="n">void</span> <span class="n">testIsosceles</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">Random</span> <span class="n">r</span> <span class="o">=</span> <span class="n">new</span> <span class="n">java</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">Random</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nb">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">iterations</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nb">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">nextInt</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="nb">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">nextInt</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+
+        <span class="o">//</span><span class="n">Filter</span> <span class="n">out</span> <span class="n">sides</span> <span class="n">where</span> <span class="n">x</span> <span class="o">=</span> <span class="n">y</span> <span class="o">=</span> <span class="n">z</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">!=</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">assertEquals</span><span class="p">(</span><span class="n">categoriseTriangle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">Triangle</span><span class="o">.</span><span class="n">isosceles</span><span class="p">);</span>
+            <span class="n">assertEquals</span><span class="p">(</span><span class="n">categoriseTriangle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">Triangle</span><span class="o">.</span><span class="n">isosceles</span><span class="p">);</span>
+            <span class="n">assertEquals</span><span class="p">(</span><span class="n">categoriseTriangle</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">Triangle</span><span class="o">.</span><span class="n">isosceles</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nd">@Test</span>
+<span class="n">void</span> <span class="n">testScalene</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">Random</span> <span class="n">r</span> <span class="o">=</span> <span class="n">new</span> <span class="n">java</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">Random</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nb">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">iterations</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nb">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">nextInt</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="nb">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">nextInt</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="nb">int</span> <span class="n">z</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">nextInt</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">);</span>  <span class="o">//</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">z</span>
+
+        <span class="o">//</span><span class="n">Filter</span> <span class="n">out</span> <span class="n">sides</span> <span class="n">where</span> <span class="n">x</span> <span class="o">=</span> <span class="n">y</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">z</span><span class="p">,</span> <span class="ow">or</span> <span class="n">x</span> <span class="o">=</span> <span class="n">z</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">!=</span> <span class="n">y</span> <span class="o">&amp;&amp;</span> <span class="n">x</span> <span class="o">!=</span> <span class="n">z</span> <span class="o">&amp;&amp;</span> <span class="n">y</span> <span class="o">!=</span> <span class="n">z</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">assertEquals</span><span class="p">(</span><span class="n">categoriseTriangle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">),</span> <span class="n">Triangle</span><span class="o">.</span><span class="n">scalene</span><span class="p">);</span>
+            <span class="n">assertEquals</span><span class="p">(</span><span class="n">categoriseTriangle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">),</span> <span class="n">Triangle</span><span class="o">.</span><span class="n">scalene</span><span class="p">);</span>
+            <span class="n">assertEquals</span><span class="p">(</span><span class="n">categoriseTriangle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">),</span> <span class="n">Triangle</span><span class="o">.</span><span class="n">scalene</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In <code class="docutils literal notranslate"><span class="pre">testIsosceles</span></code> and <code class="docutils literal notranslate"><span class="pre">testScalene</span></code>, we generate some random side lengths, and then the branches <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(x</span> <span class="pre">!=</span> <span class="pre">y)</span></code> and <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(x</span> <span class="pre">!=</span> <span class="pre">y</span> <span class="pre">!=</span> <span class="pre">z)</span></code> are the conditions that filter out inputs that do not hold for the property. We could instead have represented this explicitly as a property; for example, in <code class="docutils literal notranslate"><span class="pre">testIsosceles</span></code>, we could state:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">assertTrue</span><span class="p">(</span><span class="n">x</span> <span class="o">!=</span> <span class="n">y</span><span class="p">,</span> <span class="n">categoriseTriangle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">Triangle</span><span class="o">.</span><span class="n">isosceles</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Either of these approaches is valid.</p>
+</div>
+<p>What we can see with the above examples is the pattern of: (1) generating random inputs; (2) such that a condition holds; and (3) checking whether a property holds on those inputs.</p>
+</section>
+<section id="tool-support">
+<h3><span class="section-number">6.5.2. </span>Tool support<a class="headerlink" href="#tool-support" title="Permalink to this heading">#</a></h3>
+<p>A better way to implement property-based testing, rather than doing it by hand, is to use tools designed specifically for the task.</p>
+<p><a class="reference external" href="https://hypothesis.readthedocs.io/">Hypothesis</a> is a property-based testing framework for Python.</p>
+<p><a class="reference external" href="https://jqwik.net/">jqwik</a> is a property-based testing framework for Java.</p>
+<p>Both frameworks help to generate random data, filter out inputs according to the condition, and to specify properties. For example, we could implement the <code class="docutils literal notranslate"><span class="pre">testIsosceles</span></code> in jqwik as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Property</span>
+<span class="n">boolean</span> <span class="n">isosceles</span><span class="p">(</span><span class="nd">@Forall</span><span class="p">(</span><span class="s2">&quot;xNotEqualToY&quot;</span><span class="p">)</span> <span class="n">Arbitrary</span><span class="o">&lt;</span><span class="n">Tuple</span><span class="o">.</span><span class="n">Tuple2</span><span class="o">&lt;</span><span class="n">Integer</span><span class="p">,</span> <span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="n">pair</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="nb">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">pair</span><span class="o">.</span><span class="n">get1</span><span class="p">();</span>
+    <span class="nb">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">pair</span><span class="o">.</span><span class="n">get2</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">Triangle</span><span class="o">.</span><span class="n">categoriseTriangle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">Triangle</span><span class="o">.</span><span class="n">isosceles</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nd">@Provide</span>
+<span class="n">Arbitrary</span><span class="o">&lt;</span><span class="n">Tuple2</span><span class="o">&lt;</span><span class="n">Integer</span><span class="p">,</span> <span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="n">xNotEqualToY</span><span class="p">()</span> 
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">Arbitraries</span><span class="o">.</span><span class="n">integers</span><span class="p">()</span><span class="o">.</span><span class="n">between</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">tuple2</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">i</span> <span class="o">-&gt;</span>  <span class="n">i</span><span class="o">.</span><span class="n">get1</span><span class="p">()</span> <span class="o">!=</span> <span class="n">i</span><span class="o">.</span><span class="n">get2</span><span class="p">());</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This implementation looks a bit complex at first, and indeed, these tools have a short but steep learning curve. In summary, <code class="docutils literal notranslate"><span class="pre">isosceles</span></code> is the property that we want to test, which is that the triangle <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code> should be classified as an isosceles triangle, but only if <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">!=</span> <span class="pre">y</span></code>. It should hold for all  <code class="docutils literal notranslate"><span class="pre">Integer</span></code> pairs such that the condition <code class="docutils literal notranslate"><span class="pre">xNotEqualToY</span></code> holds. This is specified in the parameter declaration <code class="docutils literal notranslate"><span class="pre">&#64;Forall(&quot;xNotEqualToY&quot;)</span> <span class="pre">...</span></code>. The condition “xNotEqualToY” is defined by the method <code class="docutils literal notranslate"><span class="pre">xNotEqualToY</span></code> with the <code class="docutils literal notranslate"><span class="pre">&#64;Provide</span></code> keyword. <code class="docutils literal notranslate"><span class="pre">Arbitraries</span></code> is a utility class provided by jqwik. In this instance, we generate random pairs of integers between 1 and 100 such the two elements in the pair are not equal, specified using <code class="docutils literal notranslate"><span class="pre">filter(i</span> <span class="pre">-&gt;</span> <span class="pre">i.get1()</span> <span class="pre">!=</span> <span class="pre">i.get2())</span></code>. The operator <code class="docutils literal notranslate"><span class="pre">-&gt;</span></code> can be read as “such that”.</p>
+<p>So, this implements the property defined by <code class="docutils literal notranslate"><span class="pre">testIsosceles</span></code> above, but handles the random test generation. Tools like jqwik also do more than random testing. For example, if they find an example that does not hold, they try to search for a simpler, smaller example that still violates the property. Because this is smaller and simpler, it can make debugging easier.</p>
+</section>
+<section id="strengths-and-weaknesses-of-property-based-testing">
+<h3><span class="section-number">6.5.3. </span>Strengths and weaknesses of property-based testing<a class="headerlink" href="#strengths-and-weaknesses-of-property-based-testing" title="Permalink to this heading">#</a></h3>
+<p>Compared to example-based functional testing techniques such as input partitioning and control-flow testing, property-based testing has the following strengths:</p>
+<ol class="arabic simple">
+<li><p>It can generate a large volume of tests with minimal human oversight and cost.</p></li>
+<li><p>It encourages us to make our assumptions explicit by defining properties.</p></li>
+<li><p>It can find things that a human tester does not think of.</p></li>
+</ol>
+<p>But, it also has limitations:</p>
+<ol class="arabic simple">
+<li><p>The coverage of the input domain is not systematic, so it is unlikely to test edges cases like boundary values unless explicitly told to, and is unlikely to achieve good coverage of the software unless specifically guided. See the section on  <a class="reference internal" href="Security-Testing.html#sec-security-testing-random-testing"><span class="std std-ref">random testing</span></a> for a more detailed discussion with examples.</p></li>
+<li><p>It only tests the properties that it is given, which are (usually) partial properties. While specifying test oracle  that are complete is possible, it is uncommon.</p></li>
+</ol>
+<p>As such, the conclusion is  that property-based testing and example-based testing complement each other, so they should be used together; rather than relying on just one technique.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Testing-Modules.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">5. </span>Testing Modules</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Testing-and-Integration.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">7. </span>Testing-and-Integration</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-of-this-chapter">6.1. Learning outcomes of this chapter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-introduction">6.2. Chapter Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#active-and-passive-test-oracles">6.3. Active and Passive Test Oracles</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#types-of-test-oracle">6.4. Types of Test Oracle</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#formal-executable-specifications">6.4.1. Formal, executable specifications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solved-examples">6.4.2. Solved examples</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metamorphic-oracles">6.4.3. Metamorphic oracles</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alternate-implementations">6.4.4. Alternate implementations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#heuristic-oracles">6.4.5. Heuristic oracles</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-golden-program">6.4.6. The Golden Program!</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#oracle-derivation">6.4.7. Oracle derivation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#property-based-testing">6.5. Property-based testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#defining-property-based-templates">6.5.1. Defining property-based templates</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tool-support">6.5.2. Tool support</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#strengths-and-weaknesses-of-property-based-testing">6.5.3. Strengths and weaknesses of property-based testing</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By SWEN90006
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

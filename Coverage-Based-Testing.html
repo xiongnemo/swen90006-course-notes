@@ -1,0 +1,1600 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>4. Coverage-Based Testing &#8212; SWEN90006 Software &amp; Security Testing</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/book-style.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Coverage-Based-Testing';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="5. Testing Modules" href="Testing-Modules.html" />
+    <link rel="prev" title="3. Boundary-Value Analysis" href="Boundary-Value.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/uom.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/uom.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Subject Introduction
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">LECTURE NOTES</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Introduction-to-Testing.html">1. Introduction to Software Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-Partitioning.html">2. Input Partitioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Boundary-Value.html">3. Boundary-Value Analysis</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">4. Coverage-Based Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Testing-Modules.html">5. Testing Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Property-based-testing.html">6. Property-based Testing and Test Oracles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Testing-and-Integration.html">7. Testing-and-Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Security-Testing.html">8. Security Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Coverage-Guided-Fuzzing.html">9. Code Coverage-Guided Fuzzing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Symbolic-Execution.html">10. Automated test generation using symbolic execution</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">APPENDIX</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Probabilities.html">A Brief Review of Some Probability Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Maximum.html">Maximum Likelihood Estimation</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/Coverage-Based-Testing.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Coverage-Based Testing</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-of-this-chapter">4.1. Learning outcomes of this chapter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-introduction">4.2. Chapter introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#control-flow-testing">4.3. Control-Flow Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#control-flow-graphs">4.3.1. Control-Flow Graphs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coverage-based-criteria">4.3.2. Coverage-Based Criteria</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#measuring-coverage">4.3.3. Measuring Coverage</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tool-support">4.3.3.1. Tool Support</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-flow-testing">4.4. Data-Flow Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#static-data-flow-analysis">4.4.1. Static Data-Flow Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dynamic-data-flow-analysis-with-testing">4.4.2. Dynamic Data-Flow Analysis with Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">4.4.3. Coverage-Based Criteria</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">4.4.4. Tool Support</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutation-analysis">4.5. Mutation Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-coupling-effect">4.5.1. The Coupling Effect</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-coupling-effect-mutants-and-testing">4.5.2. The Coupling Effect, Mutants, and Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systematic-mutation-analysis-via-mutant-operators">4.5.3. Systematic Mutation Analysis via Mutant Operators</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#equivalent-mutants">4.5.4. Equivalent Mutants</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">4.5.5. Tool Support</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-coverage-criteria">4.6. Comparing Coverage Criteria</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#effectiveness-of-coverage-criterion">4.6.1. Effectiveness of Coverage Criterion</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="coverage-based-testing">
+<h1><span class="section-number">4. </span>Coverage-Based Testing<a class="headerlink" href="#coverage-based-testing" title="Permalink to this heading">#</a></h1>
+<section id="learning-outcomes-of-this-chapter">
+<h2><span class="section-number">4.1. </span>Learning outcomes of this chapter<a class="headerlink" href="#learning-outcomes-of-this-chapter" title="Permalink to this heading">#</a></h2>
+<p>At the end of this chapter, you should be able to:</p>
+<ul class="simple">
+<li><p>Select test inputs for a program based on its control-flow graph, using the various control-flow coverage criteria.</p></li>
+<li><p>Identify when a variable in a program is defined, referenced, and undefined.</p></li>
+<li><p>Select test inputs from a control-flow graph annotated with variable information, using the various data-flow coverage criteria.</p></li>
+<li><p>Identify static data-flow anomalies from the variable information in a control-flow graph.</p></li>
+<li><p>Compare and contrast the different control-flow and data-flow coverage criteria.</p></li>
+<li><p>Describe the process of mutation analysis and apply it to a small-scale program.</p></li>
+<li><p>Argue why you think mutation analysis is useful or not.</p></li>
+<li><p>Define equivalent mutants, and their impact on mutation analysis.</p></li>
+<li><p>Describe the importance of and motivate the use of coverage metrics in testing.</p></li>
+</ul>
+</section>
+<section id="chapter-introduction">
+<h2><span class="section-number">4.2. </span>Chapter introduction<a class="headerlink" href="#chapter-introduction" title="Permalink to this heading">#</a></h2>
+<p>In this chapter, we discuss three software testing techniques that are based on achieving <em>coverage</em> of the software being tested. The notion behind of these techniques is to achieve some form of coverage of the , based on well-defined criteria, rather than partitioning the input domain of the program. While these techniques were originally designed as techniques to <em>generate</em> test inputs, in contemporary software engineering, they are more useful as <em>measures</em> of test suite quality. That is, we generate a test suite using some technique, such as input partitioning, and we use tools to automatically measure the coverage of the test suite; making improvements when we find parts of the program that should be covered, but are not.</p>
+<p>The usual way of looking at the structure of the code is to look at the possible sequences of statements that can be executed. If the program contains an if statement then there are two possible sequence of statements: one in which the if condition evaluates to true; and one in which it evaluates to false. If the program contains a while loop then the actual sequences of statements that get executed will depend on the loop. In some cases it may execute exactly <span class="math notranslate nohighlight">\(n\)</span> times for any execution, in others it may vary, while in some it may execute indefinitely. Thus, the test inputs are selected to execute each statement, branch, or path in the program itself, and are therefore <em>white-box</em> testing techniques.</p>
+<p>There are three techniques that we discuss in this chapter:</p>
+<ol class="arabic">
+<li><p><strong>Control-flow testing</strong> – control-flow strategies select test inputs to <em>exercise</em> paths in the control-flow graph. They select paths based on the control information in the graph, typically given by predicates in if statements and while loops.</p>
+<p>Test inputs are selected to meet criteria for <em>covering</em> the graph (and therefore the code) with test cases in various ways. Examples of coverage criteria include:</p>
+<ul class="simple">
+<li><p>Path coverage;</p></li>
+<li><p>Branch coverage;</p></li>
+<li><p>Condition coverage; and</p></li>
+<li><p>Statement coverage.</p></li>
+</ul>
+</li>
+<li><p><strong>Data-flow testing</strong> — data-flow strategies select inputs to exercise paths based on the flow of data between variables; for example, between the <em>definition</em> of a variable, such as assigning a value to a variable, and the <em>use</em> of that variable in the program</p>
+<p>As with control-flow strategies, test inputs are selected to cover the graph (and therefore the code) with test cases. Examples of coverage criteria include:</p>
+<ul class="simple">
+<li><p>Execute every definition;</p></li>
+<li><p>Execute every use;</p></li>
+<li><p>Execute every path between every definition and every use.</p></li>
+</ul>
+</li>
+<li><p><strong>Mutation analysis</strong> — mutation analysis is a technique for measuring the effectiveness of test suites, with the side effect that test cases are created and added to that test suite. The technique is based on seeding faults in a program, and then assessing whether or not that fault is detected by the test suite. If not, then that test suite is <em>inadequate</em> because the fault was not detected, and a new test case must be added to find that fault.</p>
+<p>Using specially designed operators, many copies of the program are created, each one with a fault, with the aim of the test suite killing all of these.</p>
+</li>
+</ol>
+<div class="admonition-remark admonition">
+<p class="admonition-title">Remark</p>
+<p>Note that these techniques are useful only for selecting test <em>inputs</em>; not test <em>cases</em>. That is, they are not useful for selecting test outputs. If both the test inputs and expected outputs are derived from the program itself, then we will never produce failures because the expected outputs and actual outputs will always be the same. As such, a white-box testing technique still requires a [test_oracles](test oracle), and therefore, a specification of the program behaviour.</p>
+</div>
+</section>
+<section id="control-flow-testing">
+<h2><span class="section-number">4.3. </span>Control-Flow Testing<a class="headerlink" href="#control-flow-testing" title="Permalink to this heading">#</a></h2>
+<p>In this section, we discuss <em>control-flow testing</em> techniques.</p>
+<section id="control-flow-graphs">
+<h3><span class="section-number">4.3.1. </span>Control-Flow Graphs<a class="headerlink" href="#control-flow-graphs" title="Permalink to this heading">#</a></h3>
+<p>The most common form of white-box testing is control-flow testing, which aims to understand the <em>flow of control</em> within a program. There are a number of ways of capturing the flow of control in a program, but by far the most common is by using a <em>control-flow graph</em> (CFG).</p>
+<p>Informally, a CFG is a graphical representation of the control structure of a program and the possible <em>paths</em> along which the program may execute. More formally we have the following definition.</p>
+<div class="admonition-definition admonition">
+<p class="admonition-title">Definition</p>
+<p>A <em>control-flow graph</em> is a graph <span class="math notranslate nohighlight">\(\rm G = (V,E )\)</span> where:</p>
+<ul class="simple">
+<li><p>A vertex in the CFG represents a program statement;</p></li>
+<li><p>An edge in the CFG represents the ability of a program to flow from its current statement to the statement at the other end of the edge;</p></li>
+<li><p>If an edge is associated with a conditional statement, label the edge with the conditionals value, either true or false.</p></li>
+</ul>
+</div>
+<p>In diagrams, statements are usually represented by square boxes and branches by diamond boxes.</p>
+<div class="highlight-c notranslate" id="f-4-1"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">power</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">base</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">power</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">    </span><span class="n">power</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">power</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">base</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">power</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">power</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p style="text-align: center;">Figure 4.1: A C function to iteratively raise a base to a power.</p>
+<p>As a first example consider the power function in Figure <a class="reference internal" href="#f-4-1"><span class="std std-ref">4.1</span></a>, which for integer inputs base and n, calculates <span class="math notranslate nohighlight">\({ base^n}\)</span>. All looping constructs decompose into <em>test-and-branch</em> control flow structures. The for loop in Figure <a class="reference internal" href="#f-4-1"><span class="std std-ref">4.1</span></a> needs to be decomposed into a test i <code class="docutils literal notranslate"><span class="pre">&lt;</span></code>= n and a branch. The control graph for the power function appears in Figure <a class="reference internal" href="#f-4-2"><span class="std std-ref">4.2</span></a>.</p>
+<figure class="align-center" id="f-4-2">
+<a class="reference internal image-reference" href="_images/CFG-Example-1.png"><img alt="_images/CFG-Example-1.png" src="_images/CFG-Example-1.png" style="width: 45%;" /></a>
+</figure>
+<p style="text-align: center;">Figure 4.2: The control-flow graph for the function in Figure 4.1</p>
+<p>We make two observations about the control-flow graph before continuing.</p>
+<div class="admonition-remark admonition">
+<p class="admonition-title">Remark</p>
+<p>First, note that we have divided the CFG into a number of <em>basic blocks</em>. Each basic block is a sequence of statements with no branches and only a single entry point and a single exit point and so, only a single path through the block. The use of basic blocks makes large CFGs easier to visualise and analyse.</p>
+<p>Second, we have labelled all of the nodes in the graph with letters. In general, since paths are sequences of nodes in the control-flow graph we will label nodes and not edges in the graph.</p>
+</div>
+<p>We introduce following definitions for our analysis for control flow graphs.</p>
+<div class="admonition-definition admonition">
+<p class="admonition-title">Definition</p>
+<ul class="simple">
+<li><p>An <em>execution path</em>, or just a <em>path</em>, is a sequence of nodes in the control flow graph that starts at the entry node and ends at the exit node.</p></li>
+<li><p>A <em>branch</em>, or <em>decision</em>, is a point in the program where the flow of control can diverge. For example, if-then-else statements and switch statements cause branches in the control flow graph.</p></li>
+<li><p>A <em>condition</em> is a simple <em>atomic</em> predicate or simple relational expression occurring within a branch. Conditions <em>do not</em> contain <em>and</em> (in C &amp;&amp;), <em>or</em> (in C ||) and <em>not</em> (in C !) operators.</p></li>
+<li><p>A <em>feasible path</em> is a path where there is at least one input in the input domain that can force the program to execute the path. Otherwise the path is an <em>infeasible path</em> and no test case can force the program to execute that path.</p></li>
+</ul>
+</div>
+<p>In terms of the control-flow graph, a branch is a node in the graph with two or more edges that leave that node:</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/branch.png"><img alt="_images/branch.png" src="_images/branch.png" style="width: 35%;" /></a>
+</figure>
+<p>In turn branches are made up from conditions. For example, the branch given by <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(a</span> <span class="pre">&gt;</span> <span class="pre">1</span> <span class="pre">and</span> <span class="pre">b</span> <span class="pre">==</span> <span class="pre">0)</span></code> consists of the conjunction of two conditions: (1) <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">&gt;</span> <span class="pre">1</span></code>; and (2) <code class="docutils literal notranslate"><span class="pre">b</span> <span class="pre">==</span> <span class="pre">0</span></code>. Analysing the branches and conditions in a program gives us a great deal of insight into how to choose test cases to follow specific paths. For example, we need to select test inputs to make a branch true and false and in turn this means choosing values for a and b to make the branch take on the vales true and false.</p>
+<p>In this example, there is one way to make the branch true:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">&gt;</span> <span class="pre">1</span> <span class="pre">and</span> <span class="pre">b</span> <span class="pre">==</span> <span class="pre">0</span></code></p></li>
+</ul>
+<p>and three ways to make the branch false:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">&gt;</span> <span class="pre">1</span> <span class="pre">and</span> <span class="pre">b</span> <span class="pre">!=</span> <span class="pre">0</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">=&lt;</span> <span class="pre">1</span> <span class="pre">and</span> <span class="pre">b</span> <span class="pre">==</span> <span class="pre">0</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">=&lt;</span> <span class="pre">1</span> <span class="pre">and</span> <span class="pre">b</span> <span class="pre">!=</span> <span class="pre">0</span></code>.</p></li>
+</ul>
+</section>
+<section id="coverage-based-criteria">
+<h3><span class="section-number">4.3.2. </span>Coverage-Based Criteria<a class="headerlink" href="#coverage-based-criteria" title="Permalink to this heading">#</a></h3>
+<p>The aim of coverage-based testing methods is to <em>cover</em> the program with test cases that satisfy some fixed coverage criteria. Put another way, we choose test cases to exercise as much of the program as possible according to some criteria. If some part of the program is not exercised by any test case then there may well be undiscovered faults lurking there.</p>
+<p>Coverage-based testing for control-flow graphs works by choosing test cases according to well defined <em>coverage</em> criteria. The more common coverage criteria are the following.</p>
+<ul>
+<li><p><strong>Statement coverage</strong> (or <strong>node coverage</strong>):  Every statement of the program should be exercised at least once.</p></li>
+<li><p><strong>Branch coverage</strong> (or <strong>decision coverage</strong>): Every possible alternative in a branch (or decision) of the program should be exercised at least once. For if statements this means that the branch must be made to take on the values true and false, <em>even if the result of this branch does nothing</em>, for example, for an if statement with no else, the false case must still be executed.</p></li>
+<li><p><strong>Condition coverage</strong>: Each condition in a branch is made to evaluate to true and false at least once. For example, in the branch <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(a</span> <span class="pre">and</span> <span class="pre">b)</span></code>, where <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> are both conditions, then we must execute a set of tests such as:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">a</span></code>  evaluates to true  at least once and false at least once; and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">b</span></code>  evaluates to true at least once and false at least once.</p></li>
+</ul>
+</li>
+<li><p><strong>Decision/Condition coverage</strong>:  Each condition in a branch is made to evaluate to both true and false and each branch is made to evaluate to both true and false. That is, a combination of branch coverage and condition coverage. For example, in the branch <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">a</span> <span class="pre">and</span> <span class="pre">b</span></code>, where <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> are both conditions, we must execute a set of tests such that:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">a</span></code>  evaluates to true  at least once and false at least once;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">b</span></code>  evaluates to true at least once and false at least once; and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">and</span> <span class="pre">b</span></code> evaluates to true at least once and false at least once.</p></li>
+</ul>
+<p>If <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> are both Boolean variables, this can be achieved using the following test inputs:</p>
+</li>
+</ul>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>a</p></th>
+<th class="head"><p>b</p></th>
+<th class="head"><p>a and b</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+</tr>
+<tr class="row-odd"><td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p><strong>Multiple-condition coverage</strong>:
+All possible combinations of condition outcomes within each branch should be exercised at least once. For example, in the branch <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(a</span> <span class="pre">and</span> <span class="pre">b)</span></code>, where <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> are both conditions, we must execute a set of tests such that all four combinations of <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> are true and false respectively.  That is, we must execute the following four conditions:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>a</p></th>
+<th class="head"><p>b</p></th>
+<th class="head"><p>a and b</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>true</p></td>
+<td><p>true</p></td>
+<td><p>true</p></td>
+</tr>
+<tr class="row-odd"><td><p>false</p></td>
+<td><p>true</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-even"><td><p>true</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+</tr>
+<tr class="row-odd"><td><p>false</p></td>
+<td><p>false</p></td>
+<td><p>false</p></td>
+</tr>
+</tbody>
+</table>
+<p>For this, we have  <span class="math notranslate nohighlight">\(2^n\)</span> number of objectives to satisfy, where <span class="math notranslate nohighlight">\(n\)</span> is the number of conditions.</p>
+</li>
+<li><p><strong>Path coverage</strong>:
+Every execution <em>path</em> of the program should be exercised at least once.</p>
+<p><strong>Note</strong> that path coverage is impossible for graphs containing loops, because there are an infinite number of paths. A typical work around is to apply the <em>zero-to-many</em> rule, discussed in the <a class="reference internal" href="Input-Partitioning.html#domain-testing"><span class="std std-ref">Domain Testing</span></a> section, which states that the minimum number of times a loop can execute is zero, so this is a boundary condition. Similarly, some loops have an upper bound, so treat this as a boundary.</p>
+<p>A general guideline for loops is to select test inputs that execute the loop:</p>
+<ul class="simple">
+<li><p>zero times – so that we can test paths that do not execute the loop;</p></li>
+<li><p>once – to test that the loop can be entered and that the results for a single iteration are “correct”;</p></li>
+<li><p>twice – to test that the results remain “correct” between different iterations of the loop;</p></li>
+<li><p>N times (greater than 2) – to test that an arbitrary number of iterations returns the “correct” results; and</p></li>
+<li><p>N+1 times to test that after an arbitrary number of iterations the results remain “correct” between iterations.</p></li>
+</ul>
+<p>In the case that we know the upper bound of the loop, then set N+1 to be this upper bound.</p>
+</li>
+</ul>
+<div class="tip admonition" id="example-28">
+<p class="admonition-title">Example 28: </p>
+<p>To motivate the selection of test cases consider the following simple program in Figure <a class="reference internal" href="#f-4-3"><span class="std std-ref">4.3</span></a>.</p>
+<div class="highlight-c notranslate" id="f-4-3"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="w">    </span><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d %d %d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">a</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">b</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">a</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d %d %d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p style="text-align: center;">Figure 4.3: A simple program for control-flow testing.</p>
+<p>The first step in the analysis is to generate the control-flow graph which we show in Figure <a class="reference internal" href="#f-4-4"><span class="std std-ref">4.4</span></a>.</p>
+<figure class="align-center" id="f-4-4">
+<a class="reference internal image-reference" href="_images/cbtgraph-A.png"><img alt="_images/cbtgraph-A.png" src="_images/cbtgraph-A.png" style="width: 50%;" /></a>
+</figure>
+<p style="text-align: center;">Figure 4.4: The Control Flow Graph for the program in Figure 4.3</p>
+<p>Now, what is needed for statement coverage? If all of the branches are true at least once then we will have executed every statement in the graph. Put another way to execute every statement at least once we must execute the path ABCDEFGF.</p>
+<p>Now, looking at the <em>conditions</em> inside each of the three <em>branches</em> we can derive a set of constraints on the values of <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code> and <code class="docutils literal notranslate"><span class="pre">c</span></code> such that <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">&gt;</span> <span class="pre">1</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span> <span class="pre">==</span> <span class="pre">0</span></code> in order to make the first branch true, <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">=&lt;</span>&#160; <span class="pre">2</span></code> in order to make the third branch true, and <code class="docutils literal notranslate"><span class="pre">c</span> <span class="pre">&gt;</span> <span class="pre">1</span></code> to make the second branch true. A test case of the form <code class="docutils literal notranslate"><span class="pre">(a,</span> <span class="pre">b,</span> <span class="pre">c)</span> <span class="pre">=</span> <span class="pre">(2,</span> <span class="pre">0,</span> <span class="pre">3)</span></code> will execute all of the statements in the program.</p>
+<p>Note that we have not needed to make every branch take on both values; nor have we made every condition evaluate to true and false; and nor have we traversed every path in the program.</p>
+<p>We already have a test input <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">0,</span> <span class="pre">3)</span></code> that will make all of the branches true. To meet the branch coverage condition all we need are test inputs that will make each branch false. Again looking at the conditions inside the branches, the test input <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">1,</span> <span class="pre">1)</span></code> will make all of the branches false. So our two test inputs <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">0,</span> <span class="pre">3)</span></code> and <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">1,</span> <span class="pre">1)</span></code> is a test suite that will meet the branch coverage criteria.</p>
+<p>For any of the criteria involving condition coverage we need to look at each of the five conditions in the program:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(C_1\)</span>: <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">&gt;</span> <span class="pre">1</span></code></p></li>
+<li><p><span class="math notranslate nohighlight">\(C_2\)</span>: <code class="docutils literal notranslate"><span class="pre">b</span> <span class="pre">==</span> <span class="pre">0</span></code></p></li>
+<li><p><span class="math notranslate nohighlight">\(C_3\)</span>: <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">==</span> <span class="pre">2</span></code></p></li>
+<li><p><span class="math notranslate nohighlight">\(C_4\)</span>: <code class="docutils literal notranslate"><span class="pre">c</span> <span class="pre">&gt;</span> <span class="pre">1</span></code></p></li>
+<li><p><span class="math notranslate nohighlight">\(C_5\)</span>: <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">&gt;=</span> <span class="pre">2</span></code>.</p></li>
+</ul>
+<p>The test input <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">0,</span> <span class="pre">3)</span></code> will make <span class="math notranslate nohighlight">\(C_1\)</span> false, <span class="math notranslate nohighlight">\(C_2\)</span> true, <span class="math notranslate nohighlight">\(C_3\)</span> false, <span class="math notranslate nohighlight">\(C_4\)</span> true and <span class="math notranslate nohighlight">\( C_5\)</span> false. Examples of sets of test inputs and the criteria that they meet are given in Table <a class="reference internal" href="#t-4-1"><span class="std std-ref">4.1</span></a>.</p>
+<table class="table" id="t-4-1">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Coverage Criteria</p></th>
+<th class="head text-left"><p>Test Inputs</p></th>
+<th class="head text-left"><p>Path Execution</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p>Statement</p></td>
+<td class="text-left"><p>(2, 0, 3)</p></td>
+<td class="text-left"><p>ABCDEFGF</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p></p></td>
+<td class="text-left"><p></p></td>
+<td class="text-left"><p></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>Branch</p></td>
+<td class="text-left"><p>(2, 0, 3)</p></td>
+<td class="text-left"><p>ABCDEFGF</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p></p></td>
+<td class="text-left"><p>(1, 1, 1)</p></td>
+<td class="text-left"><p>ABDF</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p></p></td>
+<td class="text-left"><p></p></td>
+<td class="text-left"><p></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>Condition</p></td>
+<td class="text-left"><p>(1, 0, 3)</p></td>
+<td class="text-left"><p>ABDEF</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p></p></td>
+<td class="text-left"><p>(2, 1, 1)</p></td>
+<td class="text-left"><p>ABDFGF</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p></p></td>
+<td class="text-left"><p></p></td>
+<td class="text-left"><p></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>Decision/Condition</p></td>
+<td class="text-left"><p>(2, 0, 4)</p></td>
+<td class="text-left"><p>ABCDEFGF</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p></p></td>
+<td class="text-left"><p>(1, 1, 1)</p></td>
+<td class="text-left"><p>ABDF</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p></p></td>
+<td class="text-left"><p></p></td>
+<td class="text-left"><p></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>Multiple condition</p></td>
+<td class="text-left"><p>(2, 0, 4)</p></td>
+<td class="text-left"><p>ABCDEFGF</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p></p></td>
+<td class="text-left"><p>(2, 1, 1)</p></td>
+<td class="text-left"><p>ABDEFGF</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p></p></td>
+<td class="text-left"><p>(1, 0, 2)</p></td>
+<td class="text-left"><p>ABDEF</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p></p></td>
+<td class="text-left"><p>(1, 1, 1)</p></td>
+<td class="text-left"><p>ABDF</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p></p></td>
+<td class="text-left"><p></p></td>
+<td class="text-left"><p></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>Path</p></td>
+<td class="text-left"><p>(2, 0, 4)</p></td>
+<td class="text-left"><p>ABCDEFGF</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p></p></td>
+<td class="text-left"><p>(2, 1, 1)</p></td>
+<td class="text-left"><p>ABDFGF</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p></p></td>
+<td class="text-left"><p>(1, 0, 2)</p></td>
+<td class="text-left"><p>ABDEF</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p></p></td>
+<td class="text-left"><p>(4, 0, 0)</p></td>
+<td class="text-left"><p>ABCDFGFGF</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p></p></td>
+<td class="text-left"><p>…</p></td>
+<td class="text-left"><p>…</p></td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: center;">Table 4.1: Test inputs for the various coverage criteria for the program in Figure 4.3</p>
+<p>The set of test cases meeting the multiple condition criteria is given in Table <a class="reference internal" href="#t-4-2"><span class="std std-ref">4.2</span></a>. In the table, we define the branches using the following labels:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(B_1\)</span>:  <code class="docutils literal notranslate"><span class="pre">C_1</span> <span class="pre">&amp;&amp;</span> <span class="pre">C_2</span></code></p></li>
+<li><p><span class="math notranslate nohighlight">\(B_2\)</span>:  <code class="docutils literal notranslate"><span class="pre">C_3</span> <span class="pre">||</span> <span class="pre">C_4</span></code></p></li>
+</ul>
+<table class="table" id="t-4-2">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Test inputs</p></th>
+<th class="head text-center"><p><span class="math notranslate nohighlight">\(C_1\)</span></p></th>
+<th class="head text-center"><p><span class="math notranslate nohighlight">\(C_2\)</span></p></th>
+<th class="head text-center"><p><span class="math notranslate nohighlight">\(B_1\)</span></p></th>
+<th class="head text-center"><p><span class="math notranslate nohighlight">\(C_3\)</span></p></th>
+<th class="head text-center"><p><span class="math notranslate nohighlight">\(C_4\)</span></p></th>
+<th class="head text-center"><p><span class="math notranslate nohighlight">\(B_2\)</span></p></th>
+<th class="head text-center"><p><span class="math notranslate nohighlight">\(C_5\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p></p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">&gt;</span> <span class="pre">1</span></code></p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">b</span> <span class="pre">==</span> <span class="pre">0</span></code></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">==</span> <span class="pre">2</span></code></p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">c</span> <span class="pre">&gt;</span> <span class="pre">1</span></code></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">&gt;=</span> <span class="pre">2</span></code></p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>(1, 0, 3)</p></td>
+<td class="text-center"><p>F</p></td>
+<td class="text-center"><p>T</p></td>
+<td class="text-center"><p>F</p></td>
+<td class="text-center"><p>F</p></td>
+<td class="text-center"><p>T</p></td>
+<td class="text-center"><p>T</p></td>
+<td class="text-center"><p>F</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>(2, 1, 1)</p></td>
+<td class="text-center"><p>T</p></td>
+<td class="text-center"><p>F</p></td>
+<td class="text-center"><p>F</p></td>
+<td class="text-center"><p>T</p></td>
+<td class="text-center"><p>F</p></td>
+<td class="text-center"><p>T</p></td>
+<td class="text-center"><p>T</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>(2, 0, 4)</p></td>
+<td class="text-center"><p>T</p></td>
+<td class="text-center"><p>T</p></td>
+<td class="text-center"><p>T</p></td>
+<td class="text-center"><p>T</p></td>
+<td class="text-center"><p>T</p></td>
+<td class="text-center"><p>T</p></td>
+<td class="text-center"><p>T</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>(1, 1, 1)</p></td>
+<td class="text-center"><p>F</p></td>
+<td class="text-center"><p>F</p></td>
+<td class="text-center"><p>F</p></td>
+<td class="text-center"><p>F</p></td>
+<td class="text-center"><p>F</p></td>
+<td class="text-center"><p>F</p></td>
+<td class="text-center"><p>F</p></td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: center;">Table 4.2: Multiple condition coverage for the program in Figure 4.3</p>
+</div>
+<div class="admonition-exercise-1 admonition">
+<p class="admonition-title">Exercise 1</p>
+<ul class="simple">
+<li><p>Can you find an <em>infeasible path</em> in this example?</p></li>
+</ul>
+<p><strong>Reminder</strong>: A path is said to be <em>infeasible</em> if there are no test cases in the input domain that can execute the path.</p>
+<ul class="simple">
+<li><p>How many execution paths are there in the program?</p></li>
+</ul>
+</div>
+<div class="tip admonition" id="example-29">
+<p class="admonition-title">Example 29: <strong>A Second Example</strong></p>
+<p>For the second example, consider the function squeeze from Section <a class="reference internal" href="Introduction-to-Testing.html#programs"><span class="std std-ref">Programs</span></a> (shown again in Figure <a class="reference internal" href="#f-4-5"><span class="std std-ref">4.5</span></a>).</p>
+<div class="highlight-c notranslate" id="f-4-5"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">squeeze</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">s</span><span class="p">[],</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">c</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="sc">&#39;\0&#39;</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    		</span><span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="o">++</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">    	</span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">&#39;\0&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p style="text-align: center;">Figure 4.5: The squeeze function from Kernighan and Ritchie revisited.</p>
+<p>Our analysis begins with the standard analysis of input/output domains and then constructs a control-flow graph for the function. The input domain for the function squeeze is <span class="math notranslate nohighlight">\({ char[] \times int}\)</span> and the output domain is <span class="math notranslate nohighlight">\( char[]\)</span>. The control-flow graph is shown in Figure <a class="reference internal" href="#f-4-6"><span class="std std-ref">4.6</span></a>.</p>
+<figure class="align-center" id="f-4-6">
+<a class="reference internal image-reference" href="_images/squeeze-CFG.png"><img alt="_images/squeeze-CFG.png" src="_images/squeeze-CFG.png" style="width: 70%;" /></a>
+</figure>
+<p style="text-align: center;">Figure 4.6: The control-flow graph for the squeeze function.</p>
+<p>The next step is to decide which of the coverage criteria will be used to select test cases. Typically, the exact criteria (statement, branch, condition, multiple condition, path) will depend on the project and what testing is meant to achieve.</p>
+<p>For this example we will begin by determining the branches and conditions. Fortunately there are only two branches each of which contains only a single condition. Consequently, if we choose test inputs so that each condition evaluates to both true and false then we will also have achieved branch coverage.</p>
+<p>Notice that the paths divide the input domain into subsets where each element of a subsets selects a specific path. For the squeeze functions the subsets can be characterised as follows.</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Path</p></th>
+<th class="head"><p>Equivalence classes to select the path</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\({ABCG}\)</span></p></td>
+<td><p>Selected by the test input (“”, <span class="math notranslate nohighlight">\(c\)</span>) for any character <span class="math notranslate nohighlight">\(c\)</span>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\({ABCDFCG}\)</span></p></td>
+<td><p>Selected by any test input ({S}, <span class="math notranslate nohighlight">\(c\)</span>) where <span class="math notranslate nohighlight">\(S\)</span> is a string of length 1, and <span class="math notranslate nohighlight">\(c\)</span> occurs in <span class="math notranslate nohighlight">\(S\)</span>.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\({ABCDEFCG}\)</span></p></td>
+<td><p>Selected by any test input (<span class="math notranslate nohighlight">\(S\)</span>, <span class="math notranslate nohighlight">\(c\)</span>) where <span class="math notranslate nohighlight">\(S\)</span> is a string of length 1 and <span class="math notranslate nohighlight">\(c\)</span> does not occur in <span class="math notranslate nohighlight">\(S\)</span>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\vdots\)</span></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\({ABCDFCDF\ldots CDFCG}\)</span></p></td>
+<td><p>Selected by any test input (<span class="math notranslate nohighlight">\(S\)</span>, <span class="math notranslate nohighlight">\(c\)</span>) where <span class="math notranslate nohighlight">\(S\)</span> is a string of length <span class="math notranslate nohighlight">\(&gt; 1\)</span> and <span class="math notranslate nohighlight">\(c\)</span> does not occur in <span class="math notranslate nohighlight">\(S\)</span>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\({ABCDEFCDEF\ldots CDEFCG}\)</span></p></td>
+<td><p>Selected by any test input (<span class="math notranslate nohighlight">\(S\)</span>, <span class="math notranslate nohighlight">\({ c}\)</span>) where <span class="math notranslate nohighlight">\(S\)</span> s a string of length <span class="math notranslate nohighlight">\(&gt; 1\)</span> and <span class="math notranslate nohighlight">\(c\)</span> occurs in <span class="math notranslate nohighlight">\(S\)</span>.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Next we need to derive the test cases. To do this there are two further questions that we need to answer.</p>
+<ul class="simple">
+<li><p>How many times do we need to execute the for loop?</p></li>
+<li><p>How do we determine the expected results for a test case?</p></li>
+</ul>
+<p>If path coverage were to be demanded, then the coverage criteria could not be satisfied because there are an infinite number of paths. However, we can apply the guideline regarding loops and select test inputs that execute the loop 0, 1, 2, N, and N+1 times. In the squeeze example, the control-flow graph has two loops. Both start and end at node C, however, only one of them contains the node E. Therefore, the zero-to-many rule is applied to each of these. This gives us the paths <span class="math notranslate nohighlight">\(ABC(DFC)^nG\)</span> and <span class="math notranslate nohighlight">\(ABC(DEFC)^nG\)</span>, for <span class="math notranslate nohighlight">\(n \in \{0, 1, 2, 4, 5\}\)</span>.</p>
+<p>This example shows the weakness with the zero-to-many rule (and in path coverage with loops). The paths generated for this only execute the case in which the character c is in every position of the array, and the case in which it is in none. Instead of following this strictly, we use our intuition to combine the two cases, and interleave the loop paths; therefore, in some iterations the test case executes the statement at node E, and in others, it does not.</p>
+<p>Now that the test inputs have been derived, the expected outputs must be determined. In our case we will use the design-level specification for the squeeze function to manually determine the expected outputs.</p>
+<p>Table <a class="reference internal" href="#t-4-3"><span class="std std-ref">4.3</span></a> outlines the test cases, and the paths that they exercise, for the squeeze program.</p>
+<table class="table" id="t-4-3">
+<thead>
+<tr class="row-odd"><th class="head"><p>Coverage Criteria</p></th>
+<th class="head"><p>Test Input</p></th>
+<th class="head"><p>Expected Output</p></th>
+<th class="head"><p>Path</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Statement Coverage</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">(&quot;c&quot;,</span> <span class="pre">'c')</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code></p></td>
+<td><p>ABCDEFCG</p></td>
+</tr>
+<tr class="row-odd"><td><p>Branch Coverage</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">(&quot;&quot;,</span> <span class="pre">'c')</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code></p></td>
+<td><p>ABCG</p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">(&quot;ab&quot;,</span> <span class="pre">'b')</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;a&quot;</span></code></p></td>
+<td><p>ABCDFCDEFCG</p></td>
+</tr>
+<tr class="row-odd"><td><p>Path Coverage</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">(&quot;&quot;,</span> <span class="pre">'c')</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code></p></td>
+<td><p>ABCG</p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">(&quot;c&quot;,</span> <span class="pre">'c')</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code></p></td>
+<td><p>ABCDEFCG</p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">(&quot;ab&quot;,</span> <span class="pre">'b')</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;a&quot;</span></code></p></td>
+<td><p>ABCDFCDEFCG</p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">(&quot;abcd&quot;,</span> <span class="pre">'d')</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;abc&quot;</span></code></p></td>
+<td><p>ABC(DFC)<span class="math notranslate nohighlight">\(^3\)</span>DEFCG</p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">(&quot;abcde&quot;,</span> <span class="pre">'e')</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;abcd&quot;</span></code></p></td>
+<td><p>ABC(DFC)<span class="math notranslate nohighlight">\(^4\)</span>DEFCG</p></td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: center;">Table 4.3: Test Cases for the squeeze function.</p>
+</div>
+</section>
+<section id="measuring-coverage">
+<h3><span class="section-number">4.3.3. </span>Measuring Coverage<a class="headerlink" href="#measuring-coverage" title="Permalink to this heading">#</a></h3>
+<p>Clearly, applying control-flow testing manually is a time-consuming process that is unlikely to give many benefits. However, there are aspects of the process that are easily automatable due to their mechanical nature. Deriving the control-flow graph can be automated by simply looking at the source code. Deriving test inputs from is considerably more difficult, especially for programs with non-linear domains, and for non-primitive data types.</p>
+<p>However, one straightforward and valuable task is to measure the level of coverage of a given test suite, which can be automated easily with tools. This can be measured by executing the test suite over the program, seeing which coverage objectives are met, and providing both high-level and fine-grained feedback on the coverage.</p>
+<p>A <em>coverage score</em> is defined as the number of test objects met divided by the number of total test objectives. The test objectives measured are relative to the particular criterion. For example, for statement coverage, the number of objectives is the number of statements, and the number of objectives met is the number of statements executed by <em>at least one test</em>. For branch coverage, the number of objects is the number of branches <span class="math notranslate nohighlight">\(\times\)</span> two (each branch must be executed for both the true and false case).</p>
+<p>As an example, consider the squeeze function from Figure <a class="reference internal" href="#f-4-6"><span class="std std-ref">4.6</span></a>. If we want to achieve branch coverage, there are four test objectives: two branches, each with two possible outputs. Now, consider the following test suite, consisting of two tests, which could be generated using any arbitrary technique: <code class="docutils literal notranslate"><span class="pre">(s</span> <span class="pre">=</span> <span class="pre">&quot;abc&quot;,</span> <span class="pre">c</span> <span class="pre">=</span> <span class="pre">&quot;d&quot;),</span>   <span class="pre">(s</span> <span class="pre">=</span> <span class="pre">&quot;&quot;,</span> <span class="pre">c</span> <span class="pre">=</span> <span class="pre">&quot;d&quot;)</span></code>.</p>
+<p>We can measure the coverage of this as follows, in which e.g. the FFFT in the first row indicates that branch <span class="math notranslate nohighlight">\( C\)</span> was executed <em>true</em> on the first three iterations of the loop, and <em>false</em> on the final iteration:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Inputs</p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">s[i]</span> <span class="pre">!=</span> <span class="pre">'\0'</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">s[i]</span> <span class="pre">!=</span> <span class="pre">c</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">(s</span> <span class="pre">=</span> <span class="pre">&quot;abc&quot;,</span> <span class="pre">c</span> <span class="pre">=</span> <span class="pre">&quot;d&quot;)</span></code></p></td>
+<td><p>TTTF</p></td>
+<td><p>FFF</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">(s</span> <span class="pre">=</span> <span class="pre">&quot;&quot;,</span> <span class="pre">c</span> <span class="pre">=</span> <span class="pre">&quot;d&quot;)</span></code></p></td>
+<td><p>TTTF</p></td>
+<td><p>FFF</p></td>
+</tr>
+</tbody>
+</table>
+<p>Scanning down the columns, we can see that the branch <code class="docutils literal notranslate"><span class="pre">s[i]</span> <span class="pre">!=</span> <span class="pre">'0'</span></code> is executed for both true and false at least once, while the branch <code class="docutils literal notranslate"><span class="pre">s[i]</span> <span class="pre">!=</span> <span class="pre">c</span></code> is executed only for the false case. The coverage score is calculated as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{array}{lll}
+  &amp;   &amp;   \frac{objectives~met}{total~objectives} \\[1mm]
+  &amp; = &amp; \frac{3}{4} \\[1mm]
+  &amp; = &amp; 75\%
+\end{array}\end{split}\]</div>
+<p>This means that we have achieved 75% branch coverage. Further, looking at the table, we can scan down the columns to see <em>which</em> coverage objectives were not met (the true case for <code class="docutils literal notranslate"><span class="pre">s[i]</span> <span class="pre">!=</span> <span class="pre">c</span></code>), and can add a new test input to cover this case.</p>
+<p>Thus, from a practical perspective, the idea is to generate a test suite using some method (generally a black-box method), and to then measure the coverage of that test suite. Test objectives that are not covered can then be added using the technique described in this section. Such an approach is cheaper than deriving tests from the control-flow graph directly, due to the fact that a reasonable set of black-box tests will generally achieve a high coverage initially.</p>
+<section id="tool-support">
+<h4><span class="section-number">4.3.3.1. </span>Tool Support<a class="headerlink" href="#tool-support" title="Permalink to this heading">#</a></h4>
+<p>There are many control-flow coverage tools available for most languages, although many of these are restricted only the statement coverage, and sometimes branch or decision/condition coverage. Some open-source tools for Java measuring Java code coverage can be found at <a class="reference external" href="http://java-source.net/open-source/code-coverage">http://java-source.net/open-source/code-coverage</a>.</p>
+<p>One excellent piece of software support is Atlassian’s Clover tool (<a class="reference external" href="https://www.atlassian.com/software/clover/overview">https://www.atlassian.com/software/clover/overview</a>). Clover provides feedback on statement (node), branch, and method coverage, and reports fine-grained details such as which tests cover which parts of the code.</p>
+</section>
+</section>
+</section>
+<section id="data-flow-testing">
+<h2><span class="section-number">4.4. </span>Data-Flow Testing<a class="headerlink" href="#data-flow-testing" title="Permalink to this heading">#</a></h2>
+<p>It is hard to do better to motivate data-flow testing than that given by Rapps and Wuyeker:</p>
+<blockquote>
+<div><p><em>It is our belief that, just as one would not feel confident about a &gt; program without executing every statement in it as part of some test, &gt; one should not feel confident about a program without having seen the &gt; effect of using the value produced by each and every computation.</em></p>
+</div></blockquote>
+<p>Despite the analyses of input and output domains used in equivalence partitioning, boundary-value analysis, and control-flow graphs, testing still relies on personal experience to choose test cases that will uncover program faults. The problem is made harder if a programs has a large number of input variables. For example, if a program with 5 input variables and each variable’s input domain is partitioned into 5 equivalence classes then there are <span class="math notranslate nohighlight">\(\rm 5^5 = 3125\)</span> possible combinations to test.</p>
+<p><em>How can we select better test cases in order to increase the power of each test case</em>?</p>
+<p>One way of improving our test cases is to find better criteria for test case selection. The other way is to find a testing a scheme that produces additional information (information other than the output of the program under test) to use for program analysis.</p>
+<p>Data-flow analysis provides information about the creation and use of data definitions in a program. The information generated by data-flow analysis can be used to:</p>
+<ul class="simple">
+<li><p>detect many simple programming or logical faults in the program;</p></li>
+<li><p>provide testers with dependencies between the definition and use of variables;</p></li>
+<li><p>provide a set of criteria to complement coverage based testing.</p></li>
+</ul>
+<p>Static analysis of programs is a large field. We will go into enough depth in these notes to give you the general idea, some techniques that you can use in practice and hopefully to extend later for specific applications.</p>
+<section id="static-data-flow-analysis">
+<h3><span class="section-number">4.4.1. </span>Static Data-Flow Analysis<a class="headerlink" href="#static-data-flow-analysis" title="Permalink to this heading">#</a></h3>
+<p>In the simplest form of data-flow analysis, a programming language statement may act on a variable in 3 different ways. It may <em>define</em> a variable, <em>reference</em> a variable and <em>undefine</em> a variable:</p>
+<ul class="simple">
+<li><p><strong>Define (d)</strong> – A statement <em>defines</em> a variable by assigning a value to the variable. For example if the program variable <code class="docutils literal notranslate"><span class="pre">x</span></code> has been declared then the statements <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">5</span></code> and  <code class="docutils literal notranslate"><span class="pre">scan(x)</span></code> in C both defined the variable <code class="docutils literal notranslate"><span class="pre">x</span></code>, but the statement <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">3</span> <span class="pre">*</span> <span class="pre">y</span></code> only defines <code class="docutils literal notranslate"><span class="pre">x</span></code> if <code class="docutils literal notranslate"><span class="pre">y</span></code> is defined.</p></li>
+</ul>
+<div class="admonition-remark admonition">
+<p class="admonition-title">Remark</p>
+<p>Note that this is not the same as a variable being <em>declared</em>. In many languages, we can declare a variable without assigning a value to it; e.g. <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">x</span></code> in C declares <code class="docutils literal notranslate"><span class="pre">x</span></code> as an integer but does not give it a value. Similarly, in many languages we can declare a value simply by defining it; e.g. <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">5</span></code> in Python will define the value of <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p>
+</div>
+<ul class="simple">
+<li><p><strong>Reference (r)</strong> – A statement makes a <em>reference</em> to a variable by reading a value from the variable.</p></li>
+</ul>
+<p>If the program variable <code class="docutils literal notranslate"><span class="pre">x</span></code> is defined then an example of <code class="docutils literal notranslate"><span class="pre">x</span></code> used as a reference is the statement <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">5</span></code> or <code class="docutils literal notranslate"><span class="pre">scan(x)</span></code> in C, where <code class="docutils literal notranslate"><span class="pre">x</span></code> is used to store a value and must be referenced to obtain its current value.</p>
+<ul class="simple">
+<li><p><strong>Undefine (u)</strong> – A statement <em>undefines</em> a variable whenever the value of the variable becomes unknown. For example, the scope of a local variable ends.</p></li>
+</ul>
+<p>The aim of data-flow analysis is to trace through the program’s control-flow graph and detect <em>data-flow anomalies</em>. data-flow anomalies indicate the possibility of program faults.</p>
+<div class="admonition-definition-u-r-anomaly admonition">
+<p class="admonition-title">Definition – u-r anomaly</p>
+<p>A <em>u-r anomaly</em> occurs when an undefined variable is referenced. Most commonly <em>u-r</em> anomalies occur when a variable is referenced without it having been assigned a value first — that is, it is <em>uninitialised</em>. A common source of <em>u-r</em> anomalies arises when the wrong variable is referenced.</p>
+<p>Formally, a u-r anomaly is when a variable becomes undefined (perhaps has not been defined at all) and it is referenced on <em>some</em> future definition-free path. Note that this only requires it to be referenced on at least one path. Even if the variable is defined before it is referenced, or never referenced at all, on other paths, <em>any</em> reference on a definition-free path is a potential fault, so this is flagged as an anomaly.</p>
+</div>
+<div class="admonition-definition-d-u-anomaly admonition">
+<p class="admonition-title">Definition – d-u anomaly</p>
+<p>A <em>d-u anomaly</em> occurs when a defined variable has not been referenced before it becomes undefined. This anomaly usually indicates that the wrong variable has been defined or undefined.</p>
+<p>Formally, a d-u anomaly is when a defined variable is not referenced on any future path before it is undefined. Note  if there is at least one path that references the variable, there is <strong>no</strong> d-u anomaly.</p>
+</div>
+<div class="admonition-definition-d-d-anomaly admonition">
+<p class="admonition-title">Definition – d-d anomaly</p>
+<p>A <em>d-d anomaly</em> indicates that the same variable is defined twice causing a hole in the scope of the first definition of the variable. This anomaly usually occurs because of misspelling or because variables have been imported from another module.</p>
+<p>Formally, a d-d anomaly is when a defined variable is not referenced on any future path before it is re-defined. Note that if there is at least one path that references the variable, there is <strong>no</strong> d-d anomaly.</p>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">Example 30: Static Data-Flow Anomalies</p>
+<div class="highlight-c++ notranslate" id="f-4-7"><div class="highlight"><pre><span></span><span class="cm">/* Defining  p1 and p2 */</span>
+
+<span class="n">TestClass1</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TestClass1</span><span class="p">();</span><span class="w">  </span>
+<span class="n">TestClass2</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TestClass2</span><span class="p">();</span><span class="w">  </span>
+
+<span class="cm">/* References to p1 and p2 */</span>
+<span class="n">p1</span><span class="o">-&gt;</span><span class="n">process</span><span class="p">();</span><span class="w">   </span>
+<span class="n">p2</span><span class="o">-&gt;</span><span class="n">process</span><span class="p">();</span><span class="w">   </span>
+
+<span class="cm">/* Reference to p1 */</span>
+<span class="n">p1</span><span class="o">-&gt;</span><span class="n">process2</span><span class="p">();</span><span class="w">  </span>
+
+<span class="cm">/* p2 is now  undefined */</span>
+<span class="k">delete</span><span class="w"> </span><span class="n">p2</span><span class="p">;</span><span class="w">       </span>
+
+<span class="cm">/* Reference to p2 which is now undefined */</span>
+<span class="n">p2</span><span class="o">-&gt;</span><span class="n">process2</span><span class="p">();</span><span class="w">  </span>
+</pre></div>
+</div>
+<p style="text-align: center;">Figure 4.7: A program module with a u-r anomaly.</p>
+<p>As a first example consider the program fragment in Figure <a class="reference internal" href="#f-4-7"><span class="std std-ref">4.7</span></a>, which is written in C++. Perhaps the most obvious indication of a fault in the program is a <em>u-r</em> anomaly where we reference the variable <code class="docutils literal notranslate"><span class="pre">p2</span></code> which is undefined at the point where its value is needed. However, in large systems this kind of anomaly can be difficult to detect manually because of branching in the control-flow graph.</p>
+<p>The block of program between the definition of <code class="docutils literal notranslate"><span class="pre">p2</span></code> and the deletion of <code class="docutils literal notranslate"><span class="pre">p2</span></code> is not harmful. However, the anomaly can indicate the premature deletion of <code class="docutils literal notranslate"><span class="pre">p2</span></code> which may effect the execution of the program in the region after the deletion of <code class="docutils literal notranslate"><span class="pre">p2</span></code>.</p>
+<div class="highlight-c notranslate" id="f-4-8"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">Faulty_Fibonacci</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">sum</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">));</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">NULL</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">FatalError</span><span class="p">(</span><span class="n">OUT_OF_SPACE</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">];</span>
+<span class="w">        </span><span class="n">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">        </span><span class="n">free</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">sum</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p style="text-align: center;">Figure 4.8: A second example of a u-r anomaly.</p>
+<p>The second example of a <em>u-r</em> anomaly is the function Faulty_Fibonacci given in Figure <a class="reference internal" href="#f-4-8"><span class="std std-ref">4.8</span></a>. The control-flow graph for Faulty_Fibonacci is given in Figure <a class="reference internal" href="#f-4-9"><span class="std std-ref">4.9</span></a>.</p>
+<figure class="align-center" id="f-4-9">
+<a class="reference internal image-reference" href="_images/Fibonacci-CFG.png"><img alt="_images/Fibonacci-CFG.png" src="_images/Fibonacci-CFG.png" style="width: 60%;" /></a>
+</figure>
+<p style="text-align: center;">Figure 4.9: The control-flow graph for the program fragment in Figure 4.8, which contains a u-r anomaly.</p>
+<p>The fault in the Faulty_Fibonacci program is that we have freed up our memory, the array C in this case, too early. <em>Our data-flow analysis will only pick this up if the loop is executed two or more times</em>.</p>
+<p>If we look firstly at the path ABCEFGJKL then the variable c undergoes the following sequence of transitions at each of the nodes on the path above.</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Node</p></th>
+<th class="head"><p>Action on the Variable c</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>A</p></td>
+<td><p>no action</p></td>
+</tr>
+<tr class="row-odd"><td><p>B</p></td>
+<td><p>define (d)</p></td>
+</tr>
+<tr class="row-even"><td><p>C</p></td>
+<td><p>reference (r)</p></td>
+</tr>
+<tr class="row-odd"><td><p>E</p></td>
+<td><p>define (d)</p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p>define (d)</p></td>
+</tr>
+<tr class="row-odd"><td><p>F</p></td>
+<td><p>no action</p></td>
+</tr>
+<tr class="row-even"><td><p>G</p></td>
+<td><p>no action</p></td>
+</tr>
+<tr class="row-odd"><td><p>J</p></td>
+<td><p>reference (r)</p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p>reference (r)</p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p>define (d)</p></td>
+</tr>
+<tr class="row-even"><td><p>K</p></td>
+<td><p>undefine (u)</p></td>
+</tr>
+<tr class="row-odd"><td><p>L</p></td>
+<td><p>no action</p></td>
+</tr>
+</tbody>
+</table>
+<p>If we execute the loop again we must now revisit nodes G and J. The next action to take on node J is a reference (r) action and so we have a u-r anomaly from the first iteration of loop. This kind of scenario is quite typical of u-r anomalies in C.</p>
+<p>As our third example consider the following program fragment:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">read</span> <span class="p">(</span><span class="n">m</span><span class="p">);</span>
+<span class="n">read</span> <span class="p">(</span><span class="n">n</span><span class="p">);</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">n</span> <span class="o">+</span> <span class="n">n</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>In this example the program variable m is given a value by the read statement (a definition) and then the assignment (another definition), but is not referenced in between.</p>
+<p>The <em>d-d</em> anomaly can indicate either: (1) that we have mistakenly used m to store the results of the computation n+n, or (2) we have read the wrong variable m as input. The data-flow analysis does not tell us what the fault actually is; it just tells us that there is potentially something wrong.</p>
+<p>More generally what types of faults can data-flow analysis detect? Typically we can detect common types of programming mistakes, such as:</p>
+<ul class="simple">
+<li><p>typing errors</p></li>
+<li><p>uninitialised variables</p></li>
+<li><p>misspelling of names</p></li>
+<li><p>misplacing of statements</p></li>
+<li><p>incorrect parameters</p></li>
+<li><p>incorrect pointer references</p></li>
+</ul>
+</div>
+</section>
+<section id="dynamic-data-flow-analysis-with-testing">
+<h3><span class="section-number">4.4.2. </span>Dynamic Data-Flow Analysis with Testing<a class="headerlink" href="#dynamic-data-flow-analysis-with-testing" title="Permalink to this heading">#</a></h3>
+<p>We will update our terminology to be consistent with that of Rapps and Wuyeker. The first change to note is that Rapps and Wuyeker distinguish between two different uses of a variable:</p>
+<div class="admonition-definition admonition">
+<p class="admonition-title">Definition</p>
+<ul class="simple">
+<li><p>A <strong>C-use</strong> of a variable is a <em>computation use</em> of a variable, for example, <span class="math notranslate nohighlight">\( y~ =~ x * 2\)</span>;</p></li>
+<li><p>A <strong>P-use</strong> of a variable is a <em>predicate use</em> , for example, <span class="math notranslate nohighlight">\( if~ (x~ &lt;~ 2) \ldots\)</span>.</p></li>
+</ul>
+</div>
+<p>Secondly, we adopt the notation employed by Rapps and Wuyeker, as outlined in Definition 33 below.</p>
+<div class="admonition-definition admonition">
+<p class="admonition-title">Definition</p>
+<ul class="simple">
+<li><p>Let <span class="math notranslate nohighlight">\(d_n(x)\)</span> denote a variable x that is assigned or initialised to a value at node (statement) n ( <strong>Definition</strong>).</p></li>
+<li><p>Let <span class="math notranslate nohighlight">\(u_n(x)\)</span> denote a variable x that is used, or referenced, at node (statement) n (<strong>Use</strong>).</p></li>
+<li><p>Let <span class="math notranslate nohighlight">\(c_n(x)\)</span> denote a computational usage of the variable x at the node n (<strong>Computational Use</strong>).</p></li>
+<li><p>Let <span class="math notranslate nohighlight">\(p_n(x)\)</span> denote a predicate usage of the variable x at the node n (<strong>Predicate Use</strong>).</p></li>
+<li><p>Let <span class="math notranslate nohighlight">\(k_n(x)\)</span> denote a variable x that is killed, or undefined, at a node (statement) n (<strong>Kill</strong>).</p></li>
+</ul>
+</div>
+<p>The data-flow annotations of Definition 33 are attached to nodes in the control-flow graph. The node <strong>n</strong> in the figure below</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/Weighted-Edges.png"><img alt="_images/Weighted-Edges.png" src="_images/Weighted-Edges.png" style="width: 40%;" /></a>
+</figure>
+<p>is annotated with a definition for x. This means that the variable x at node n is defined from the node n onwards along any path containing <strong>n</strong>. The node <strong>m</strong> is annotated with a <em>computational</em> use of x, and a definition of y.</p>
+<p>All of the defines, uses, and undefines of a single variable are collated, and are represented using a <em>data-flow graph</em>. A data-flow graph is simply control-flow graph, except that its nodes are annotated with information regarding the definition, use, and undefinition of all of the variables used in that node.</p>
+<div class="admonition-exercise admonition">
+<p class="admonition-title">Exercise</p>
+<p>Annotate the graph in Figure <a class="reference internal" href="#f-4-8"><span class="std std-ref">4.8</span></a> with its definition, use, and undefinition information.</p>
+</div>
+<p>We define the following for data-flow graphs.</p>
+<div class="admonition-definition admonition">
+<p class="admonition-title">Definition</p>
+<ul class="simple">
+<li><p>A <em>definition clear path</em> <span class="math notranslate nohighlight">\(p\)</span> with respect to a variable <span class="math notranslate nohighlight">\( x\)</span> is a sub-path of the control-flow graph where <span class="math notranslate nohighlight">\( x\)</span> is defined in the first node of the path <span class="math notranslate nohighlight">\(p\)</span>, and is not defined or killed in any of the remaining nodes in <span class="math notranslate nohighlight">\(p\)</span>.</p></li>
+<li><p>A <em>loop-free path segment</em> is a sub-path <span class="math notranslate nohighlight">\(p\)</span> of the control-flow graph in which each node is visited at most once.</p></li>
+<li><p>A definition <span class="math notranslate nohighlight">\(d_m(x)\)</span> reaches a use <span class="math notranslate nohighlight">\(u_n(x)\)</span> if and only if there is a sub-path <span class="math notranslate nohighlight">\(p\)</span> that is definition clear (with respect to x, and for which m is the head element, and n is the final element.</p></li>
+</ul>
+</div>
+<p>The aim is to define criteria with which to select and assess test suites. We will only look at some of the more popular of the full set of criteria discussed in the literature, and give some feel for their relative effectiveness.</p>
+<p>In particular we will be looking at the <em>data-flow path selection</em> criteria due to Rapps and Weyuker. The work is reported in [2].</p>
+<p>The aim in data-flow based testing methods is to select test cases that traverse paths from nodes that <em>define</em> variables to nodes that <em>use</em> those variables, and ultimately to nodes that <em>undefine</em> those variables.</p>
+</section>
+<section id="id1">
+<h3><span class="section-number">4.4.3. </span>Coverage-Based Criteria<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<p>As with control-flow testing, the selection of test cases for data-flow testing involves achieving certain types of coverage on the graph, as defined by criteria. The most common forms of data-flow graph coverage criteria as the following.</p>
+<ul>
+<li><p><strong>All-Defs</strong> — For the All-Defs criterion we require that there is some definition-clear sub-path from <em>all definitions</em> of a variable to a single use of that variable. For example, consider the following data-flow graph:</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/All-Defs-Example.png"><img alt="_images/All-Defs-Example.png" src="_images/All-Defs-Example.png" style="width: 50%;" /></a>
+</figure>
+<p>For a test suite to satisfy that All-Defs criteria, we would need to test at least one path from the single definition of x, to at least one use. A single test case is sufficient for this. The paths 1, 2, 4, 6 or the path 1, 3, 4, 5 would be satisfactory.</p>
+</li>
+<li><p><strong>All-Uses</strong> — The All-Uses criteria requires some definition-clear sub-path from <em>all definitions</em> of a variable to <em>all uses</em> reached by that definition. For example, consider the following data-flow graph:</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/All-Defs-Example.png"><img alt="_images/All-Defs-Example.png" src="_images/All-Defs-Example.png" style="width: 50%;" /></a>
+</figure>
+<p>The All-Uses criteria requires that we test <span class="math notranslate nohighlight">\(d_1(x)\)</span> to each use and its successor nodes.</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(d_1(x)\)</span> to <span class="math notranslate nohighlight">\(u_2(x)\)</span>;</p></li>
+<li><p><span class="math notranslate nohighlight">\(d_1(x)\)</span> to <span class="math notranslate nohighlight">\(u_3(x)\)</span>; and</p></li>
+<li><p><span class="math notranslate nohighlight">\(d_1(x)\)</span> to <span class="math notranslate nohighlight">\(u_5(x)\)</span>.</p></li>
+</ol>
+<p>A test suite that traverses the paths 1, 2, 4, 5, 6 and 1, 3, 4, 6 are satisfactory under this criteria.</p>
+</li>
+<li><p><strong>All-Du-Paths</strong> — Here <strong>DU</strong> stands for <em>definition-use</em>. The All-DU-Paths criterion requires that a test set traverse <em>all definition-clear sub-paths</em> that are cycle-free or simple-cycles from <em>all definitions</em> to <em>all uses</em> reached by that definition, and every successor node of that use.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/All-Defs-Example.png"><img alt="_images/All-Defs-Example.png" src="_images/All-Defs-Example.png" style="width: 50%;" /></a>
+</figure>
+<p>The All-DU-Paths criteria requires that we test <span class="math notranslate nohighlight">\(d_1(x)\)</span> to each use.</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(d_1(x)\)</span> to a <span class="math notranslate nohighlight">\(u_2(x)\)</span>;</p></li>
+<li><p><span class="math notranslate nohighlight">\(d_1(x)\)</span> to a <span class="math notranslate nohighlight">\(u_3(x)\)</span>;</p></li>
+<li><p>both paths from <span class="math notranslate nohighlight">\(d_1(x)\)</span> to <span class="math notranslate nohighlight">\(u_5(x)\)</span>.</p></li>
+</ol>
+<p>Under this criteria, satisfactory paths are given by 1, 2, 4, 5, 6 and 1, 3, 4, 5, 6.</p>
+</li>
+</ul>
+<p>Recall from Definition 32, that a <strong>P-use</strong> of a variable is its use in a predicate, and a <strong>C-use</strong> of a variable is a use in a computation. Using these definitions, we can define the following additional data-flow test input selection criteria.</p>
+<ul>
+<li><p><strong>All-C-Uses, Some-P-Uses</strong> — The All-C-Uses, Some-P-Uses criteria requires a test set to traverse some definition-clear sub-path from each definition to each C-Use reached by that definition.</p>
+<p>If no C-Uses are reached by a definition, then some definition-clear sub-path from that definition to at least one P-Use reached by that definition.</p>
+</li>
+<li><p><strong>All-P-Uses, Some-C-Uses</strong> — The All-P-Uses, Some-C-Uses requires that a test set to traverse some definition-clear sub-path from each definition to each P-Use reached by that definition and each successor node of the use.</p>
+<p>If no P-Uses are reached by a definition, then some definition-clear sub-path from that definition to at least one C-Use reached by that definition.</p>
+</li>
+<li><p><strong>All-P-Uses</strong> — Some definition-clear sub-path from each definition to each P-Use reached by that definition and each successor node of the use</p></li>
+</ul>
+</section>
+<section id="id2">
+<h3><span class="section-number">4.4.4. </span>Tool Support<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h3>
+<p>As with control-flow testing, manually applying data-flow testing is unlikely to yield outstanding results. However, there are parts of the process that are automatable. For example, the derivation of the data-flow graph is quite easily automated, due to its mechanical nature.</p>
+<p>Derivation of test inputs from a data-flow graph would be considerably more difficult, especially for programs with non-linear domains, and for non-primitive data types. However, as with control-flow coverage, it is significantly easier to measure that a test suite has achieved some criterion by executing the suite over the program.</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>Coverlipse: See <a class="reference external" href="http://coverlipse.sourceforge.net/">http://coverlipse.sourceforge.net/</a></p>
+</div>
+</aside>
+<p><strong>Coverlipse</strong> is an open-source application that automatically determines whether a test suite achieves all-uses coverage, and provides feedback as to the paths that are missed by the test suite.</p>
+</section>
+</section>
+<section id="mutation-analysis">
+<span id="id3"></span><h2><span class="section-number">4.5. </span>Mutation Analysis<a class="headerlink" href="#mutation-analysis" title="Permalink to this heading">#</a></h2>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>[2]: In R. DeMillo, R. Lipton, and F. Sayward, Hints on Test Data Selection: Help for the Practicing Programmer, <em>IEEE Computer</em>, 11(4):34–41, 1978.</p>
+</div>
+</aside>
+<blockquote>
+<div><p>“<em>Programmers have one great advantage that is almost never exploited: &gt; they create programs that are <strong>close</strong> to being correct!</em>” — &gt; Richard DeMillo [2]</p>
+</div></blockquote>
+<p>Recall the squeeze function from Section <a class="reference internal" href="Introduction-to-Testing.html#programs"><span class="std std-ref">Programs</span></a>, shown again below.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">squeeze</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">s</span><span class="p">[],</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">c</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="sc">&#39;\0&#39;</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    		</span><span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="o">++</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">    	</span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">&#39;\0&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Now consider and incorrect implementation of this function, in which the line</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>is replaced with</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>That is, the variable j is never incremented, so the function places all references to c at position 0 in the array, and then terminates the string at position 0 (the last statement in the program). Clearly, this implementation contains a fault.</p>
+<p>If we have a test suite for the squeeze function, and it is executed on the faulty version, one of two things can happen: 1) an error is encountered, and the programmer can debug the program to find the fault and repair it; or 2) an error is not encountered, and all test cases pass.</p>
+<p>The latter occurs every day as part of every programmer’s testing – whether they like to admit it or not is another story. Faults in programs go undetected because the test cases do not produce failures. When a fault is subsequently found, the test suite is (hopefully!) updated to include a test case that finds this fault, the fault is repaired, and the test suite is run again. The fact that the fault went undetected in the original test suite, and that the test suite is updated, means that the initial test suite was <em>inadequate</em>: there was a fault in the program that went undetected by it.</p>
+<p>So far in these notes, we have discussed methods that aim to find faults by achieving coverage, but which give us little idea as to how good the resulting test suite is. In this section, we present <em>mutation analysis</em>: a method for measuring the effectiveness of test suites, with the side effect that we produce new test cases to be added to that test suite.</p>
+<div class="admonition-definition-35 admonition">
+<p class="admonition-title">Definition 35</p>
+<p>Given a program, a <em>mutant</em> of that program is a copy of the program, but with <em>one</em> slight <em>syntactic</em> change. The term “mutant” is an analogy for a biological mutant, in which small parts of a nucleotide sequence are modified by access to ionising radiation etc.</p>
+</div>
+<p>The example of the fault in the squeeze function is a mutant. In this case, the slight syntactic change is the removal of the <code class="docutils literal notranslate"><span class="pre">++</span></code> operator in the array index.</p>
+<div class="admonition-definition-36 admonition">
+<p class="admonition-title">Definition 36</p>
+<p>Given a program, a test input for that program, and a mutant, we say that the test case <em>kills</em> the mutant if and only if the output of the program and the mutant differ for the test inputs.</p>
+<ul class="simple">
+<li><p>A mutant that has been killed is said to be <em>dead</em>.</p></li>
+<li><p>A mutant that has not been killed is said to be <em>alive</em>.</p></li>
+</ul>
+</div>
+<section id="the-coupling-effect">
+<h3><span class="section-number">4.5.1. </span>The Coupling Effect<a class="headerlink" href="#the-coupling-effect" title="Permalink to this heading">#</a></h3>
+<p>The theory behind the mutation analysis is related to the quote from DeMillo at the start of this section. Programmers do not create programs at random, but rather write programs that are close to being correct, and continue to improve them so that they are closer to being correct over time. During this process, they learn the types of faults that programmers commonly make, and this experience is valuable in software testing. Most of these faults are either incorrect control flow of a program, or an incorrect computation, but the programs are close to their expected behaviour.</p>
+<div class="admonition-definition-37 admonition">
+<p class="admonition-title">Definition 37</p>
+<p>The <em>coupling effect</em> states that a test case that distinguishes a small fault in a program by identifying unexpected behaviour is so sensitive that it will distinguish more complex faults; that is, complex faults in programs are <em>coupled</em> with simple faults.</p>
+</div>
+<p>This is perhaps nothing Earth-shattering to anyone with experience in programming. If one is to look back over their repository logs, they would likely agree that many of the failures produced by their test suites are a result of one minor fault, or are so incorrect that almost any simple test case would uncover it. However, the coupling effect does have an impact on how we select test cases, whether via mutation analysis, equivalence partitioning, or any method. It implies that we should select test cases to find simple faults, and this will result in the same test cases finding larger ones.</p>
+<p>The coupling effect has not been proven, and in fact, can not be proven. However, empirical studies of the the types of faults that are made in programs gives significant support to the theory.</p>
+</section>
+<section id="the-coupling-effect-mutants-and-testing">
+<h3><span class="section-number">4.5.2. </span>The Coupling Effect, Mutants, and Testing<a class="headerlink" href="#the-coupling-effect-mutants-and-testing" title="Permalink to this heading">#</a></h3>
+<p>Recall the mutant of the squeeze program from the start of this section. We labelled any test suite that did not uncover this mutant as <em>inadequate</em>. But what relationship does this have to the test suites of programs that we are testing? In the squeeze example, we know where the fault is, so by not finding it, it is clear that the test suite is inadequate.</p>
+<p>However, consider the following scenario. We are testing the original squeeze function with a test suite, and all of our test cases pass. To evaluate the quality of the test suite, we <em>deliberately</em> insert the fault into the program by removing the <code class="docutils literal notranslate"><span class="pre">++</span></code> operator in the array index, creating a <em>mutant</em> of the program, and then run the test suite again. If this produces a failure, then the fault has been uncovered, and the mutant is killed. However, if a failure is <em>not</em> produced, then we know that the test suite is inadequate, because there is at least one possible fault that it fails to uncover. If it fails to uncover this slight fault, then it would likely fail to uncover other faults. This is the process of <em>mutation analysis</em>.</p>
+<p>In the latter case, the tester would then aim to find a test case that does kill the mutant, and add this to the test suite. Therefore, mutation analysis can be used to guide test input generation — <em>we must find a test case that kills every mutant</em> — as well as way of assessing test suite quality — <em>a test suite that kills more mutants than another is of higher quality</em>. Specifically, if test suite <span class="math notranslate nohighlight">\(S\)</span> kills all of the mutants that <span class="math notranslate nohighlight">\(T\)</span> kills, <em>plus some additional mutants</em>, then <span class="math notranslate nohighlight">\(S\)</span> subsumes <span class="math notranslate nohighlight">\(T\)</span>.</p>
+</section>
+<section id="systematic-mutation-analysis-via-mutant-operators">
+<h3><span class="section-number">4.5.3. </span>Systematic Mutation Analysis via Mutant Operators<a class="headerlink" href="#systematic-mutation-analysis-via-mutant-operators" title="Permalink to this heading">#</a></h3>
+<p>Like other approaches to testing, mutation analysis is only effective if applied systematically. This is done using <em>mutant operators</em>.</p>
+<div class="admonition-definition-38 admonition">
+<p class="admonition-title">Definition 38</p>
+<p>A <em>mutant operator</em> is a transformation rule that, given a program, generates a mutant for that program.</p>
+</div>
+<div class="tip admonition" id="example-39">
+<p class="admonition-title">Example 39: Relational Operator Replacement rule for Java</p>
+<p>The <em>relational operator replacement</em> rule takes an occurrence of a relational operator, <code class="docutils literal notranslate"><span class="pre">&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">=&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code>, <code class="docutils literal notranslate"><span class="pre">=</span></code>, or <code class="docutils literal notranslate"><span class="pre">!=</span></code>, replaces that occurrence with one of every other type of relational operator, and replaces the entire proposition in which that operator occurs with and .</p>
+<p>Therefore, if the statement <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(x</span> <span class="pre">&lt;</span> <span class="pre">y)</span></code> occurs in a program, the following seven mutants will be created:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(x</span> <span class="pre">=&lt;</span> <span class="pre">y)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(x</span> <span class="pre">&gt;</span> <span class="pre">y)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(x</span> <span class="pre">&gt;=</span> <span class="pre">y)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(x</span> <span class="pre">==</span> <span class="pre">y)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(x</span> <span class="pre">!=</span> <span class="pre">y)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(true)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(false)</span></code></p></li>
+</ul>
+<p>This operator mimics some of the problems that programmers commonly make regarding the evaluation of Boolean expressions, which typically lead to incorrect paths.</p>
+</div>
+<div class="tip admonition" id="example-40">
+<p class="admonition-title">Example 39: Arithmetic Value Insertion rule for Java</p>
+<p>The <em>Arithmetic Value Insertion</em> rules takes an arithmetic expression and replaces it with its application to the absolute value function, the negation of the absolute value function, and <em>fail-on-zero</em> function, in which the fail-on-zero throws an exception if the expression evaluates to zero.</p>
+<p>Therefore, if the statement <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">5</span></code> occurs in a program, the following three mutants will be created:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">abs(5)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">-abs(5)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">failOnZero(5)</span></code></p></li>
+</ul>
+<p>This operator is designed to enforce the addition of test cases that consider the case in which every arithmetic expression to evaluate to zero, a negative value, and a positive value. This mimics some of the problems that programmers commonly make, such as dividing by zero.</p>
+<p>Mutants are <em>syntactic</em> changes to a program, so mutant operators are dependent on the syntax of programming languages. Therefore, the mutant operators of one programming language may not necessarily apply to other languages.</p>
+</div>
+<div class="admonition-remark admonition">
+<p class="admonition-title">Remark</p>
+<p>It is important to note that mutant operators must produce mutants that are <em>syntactically valid</em>. It is possible to create mutants of programs that are not syntactically valid, however, in most programming languages, a compiler will detect these, so they cannot be killed by a test case. One could consider that they are killed by the compiler, however, syntactically invalid mutants will always be caught by a correct implementation of a compiler, so they give us no insight into test suite quality or test input generation. Even if a language is dynamically interpreted, a good collection of mutant operators will ensure that any statically invalid programs are killed.</p>
+</div>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>[1]: P. Ammann and J. Offutt, <em>Introduction to Software Testing</em>, Cambridge University Press, 2008.</p>
+</div>
+</aside>
+<p>In addition to the two mutant operators outlined above, Ammann and Offutt [1] define the following mutant operators for the Java programming language.</p>
+<ul class="simple">
+<li><p><em>Arithmetic Operator Replacement</em>: Replace each occurrence of an arithmetic operator <code class="docutils literal notranslate"><span class="pre">+</span></code>, <code class="docutils literal notranslate"><span class="pre">-</span></code>, <code class="docutils literal notranslate"><span class="pre">*</span></code>, <code class="docutils literal notranslate"><span class="pre">/</span></code>, <code class="docutils literal notranslate"><span class="pre">**</span></code>, and <code class="docutils literal notranslate"><span class="pre">%</span></code> with each of the other operators, and also replace this with the left operand and right operand (for example, replace <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">+</span> <span class="pre">y</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span></code> and with <code class="docutils literal notranslate"><span class="pre">y</span></code>).</p></li>
+<li><p><em>Conditional Operator Replacement</em>: Replace each occurrence of a logical operator <code class="docutils literal notranslate"><span class="pre">&amp;&amp;</span></code>, <code class="docutils literal notranslate"><span class="pre">||</span></code>, <code class="docutils literal notranslate"><span class="pre">&amp;</span></code>, <code class="docutils literal notranslate"><span class="pre">|</span></code>, and <code class="docutils literal notranslate"><span class="pre">^</span></code> with each of the other operators, and also replace this entire expression with the left operand and the right operand.</p></li>
+<li><p><em>Shift Operator Replacement</em>: Replace each occurrence of the shift operators <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code>, and <code class="docutils literal notranslate"><span class="pre">&gt;&gt;&gt;</span></code> with each of the other operators, and also replace the entire expression with the left operand.</p></li>
+<li><p><em>Logical Operator Replacement</em>: Replace each occurrence of a bitwise logical operator <code class="docutils literal notranslate"><span class="pre">&amp;</span></code>, <code class="docutils literal notranslate"><span class="pre">|</span></code>, and <code class="docutils literal notranslate"><span class="pre">^</span></code> with each of the other operators, and also replace the entire expression with the left and right operands.</p></li>
+<li><p><em>Assignment Operator Replacement</em>: Replace each occurrence of the assignment operators <code class="docutils literal notranslate"><span class="pre">+=</span></code>, <code class="docutils literal notranslate"><span class="pre">-=</span></code>, <code class="docutils literal notranslate"><span class="pre">*=</span></code>, <code class="docutils literal notranslate"><span class="pre">/=</span></code>, <code class="docutils literal notranslate"><span class="pre">%=</span></code>, <code class="docutils literal notranslate"><span class="pre">&amp;=</span></code>, <code class="docutils literal notranslate"><span class="pre">|</span></code>=, <code class="docutils literal notranslate"><span class="pre">^=</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;&lt;=</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;&gt;=</span></code>, and <code class="docutils literal notranslate"><span class="pre">&gt;&gt;&gt;=</span></code> with each of the other operators.</p></li>
+<li><p><em>Unary Operator Insertion</em>: Insert each unary operator <code class="docutils literal notranslate"><span class="pre">+</span></code>, <code class="docutils literal notranslate"><span class="pre">-</span></code>, <code class="docutils literal notranslate"><span class="pre">!</span></code>, and <span class="math notranslate nohighlight">\(\sim\)</span> before each expression of the correct type. For example, replace <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(x</span> <span class="pre">=</span> <span class="pre">5)</span></code> with <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(!(x</span> <span class="pre">=</span> <span class="pre">5))</span></code>.</p></li>
+<li><p><em>Unary Operator Deletion</em>: Delete each occurrence of a unary operator.</p></li>
+<li><p><em>Scalar Variable Replacement</em>: Replace each reference to a variable in a program by every other variable of the same type that is in the same scope.</p></li>
+<li><p><em>Bomb Statement Replacement</em>: Replace every statement with a call to a special <code class="docutils literal notranslate"><span class="pre">Bomb()</span></code> method, which throws an exception. This is to enforce statement coverage, and in fact, only one call to <code class="docutils literal notranslate"><span class="pre">Bomb()</span></code> is required in every program block.</p></li>
+</ul>
+<p>To systematically generate mutants, each of these operators is applied to every statement of a program to which it is applicable, generating a number of mutants for the program. Each of these mutants is then tested using the test suite, and the percentage of mutants killed by the test suite is noted.</p>
+<div class="admonition-definition-42 admonition">
+<p class="admonition-title">Definition 42</p>
+<p>The <em>mutation score</em> of a test suite for a program is the percentage of the mutants killed by that test suite, calculated by dividing the number of killed mutants by the number of total mutants:</p>
+<div class="math notranslate nohighlight">
+\[
+mutation~score = \frac{mutants~killed}{total~mutants}
+\]</div>
+</div>
+</section>
+<section id="equivalent-mutants">
+<h3><span class="section-number">4.5.4. </span>Equivalent Mutants<a class="headerlink" href="#equivalent-mutants" title="Permalink to this heading">#</a></h3>
+<p>A major problem with mutation analysis is the <em>equivalent mutant</em> problem.</p>
+<div class="admonition-definition-43 admonition">
+<p class="admonition-title">Definition 43</p>
+<p>Given a program and a mutation of that program, the mutant is said to be an <em>equivalent mutant</em> if, for every input, the program and the mutant produce the same output.</p>
+</div>
+<p>An equivalent mutant cannot be killed by any test case, because it is equivalent with the original program. As an example of an equivalent mutant, consider the squeeze function. Using the <em>Arithmetic Value Insertion</em> rule, the line</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>can be mutated to</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">i</span><span class="p">)];</span>
+</pre></div>
+</div>
+<p>in which abs is the absolute value function. However, the variable i only ever takes on values between <span class="math notranslate nohighlight">\(0\)</span> and the size of the array, so abs(i) will be equivalent to i irrelevant of the test inputs that we choose. Therefore, this mutant is equivalent to the original program, and cannot be killed.</p>
+<p>Equivalent mutants pose problems because they are impossible to kill, and difficult to detect. That is, once a test suite has been run over a collection of mutants, it is difficult to determine which mutants have not been killed due to the test suite being inadequate, or due to them being equivalent. Computing whether two programs are equivalent is undecidable, so a manual analysis needs to be undertaken for many instances, although some automated techniques exist that apply heuristics to eliminate equivalent mutants.</p>
+<p>The equivalent mutant problem implies that, for many programs, an <em>adequate</em> test suite — that is, one that kills every mutant — is unachievable.</p>
+<p>In many practical applications of mutation analysis, a <em>threshold</em> score is targeted — for example, the tester aims to kill 95% percent of the mutants, and continues trying to kill mutants until that threshold is reached.</p>
+<div class="admonition-exercise admonition">
+<p class="admonition-title">Exercise</p>
+<p>Using the mutant operators from above, define all of the mutants for the squeeze function. Identify which of these mutants are equivalent.</p>
+</div>
+</section>
+<section id="id4">
+<h3><span class="section-number">4.5.5. </span>Tool Support<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
+<p>Mutation analysis is an expensive process. Firstly, it can can generate quite a large number of mutants. In fact, the number of mutants grow exponentially with the size of the program. Generating these mutants manually is not feasible for anything other than small programs. Secondly, it requires the tester to execute the test suite over every mutant, and most likely to iterate this execution a number of times.</p>
+<p>For these reasons, a lot of work has been put into tools for automatic mutant generation, such as <strong>MuJava</strong>, a mutant generator for Java that uses the above rules, <strong>Jumble</strong>, a Java mutant generator that mutates bytecode instead of source code, and <strong>PITest</strong>, which also works on Java bytecode. These tools automatically generate the mutants for a program given its sourcecode or bytecode, and, given a test suite, automatically execute the mutants, and produce a report outlining the mutation score, and which mutants are still alive.</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>MuJava: See <a class="reference external" href="http://cs.gmu.edu/~offutt/mujava/">http://cs.gmu.edu/~offutt/mujava/</a>.</p>
+<p>Jumble: See <a class="reference external" href="http://jumble.sourceforge.net/">http://jumble.sourceforge.net/</a>.</p>
+<p>PITest: See <a class="reference external" href="http://pitest.org/">http://pitest.org/</a></p>
+</div>
+</aside>
+<p>Unfortunately, the equivalent mutant problem is not solved by the above tools. However, research into mutation analysis is leading to cheaper ways of automatically eliminating equivalent mutants using constraint solvers and compiler optimisation techniques. Applying these tools in practice is a long way off yet.</p>
+<p>At this cost comes benefit: mutation testing is considered to be the most successful test coverage criterion for finding faults. In the next section, we compare the three coverage criteria presented in this chapter.</p>
+</section>
+</section>
+<section id="comparing-coverage-criteria">
+<h2><span class="section-number">4.6. </span>Comparing Coverage Criteria<a class="headerlink" href="#comparing-coverage-criteria" title="Permalink to this heading">#</a></h2>
+<p>A question that often arises in practice is: <em>which criteria gives the best coverage</em>?</p>
+<p>The way to compare these criteria is to defined a specific relation between the criteria. The relation in question is called <em>subsumption</em> and is defined as follows.</p>
+<div class="admonition-definition admonition">
+<p class="admonition-title">Definition</p>
+<p>Criterion <span class="math notranslate nohighlight">\(A\)</span> <em>subsume</em>s criterion <span class="math notranslate nohighlight">\(B\)</span> if and only if for any control-flow graph <span class="math notranslate nohighlight">\(P\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[P ~\textrm{satisfies}~ A ~\implies~ P~{\rm satisfies}~ B\]</div>
+<p>Criteria A is equivalent to criteria B if and only if A subsumes B, and B subsumes A.</p>
+</div>
+<p>The <em>subsumes</em> relation is transitive, therefore, if <span class="math notranslate nohighlight">\(A\)</span> subsumes <span class="math notranslate nohighlight">\(B\)</span>, and <span class="math notranslate nohighlight">\(B\)</span> subsumes <span class="math notranslate nohighlight">\(C\)</span>, then <span class="math notranslate nohighlight">\(A\)</span> subsumes <span class="math notranslate nohighlight">\(C\)</span>.</p>
+<p><em>How can we compare these criteria</em>?</p>
+<p>Both data-flow criteria and coverage criteria select a set of paths that must be traversed by the test cases. To compare across different criteria Frankl and Weyuker have compared the paths that each criteria selects. Note, however, that the set of paths that satisfy a criterion are not necessarily unique. The results are shown in Figure <a class="reference internal" href="#f-4-10"><span class="std std-ref">4.10</span></a>.</p>
+<figure class="align-center" id="f-4-10">
+<a class="reference internal image-reference" href="_images/Comparisons.png"><img alt="_images/Comparisons.png" src="_images/Comparisons.png" style="width: 60%;" /></a>
+</figure>
+<p style="text-align: center;">Figure 4.10: Subsumption relations between sets of test cases chosen by various test case selection criteria.</p>
+<p>It is straightforward to see the relationships between the different data-flow techniques, and between the different control-flow techniques. For example, branch coverage (<strong>All-Edges</strong>) subsumes statement coverage (<strong>All-Nodes</strong>) because every statement is located within a branch.</p>
+<p>The relationships between the different control- and data-flow criteria are less clear to see. Condition coverage does not subsume statement coverage. This can be illustrated by the example <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(a</span> <span class="pre">&amp;&amp;</span> <span class="pre">b)</span></code>. Condition coverage mandates that a test suite must exercise a as both and , and b as both and . This can be achieved with two test cases: <code class="docutils literal notranslate"><span class="pre">(a</span> <span class="pre">==</span> <span class="pre">true,</span> <span class="pre">b</span> <span class="pre">==</span> <span class="pre">false)</span></code>, and <code class="docutils literal notranslate"><span class="pre">(a</span> <span class="pre">==</span> <span class="pre">false,</span> <span class="pre">b</span> <span class="pre">==</span> <span class="pre">true)</span></code>. However, these test cases never execute the case that <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> are <em>both</em> true, therefore, the statements in that branch are not executed.</p>
+<p>Multiple condition coverage and the criteria that it subsumes do not subsume any of the data-flow criteria. This can be illustrated with the following simple program:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">y</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">z</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>in which <code class="docutils literal notranslate"><span class="pre">f</span></code> is some function. In this example, multiple condition coverage enforces that <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">==</span> <span class="pre">1</span></code> and <code class="docutils literal notranslate"><span class="pre">z</span> <span class="pre">==</span> <span class="pre">1}</span></code> are both executed for the and cases. To achieve any of the data-flow criterion, at least one test must execute a definition-clear path from the statement <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">2</span></code> to <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">f(x)</span></code>. However, multiple condition coverage does not enforce this, therefore, it does not subsume any of the data-flow criteria.</p>
+<p>Similarly, none of the data-flow coverage criteria subsume any of the coverage metrics related to conditions or decisions. If we consider the weakest of these, condition coverage, the none of the data-flow criteria will evaluate the following statement to :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">a</span> <span class="o">:=</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>because there is no block related to the case, and therefore no variable uses in it.</p>
+<p>Decision/condition coverage clearly subsumes both branch and condition coverage, as it is a combination of the two. The <em>subsumes</em> relation is transitive, therefore, decision/condition coverage also subsumes statement coverage, because branch coverage does. Multiple-condition coverage subsumes decision/condition coverage, and path coverage (if possible) subsumes branch coverage.</p>
+<p>Mutation analysis has not been discussed so far. It is difficult to evaluate because mutant operators are defined specific to programming languages. However, one can easily take the operators defined by Ammann and Offutt for Java, described earlier, and apply them to many programming languages.</p>
+<p>These operators subsume many of the criteria in Figure <a class="reference internal" href="#f-4-10"><span class="std std-ref">4.10</span></a>, including multiple-condition coverage, and All-Defs coverage. This can be proved in these cases. For example, any test suite that kills all non-equivalent mutants generated by the <em>Bomb Statement Replacement</em> rule is guaranteed to achieve statement coverage (or node coverage in a control-flow graph), because every statement is replaced by a call to <code class="docutils literal notranslate"><span class="pre">Bomb()</span></code>. Similarly, any test suite that kills all non-equivalent mutants generated using the <em>Conditional Operator Replacement</em> rule is guaranteed to achieve multiple-condition coverage.</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>[1]: P. Ammann and J. Offutt, <em>Introduction to Software Testing</em>, Cambridge University Press, 2008.</p>
+</div>
+</aside>
+<p>In Section 5.2.2. of [1], Ammann and Offutt prove that mutation analysis is stronger than many of the coverage criteria in Figure <a class="reference internal" href="#f-4-10"><span class="std std-ref">4.10</span></a>. They hypothesise that even though some of them are not subsumed by mutation analysis, it is likely that specific mutant operators could be derived to achieve this, but that there is little benefit in doing so.</p>
+<section id="effectiveness-of-coverage-criterion">
+<h3><span class="section-number">4.6.1. </span>Effectiveness of Coverage Criterion<a class="headerlink" href="#effectiveness-of-coverage-criterion" title="Permalink to this heading">#</a></h3>
+<p>The effectiveness of these criteria is important to consider. If we go to the effort of measuring coverage and adding tests to ensure that we achieve coverage, we’d like to know that we are adding value to our test suite.</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>[3]: L. Inozemtseva and R. Holmes, Coverage is not strongly correlated with test suite effectiveness, <em>Proceedings of the 36th International Conference on Software Engineering</em>. ACM, 2014.</p>
+<p>[4]: R. Just, et al., Are mutants a valid substitute for real faults in software testing?, <em>Proceedings of the 22nd ACM SIGSOFT International Symposium on Foundations of Software Engineering</em>. ACM, 2014.</p>
+</div>
+</aside>
+<p>Several studies have looked into the effectiveness of test coverage criteria. For example, a 2014 study [3] looked into the correlation between coverage and fault-finding ability, considering statement coverage, branch coverage, and modified-condition coverage using 31,000 test suites, and found that there is a low correlation between test suite coverage and fault-finding effectiveness. Further, they found that stronger forms of coverage provide very little value. Another 2014 study [4] showed that mutation score provides is much better correlated with fault-finding ability, which is unsurprising because the mutation score is high if a test suite finds seeded faults.</p>
+<p>These studies confirmed a long-held view in software engineering that structural coverage criteria, such as control- and data-flow criteria, should be used to identify areas of the program that remain untested, and not as measure of the quality of the test suite.</p>
+<p>In short, structural test coverage is a <em>necessary but not sufficient</em> method for software testing.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Boundary-Value.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">3. </span>Boundary-Value Analysis</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Testing-Modules.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">5. </span>Testing Modules</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-of-this-chapter">4.1. Learning outcomes of this chapter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-introduction">4.2. Chapter introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#control-flow-testing">4.3. Control-Flow Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#control-flow-graphs">4.3.1. Control-Flow Graphs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coverage-based-criteria">4.3.2. Coverage-Based Criteria</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#measuring-coverage">4.3.3. Measuring Coverage</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tool-support">4.3.3.1. Tool Support</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-flow-testing">4.4. Data-Flow Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#static-data-flow-analysis">4.4.1. Static Data-Flow Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dynamic-data-flow-analysis-with-testing">4.4.2. Dynamic Data-Flow Analysis with Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">4.4.3. Coverage-Based Criteria</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">4.4.4. Tool Support</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutation-analysis">4.5. Mutation Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-coupling-effect">4.5.1. The Coupling Effect</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-coupling-effect-mutants-and-testing">4.5.2. The Coupling Effect, Mutants, and Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systematic-mutation-analysis-via-mutant-operators">4.5.3. Systematic Mutation Analysis via Mutant Operators</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#equivalent-mutants">4.5.4. Equivalent Mutants</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">4.5.5. Tool Support</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-coverage-criteria">4.6. Comparing Coverage Criteria</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#effectiveness-of-coverage-criterion">4.6.1. Effectiveness of Coverage Criterion</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By SWEN90006
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

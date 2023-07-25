@@ -1,0 +1,1254 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>2. Input Partitioning &#8212; SWEN90006 Software &amp; Security Testing</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/book-style.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Input-Partitioning';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="3. Boundary-Value Analysis" href="Boundary-Value.html" />
+    <link rel="prev" title="1. Introduction to Software Testing" href="Introduction-to-Testing.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/uom.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/uom.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Subject Introduction
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">LECTURE NOTES</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Introduction-to-Testing.html">1. Introduction to Software Testing</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">2. Input Partitioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Boundary-Value.html">3. Boundary-Value Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Coverage-Based-Testing.html">4. Coverage-Based Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Testing-Modules.html">5. Testing Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Property-based-testing.html">6. Property-based Testing and Test Oracles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Testing-and-Integration.html">7. Testing-and-Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Security-Testing.html">8. Security Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Coverage-Guided-Fuzzing.html">9. Code Coverage-Guided Fuzzing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Symbolic-Execution.html">10. Automated test generation using symbolic execution</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">APPENDIX</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Probabilities.html">A Brief Review of Some Probability Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Maximum.html">Maximum Likelihood Estimation</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/Input-Partitioning.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Input Partitioning</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-of-this-chapter">2.1. Learning outcomes of this chapter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-introduction">2.2. Chapter Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#equivalence-classes">2.3. Equivalence Classes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#input-conditions-valid-inputs-and-invalid-inputs">2.3.1. Input conditions, valid inputs, and invalid inputs</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#partioning-and-equivalence-classes">2.4. Partioning and equivalence classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#domain-testing">2.5. Domain Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#compound-predicates">2.5.1. Compound Predicates</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loops-in-programs">2.5.2. Loops in Programs</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#equivalence-partitioning">2.6. Equivalence Partitioning</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-identify-the-initial-equivalence-classes">2.6.1. Step 1 - Identify the initial equivalence classes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#guidelines-for-identifying-equivalence-classes">2.6.2. Guidelines for identifying equivalence classes</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#guideline-1-ranges">2.6.2.1. Guideline 1:  Ranges</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#guideline-2-discrete-sets">2.6.2.2. Guideline 2:  Discrete sets</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#guideline-3-number-of-inputs">2.6.2.3. Guideline 3: Number of inputs</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#guideline-4-zero-one-many">2.6.2.4. Guideline 4: Zero-one-many</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#guideline-5-must-rule">2.6.2.5. Guideline 5: Must rule</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#guideline-6-intuition-experience-catch-all">2.6.2.6. Guideline 6: Intuition/experience/catch-all!</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-eliminating-overlapping-equivalence-classes">2.6.3. Step 2 - Eliminating overlapping equivalence classes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-selecting-test-cases">2.6.4. Step 3 - Selecting test cases</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-template-trees">2.7. Test Template Trees</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start">2.7.1. Start</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#repeat">2.7.2. Repeat</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#end">2.7.3. End</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#result">2.7.4. Result</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mitigating-tree-explosion">2.7.5. Mitigating Tree Explosion</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-use">2.7.6. Practical use</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#combining-partitions">2.8. Combining Partitions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#all-combinations">2.8.1. All Combinations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#each-choice-combinations">2.8.2. Each Choice Combinations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pair-wise-combinations">2.8.3. Pair-Wise Combinations</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">2.9. References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="input-partitioning">
+<span id="chapter-input-partitioning"></span><h1><span class="section-number">2. </span>Input Partitioning<a class="headerlink" href="#input-partitioning" title="Permalink to this heading">#</a></h1>
+<section id="learning-outcomes-of-this-chapter">
+<h2><span class="section-number">2.1. </span>Learning outcomes of this chapter<a class="headerlink" href="#learning-outcomes-of-this-chapter" title="Permalink to this heading">#</a></h2>
+<p>At the end of this chapter, you should be able to:</p>
+<ul class="simple">
+<li><p>Describe the purpose of equivalence partitioning.</p></li>
+<li><p>Define valid input domain, invalid input domain, and non-testable input domain Apply testing guidelines to define new equivalence classes for a program based on its functional specification.</p></li>
+<li><p>Using the test template tree approach to generate equivalence classes for a program based on its functional specification</p></li>
+<li><p>Given a set of equivalence classes, generate tests from those equivalence classes</p></li>
+</ul>
+</section>
+<section id="chapter-introduction">
+<h2><span class="section-number">2.2. </span>Chapter Introduction<a class="headerlink" href="#chapter-introduction" title="Permalink to this heading">#</a></h2>
+<p>Recall from Section <a class="reference internal" href="Introduction-to-Testing.html#input-domains"><span class="std std-ref">Input Domains</span></a>, that each program has an <em>input domain</em> — the set of values that can be used as input to the program. Test input selection is all about selecting the values in this domain that have the highest likelihood of producing failures.</p>
+<p>Using input partitioning, programs are considered as the composition of an <em>input classifier</em>, that classifies the input domain into one of a number of different classes where each input class computes one function of the overall program.</p>
+<figure class="align-center" id="domain-model">
+<span id="f-2-1"></span><img alt="_images/Domain-Model.png" src="_images/Domain-Model.png" />
+</figure>
+<p style="text-align: center;">Figure 2.1: The Domain Model: The program acts as a classifier (or filter) that takes each input and determines which of the many program functions to apply to the input.</p>
+<p>The canonical representation of a program is the set <span class="math notranslate nohighlight">\(\{ (D_1; F_1), (D_2; F_2), \ldots \}\)</span>, where <span class="math notranslate nohighlight">\(D_i\)</span> is the <span class="math notranslate nohighlight">\(i^{th}\)</span> domain and <span class="math notranslate nohighlight">\(F_{i}\)</span> is the corresponding function computed by the program. There is a one-to-one correspondence between the input domains and the functions computed by a program. Each of the functions computed by a program occurs along a <em>program path</em>, that is, a path in the program that executes a sequence of statements for computing the function. In domain testing, an input domain is the subset of all inputs that will trigger a specific program function to be computed along a specific <em>program path</em>.</p>
+<p>As an example, consider the program in Figure <a class="reference internal" href="#f-2-2"><span class="std std-ref">2.2</span></a>, which calculates the minimum of two integers, x and y. There are two paths in this program. The first executes the statements at lines 3, 4, 5, and 7, while the second executes at lines 3, 4, and 7. Each of these can be conceived to be its own function. The first one returns the value of y, while the second returns the value of x. The input classifier executes the first function if x is greater than y, and executes the second otherwise.</p>
+<div class="highlight-c notranslate" id="f-2-2"><div class="highlight"><pre><span></span><span class="mf">1.</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">min</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="mf">2.</span><span class="w"> </span><span class="p">{</span><span class="w">                    </span>
+<span class="mf">3.</span><span class="w">     </span><span class="kt">int</span><span class="w"> </span><span class="n">minimum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">;</span><span class="w"> </span>
+<span class="mf">4.</span><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">     </span>
+<span class="mf">5.</span><span class="w">         </span><span class="n">minimum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">y</span><span class="p">;</span><span class="w"> </span>
+<span class="mf">6.</span><span class="w">     </span><span class="p">}</span>
+<span class="mf">7.</span><span class="w">     </span><span class="k">return</span><span class="w"> </span><span class="n">minimum</span><span class="p">;</span><span class="w">  </span>
+<span class="mf">8.</span><span class="w"> </span><span class="p">}</span><span class="w">                   </span>
+</pre></div>
+</div>
+<p style="text-align: center;">Figure 2.2: An implementation of the Min function</p>
+<p>Based on this view of a program, there are two possible types of faults:</p>
+<ul class="simple">
+<li><p><em>Computation faults</em>: where the correct path is chosen but an incorrect computation occurs along that path; and</p></li>
+<li><p><em>Domain faults</em>: where the computation is correct for each path but an incorrect path is chosen.</p></li>
+<li><p>The possible causes for an incorrect path are: (1) the incorrect path is executed for the input domain; (2) the decisions that make up the path selection may contain a fault; and (3) the correct path (or a fragment of a path necessary for the computation) may simply be missing.</p></li>
+</ul>
+<p>The aim of input partitioning is to derive test inputs that exercise each function of the program at least once. In this chapter, we present two methods for partitioning the input into <em>equivalence classes</em>.</p>
+</section>
+<section id="equivalence-classes">
+<span id="id1"></span><h2><span class="section-number">2.3. </span>Equivalence Classes<a class="headerlink" href="#equivalence-classes" title="Permalink to this heading">#</a></h2>
+<p>In functional testing, we can systematically derive equivalence classes and test inputs that are more likely to find faults than by using random testing. Using these techniques, we have an better idea of what constitutes an equivalence class.</p>
+<div class="admonition-definition admonition">
+<p class="admonition-title">Definition</p>
+<p>An <em><strong>equivalence class</strong></em> is a set of values from the input domain that are considered to be as likely as each other to produce failures for a program. Relating this to Figure <a class="reference internal" href="#f-2-1"><span class="std std-ref">2.1</span></a>, there are <span class="math notranslate nohighlight">\(N\)</span> equivalence classes: one for each function. Intuitively, this says that, for an equivalence class, each element in that equivalence class should execute the same statements in a program in the same order, but just with different values.</p>
+</div>
+<p>In other words, a single test input taken from an equivalence class is representative of <em>all</em> of the inputs in that class.</p>
+<p>Recall the Min function from Figure 2.2. In that program, all inputs that satisfy the relation <span class="math notranslate nohighlight">\({ x &gt; y}\)</span> will execute one path (inside the if statement), while the rest, which satisfy the relation <span class="math notranslate nohighlight">\({ x \leq y}\)</span>, will execute another (not executing inside the if statement). Therefore, all values that satisfy <span class="math notranslate nohighlight">\({ x &gt; y}\)</span> form one equivalence class, while the rest form another.</p>
+<section id="input-conditions-valid-inputs-and-invalid-inputs">
+<h3><span class="section-number">2.3.1. </span>Input conditions, valid inputs, and invalid inputs<a class="headerlink" href="#input-conditions-valid-inputs-and-invalid-inputs" title="Permalink to this heading">#</a></h3>
+<p>Each equivalence class is used to represent certain <em>input conditions</em> on the input domain. Equivalence partitioning tries to break up input domains into sets of <em>valid</em> and <em>invalid</em> inputs based on these input conditions. Unfortunately, the terms “input condition”, “valid” and “invalid” are not always used consistently but the following definition will be used in these notes to give a consistent meaning of the terms for this subject.</p>
+<div class="admonition-definition admonition">
+<p class="admonition-title">Definition</p>
+<ul class="simple">
+<li><p>An <em>input condition</em> on the input domain is a predicate on the values of a single variable in the input domain. When we need to consider the values of more than one variable in the input domain, we refer to this as the <em>combination of input conditions</em>.</p></li>
+<li><p>A <em>valid</em> input to a program is an element of the input domain that is the value expected from the program specification; that is, a non-error value according to the program specification.</p></li>
+<li><p>An <em>invalid</em> input is an input to a program is an element of the input domain that is not expected or an error value that as given by the program specification. In other words, an invalid input is a value in the input domain that is not a valid input.</p></li>
+</ul>
+</div>
+<p>The class of invalid inputs can be further broken down into two sub-classes: those that are <em>testable</em>; and those that are <em>not</em> testable.</p>
+<p>A non-testable input is one that violates the <em>precondition</em> of a program. A precondition is a condition on the input variables of a program that is <em>assumed to hold</em> when that program is executed. This means that the programmer has made an explicit assumption that the precondition holds at the start of the program, and as such, the behaviour of the program for any input that violates the precondition is <em>undefined</em>. If the behaviour is undefined, then <em>we do not test for it</em>.</p>
+<p>A testable invalid input is an invalid input that does not violate the precondition. Typically, these refer to inputs that return error codes or throw exceptions.</p>
+<p>The space of inputs can be modelled as in Figure <a class="reference internal" href="#f-2-3"><span class="std std-ref">2.3</span></a>.</p>
+<figure class="align-center" id="input-domains-valid-invalid">
+<span id="f-2-3"></span><img alt="_images/Input-Domains-Valid-Invalid.png" src="_images/Input-Domains-Valid-Invalid.png" />
+</figure>
+<p style="text-align: center;">Figure 2.3: Hierarchy of input domains</p>
+<div class="tip admonition" id="example-5">
+<p class="admonition-title">Example 5</p>
+<p>As an example of the above, consider a <em>binary search</em> function, which, given a <em>sorted</em> list of numbers, determines whether or not a specific number is in that list. The efficiency of a binary search relies on the fact that the input list is sorted. Thus, the precondition of the function is that the list is sorted. There is little point writing tests with unsorted lists, because the behaviour of a binary search is undefined for an unsorted list.</p>
+<p>The input condition on the list is a predicate specifying that the list is sorted. Any sorted list is a valid input, while any unsorted list is an invalid and untestable input.</p>
+</div>
+</section>
+</section>
+<section id="partioning-and-equivalence-classes">
+<h2><span class="section-number">2.4. </span>Partioning and equivalence classes<a class="headerlink" href="#partioning-and-equivalence-classes" title="Permalink to this heading">#</a></h2>
+<p>Input partitioning is then a systematic method for identifying interesting input conditions to be tested. To make our use of the term input condition consistent with other literature we will assume that an input condition can be applied to set of values of a specific input variable, or a set of input variables as well.</p>
+<p>The assumption behind equivalence partitioning is that all members of the class behave in the same way with respect to failures, so choosing one member of an equivalence class has the same likelihood of detecting a failure as any other member of the equivalence class. This assumption is not correct, but nonetheless, partitioning the input domain into equivalence classes is a valuable technique for testing when combined with other techniques.</p>
+<p>There are two key properties equivalence classes for software testing. If we have <span class="math notranslate nohighlight">\(n\)</span> equivalence classes <span class="math notranslate nohighlight">\({ EC_1}, \ldots, {
+  EC_n}\)</span> for an input domain, <span class="math notranslate nohighlight">\({ ID}\)</span>, the following two properties must hold:</p>
+<ul class="simple">
+<li><p>for any two equivalence classes, <span class="math notranslate nohighlight">\({ EC_i}\)</span> and <span class="math notranslate nohighlight">\({ EC_j}\)</span>, such that <span class="math notranslate nohighlight">\({ i \neq j}\)</span>, <span class="math notranslate nohighlight">\({ EC_i} \cap { EC_j} = \emptyset\)</span>; that is, <span class="math notranslate nohighlight">\({ EC_i}\)</span> and <span class="math notranslate nohighlight">\({ EC_j}\)</span> are <em>disjoint</em>; and</p></li>
+<li><p><span class="math notranslate nohighlight">\(\bigcup \{{ EC_1}, \ldots, { EC_n}\} = { ID}\)</span>; that is, the testable input domain is covered.</p></li>
+</ul>
+<p>Together, these two properties say that the equivalence classes are disjoint and they cover the input domain. In other words, for any value in the input domain, that input belongs to <em>exactly one</em> equivalence class.</p>
+<p>The key question to answer now is: <em>what constitutes a good equivalence class</em>? This chapter presents two systematic techniques for partitioning the input domain of a program into equivalence classes. The first one relies on the underlying structure of the program to determine which inputs execute the same program statements — therefore, it is a <em>white-box</em> testing technique. The second technique relies on the specified functionality of the program — therefore, it is a <em>black-box</em> testing technique. To avoid confusion between the two, we will refer to the former as <em>domain testing</em>, and the latter as <em>equivalence partitioning</em>.</p>
+<p>These two techniques are related, but the underlying concepts are different. Domain testing determines the <em>actual</em> equivalence classes of a program, while equivalence partitioning, on the other hand, determines the <em>expected</em> equivalence classes of a program from its functional requirements.</p>
+</section>
+<section id="domain-testing">
+<span id="id2"></span><h2><span class="section-number">2.5. </span>Domain Testing<a class="headerlink" href="#domain-testing" title="Permalink to this heading">#</a></h2>
+<p>In this section, we present <em>domain testing</em>. Domain testing partitions the input of a program using the program structure itself. The test inputs are executed on the program, and the tester evaluates whether the output of the program is in the expected output domain.</p>
+<p>To select test cases according to the domain testing strategy, the input space is first partitioned into a set of mutually exclusive equivalence classes. Each equivalence class corresponds to a program path. The idea is to select test cases based on the domain boundaries and to explore domain boundaries in order to work out whether or sub-domains are correct or not. More precisely, test cases are selected from: (1) the domain boundaries; and (2) points close to the domain boundaries.</p>
+<p>We will need some standard terminology for domain testing.</p>
+<ul class="simple">
+<li><p><strong>Relational Expressions</strong>: are of the form <span class="math notranslate nohighlight">\(A~rel~B\)</span>, where <span class="math notranslate nohighlight">\(rel\)</span> denotes a relational operator, that is, one of <span class="math notranslate nohighlight">\(&gt;\)</span>, <span class="math notranslate nohighlight">\(&lt;\)</span>, <span class="math notranslate nohighlight">\(\geq\)</span>, <span class="math notranslate nohighlight">\(\leq\)</span>, <span class="math notranslate nohighlight">\(=\)</span> and <span class="math notranslate nohighlight">\(\not =\)</span>.</p></li>
+<li><p><strong>Predicates</strong>: are points in a program where the control flow can diverge.</p></li>
+<li><p><strong>Simple Predicates</strong>: are single relational expressions.</p></li>
+<li><p><strong>Compound Predicates</strong>: are predicates composed of several simple predicates combined by Boolean operators such as AND (<span class="math notranslate nohighlight">\(\land\)</span>), OR (<span class="math notranslate nohighlight">\(\lor\)</span>) and NOT (<span class="math notranslate nohighlight">\(\neg\)</span>).</p></li>
+<li><p><strong>Linear Simple Predicates</strong>: are simple predicates of the form <span class="math notranslate nohighlight">\((a_{1} x_{1} + \ldots + a_{n} x_{n})~~rel~~k\)</span>, where <span class="math notranslate nohighlight">\(rel\)</span> is a relational operator, <span class="math notranslate nohighlight">\(x_{1}, \ldots, x_{n}\)</span>, and the <span class="math notranslate nohighlight">\(a_{i}\)</span>s and <span class="math notranslate nohighlight">\(k\)</span> are constants.</p></li>
+<li><p><strong>Path Condition</strong>: is the condition that must be satisfied by the input data for that path to be executed.</p></li>
+</ul>
+<div class="tip admonition" id="example-6">
+<p class="admonition-title">Example 6</p>
+<p>As an example consider the program in Figure <a class="reference internal" href="#f-2-4"><span class="std std-ref">2.4</span></a>. The domains of this program are calculated by looking at the different paths in the program. In this example, there are two if/then/else statement, which gives us four possible paths. Table <a class="reference internal" href="#t-2-1"><span class="std std-ref">2.1</span></a> outlines the four path conditions for each path, which correspond to the predicate in the branches.</p>
+<div class="highlight-c notranslate" id="f-2-4"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">w</span><span class="p">,</span><span class="w"> </span><span class="n">z</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">w</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">y</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="n">x</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">5</span><span class="n">y</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">z</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">z</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">z</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">z</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<center>
+Figure 2.4: A small (non-sensical) program to illustrate the idea of domains.
+</center>
+<p>Considering that a domain is the set of inputs that satisfy a path condition, then four path conditions gives us four domains. Each domain is defined by a <em>linear border</em>. These are shown Figure <a class="reference internal" href="#f-2-5"><span class="std std-ref">2.5</span></a>. In this figure, TT refers to the domain in which both branches in the program evaluate to true. TF, TF, and FF are defined similarly to other possible evaluations.</p>
+<div class="math notranslate nohighlight" id="t-2-1">
+\[\begin{split}\begin{array}{lll}
+ \textrm{C1a}  &amp;  &amp; x + y \geq 2\\
+ \textrm{C1b}  &amp;  &amp; x + y &lt; 2\\
+ \textrm{C2a}  &amp; (C1 T) &amp; 2x - 2y &gt; 3\\
+ \textrm{C2b}  &amp; (C1 F) &amp; 3x - 4y &gt; 3  
+\end{array}
+\end{split}\]</div>
+<center>
+Table 2.1: The four domains from the example program.
+</center>
+<p>If the branches of a program are such that certain paths are <em>infeasible</em>, then the domain for that path is empty.</p>
+<figure class="align-center" id="domain-ex">
+<span id="f-2-5"></span><a class="reference internal image-reference" href="_images/Domain-Ex-1.png"><img alt="_images/Domain-Ex-1.png" src="_images/Domain-Ex-1.png" style="width: 70%;" /></a>
+</figure>
+<center>
+Figure 2.5: The four domains from the program.
+</center>
+<div class="admonition-remark admonition">
+<p class="admonition-title">Remark</p>
+<p>We note that domain testing makes an assumption that programs are <em>linearly domained</em>.</p>
+</div>
+<p>Linear equalities are expressions that can be put into the form</p>
+<div class="math notranslate nohighlight">
+\[ a_1 x_1 + \ldots + a_n x_n = k ~~{\rm or}~~a_1 x_1 + \ldots + a_n x_n \not = k\]</div>
+<p>and linear inequalities are expressions that can be put into the form</p>
+<div class="math notranslate nohighlight">
+\[ a_1 x_1 + \ldots + a_n x_n \leq k ~~{\rm or}~~a_1 x_1 + \ldots + a_n x_n \geq k\]</div>
+<p>or</p>
+<div class="math notranslate nohighlight">
+\[ a_1 x_1 + \ldots + a_n x_n &lt; k ~~{\rm or}~~a_1 x_1 + \ldots + a_n x_n &gt; k.\]</div>
+<p>Linear borders require fewer test points to check and can be checked with more certainty.</p>
+<p>If a program violates this assumption then testing using this strategy may not be as productive at finding faults as would have been the case if the program did satisfy the assumptions, because solving non-linear equalities and inequalities is considerably more difficult that solving linear equalities and inequalities.</p>
+<p>In the non-linear case a point may lie in a domain but be computationally too expensive to check accurately; for example, a polynomial:</p>
+<div class="math notranslate nohighlight">
+\[ a_1 x_1{}^y + \ldots + a_n x_n \leq k\]</div>
+</div>
+<section id="compound-predicates">
+<h3><span class="section-number">2.5.1. </span>Compound Predicates<a class="headerlink" href="#compound-predicates" title="Permalink to this heading">#</a></h3>
+<p>Simple predicates contain just a set of variables and a relational operator such as <span class="math notranslate nohighlight">\(\leq\)</span>, <span class="math notranslate nohighlight">\(\geq\)</span>, <span class="math notranslate nohighlight">\(&gt;\)</span>, <span class="math notranslate nohighlight">\(&lt;\)</span>, <span class="math notranslate nohighlight">\(=\)</span> or <span class="math notranslate nohighlight">\(\neq\)</span>. Simple predicates create <em>simple boundaries</em>. When we use <em>compound predicates</em> to define boundaries then the situation becomes trickier to test. A compound predicate with a logical conjunction (<strong>AND</strong> operator) is straight-forward because it often defines a convex domain where all of the points lie within a boundary. A compound predicate with a logical disjunction (<strong>OR</strong> operator) can create disjointed boundaries, for example, <span class="math notranslate nohighlight">\(x\leq 0 \lor x \geq 2\)</span> creates the boundaries as in Figure <a class="reference internal" href="#f-2-6"><span class="std std-ref">2.6</span></a></p>
+<figure class="align-center" id="compound-disjunction">
+<span id="f-2-6"></span><a class="reference internal image-reference" href="_images/or-domain.png"><img alt="_images/or-domain.png" src="_images/or-domain.png" style="width: 70%;" /></a>
+</figure>
+<center>
+Figure 2.6: A boundary defined by a compound disjunction.
+</center>
+<p>To overcome this problem, domain testing treats compounds predicates such as logical disjunction as different paths. That is, in the example in Figure <a class="reference internal" href="#f-2-6"><span class="std std-ref">2.6</span></a>, the cases of <span class="math notranslate nohighlight">\(x\leq 0 \lor x \geq 2\)</span> are treated as two separate functions. Each compound predicate is broken into <em>disjunctive normal form</em>; that is, a disjunction of one or more simple predicates.</p>
+<p>To do this, each compound predicate is reduced to a predicate using only disjunction and negation, using <em>DeMorgan’s Laws</em>. For example, using the law</p>
+<div class="math notranslate nohighlight">
+\[\neg(A \lor B) ~~\equiv~~  \neg A \land \neg B\]</div>
+<p>we can reduce the expression <span class="math notranslate nohighlight">\(\neg( x\leq 0 \lor x \geq 2)\)</span> to <span class="math notranslate nohighlight">\(x &gt; 0 \land x &lt; 2\)</span>.</p>
+</section>
+<section id="loops-in-programs">
+<h3><span class="section-number">2.5.2. </span>Loops in Programs<a class="headerlink" href="#loops-in-programs" title="Permalink to this heading">#</a></h3>
+<p>If each program path corresponds to a function, then for some programs containing loops, we have an infinite number of paths, and therefore, an infinite number of equivalence classes. Selecting test inputs for each of these classes is clearly impossible, so we need a technique for making this finite.</p>
+<p>A typical work around is to apply the <em>zero-to-many</em> rule. The zero-to-many rule states that the minimum number of times a loop can execute is zero, so this is one path. Similarly, some loops have an upper bound, so treat this as a path. A general guideline for loops is to select test inputs that execute the loop:</p>
+<ul class="simple">
+<li><p>zero times – so that we can test paths that do not execute the loop;</p></li>
+<li><p>once – to test that the loop can be entered and that the results for a single iteration are correct;</p></li>
+<li><p>twice – to test that the results remain correct between different iterations of the loop;</p></li>
+<li><p>N times (greater than 2) – to test that an arbitrary number of iterations returns the correct results; and</p></li>
+<li><p>N+1 times to test that after an arbitrary number of iterations the results remain correct between iterations.</p></li>
+</ul>
+<p>In the case that we know the upper bound of the loop, then set N+1 to be this upper bound. Therefore, we are partitioning the input domain based on the number of times that a loop executes. We need only to instantiate the number, N, when selecting the test inputs that satisfy the equivalence classes.</p>
+<div class="tip admonition" id="example-8">
+<p class="admonition-title">Example 8 – Selecting Test Cases for the Triangle Program</p>
+<p>Consider a program, which takes as input, three integers, x, y, and z, each representing the length of one side of a triangle, and classifies the triangle as one of the following:</p>
+<ul class="simple">
+<li><p><em>invalid</em>: at least one side does not have a positive length, or one side is greater then the sum of the other two sides;</p></li>
+<li><p><em>equilateral</em>: all sides are the same length;</p></li>
+<li><p><em>isosceles</em>: two sides are the same length; or</p></li>
+<li><p><em>scalene</em>: are sides are of different length.</p></li>
+</ul>
+<p>An implementation of this program is shown below.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">type</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">Triangle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">equilateral</span><span class="p">,</span><span class="w"> </span><span class="n">isosceles</span><span class="p">,</span><span class="w"> </span><span class="n">scalene</span><span class="p">,</span><span class="w"> </span><span class="n">invalid</span><span class="p">};</span>
+
+<span class="n">Triangle</span><span class="w"> </span><span class="nf">categoriseTriangle</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">        </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">z</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">equilateral</span><span class="p">;</span>
+<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">isosceles</span><span class="p">;</span>
+<span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">z</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">isosceles</span><span class="p">;</span>
+<span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">z</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">isosceles</span><span class="p">;</span>
+<span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">scalene</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">else</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">invalid</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>To derive the paths for this program, we look at the branches in the program source. For simplicity, we abbreviate the predicate in the first branch to valid(x, y, z).</p>
+<p>The valid paths in the program as straightforward to identify. The equivalence class that corresponds to an equilateral triangle is characterised by the predicate <span class="math notranslate nohighlight">\({ valid(x, y, z) \land x = y \land y = z}\)</span>. For the isosceles case, there are three equivalence classes:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\({ valid(x, y, z) \land x = y \land y \neq z}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\({ valid(x, y, z) \land x \neq y \land y = z}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\({ valid(x, y, z) \land x \neq y \land y \neq z \land x = z}\)</span></p></li>
+</ul>
+<p>Finally, the equivalence class for the scalene triangle is <span class="math notranslate nohighlight">\({ valid(x, y, z) \land x \neq y \land y \neq z \land x \neq z}\)</span></p>
+<p>The invalid case is more difficult to partition. The false condition of the first branch is taken if <span class="math notranslate nohighlight">\({ \neg valid(x, y, z)}\)</span>, which is equivalent to</p>
+<div class="math notranslate nohighlight">
+\[\neg(x &gt; 0 \land y &gt; 0 \land z &gt; 0 \land x + y \geq z \land x + z \geq y \land y + z \geq x)\]</div>
+<p>Using DeMorgan’s laws to reduce this into disjunctive normal form, we are left with six cases: the negation of each of the simple predicates above.</p>
+<p>Combining the invalid with the valid cases gives us 11 abstract test cases, which must be then instantiated with actual values. For example, choose the test inputs <span class="math notranslate nohighlight">\({ x = 3 \land y = 3 \land z = 3}\)</span> for the equilateral case.</p>
+</div>
+</section>
+</section>
+<section id="equivalence-partitioning">
+<span id="id3"></span><h2><span class="section-number">2.6. </span>Equivalence Partitioning<a class="headerlink" href="#equivalence-partitioning" title="Permalink to this heading">#</a></h2>
+<p>In this section, we present <em>equivalence partitioning</em>. Equivalence partitioning partitions the input of a program using the functional requirements of the program. The test inputs are executed on the program, and the tester evaluates whether the output of the program is in the expected output domain.</p>
+<p>Equivalence partitioning is one of the oldest and still most widely used method for selecting test cases based on a partitioning of the input domain.</p>
+<p>The aim is to minimise the number of test cases required to cover all of the equivalence classes that you have identified. The general method only needs three steps:</p>
+<ul class="simple">
+<li><p>Identify the initial equivalence classes (ECs);</p></li>
+<li><p>Identify overlapping equivalence classes, and eliminate them by making the overlapping part a new equivalence classes; and</p></li>
+<li><p>Select one element from each equivalence class as the test input and work out the expected result for that test input.</p></li>
+</ul>
+<section id="step-1-identify-the-initial-equivalence-classes">
+<h3><span class="section-number">2.6.1. </span>Step 1 - Identify the initial equivalence classes<a class="headerlink" href="#step-1-identify-the-initial-equivalence-classes" title="Permalink to this heading">#</a></h3>
+<p>Unfortunately, there is no clear cut algorithm or method for choosing test inputs according to equivalence partitioning. You will still need to build up some judgement and intuition. There are however, a good set of guidelines to get you going. Again, the guidelines are just suggestions for picking good equivalence classes – the guidelines work in many cases but there are always exceptions where you will need to exercise your own creativity.</p>
+<p>The following set of guidelines will help you to identify <em>potential</em> equivalence classes. As you test a program you may need to choose extra test cases in order to explore different subsets of the input domain more thoroughly. The more you apply the guidelines and see the effect, the easier it will be for you to start choosing good classes for testing - practice will give you insight and experience.</p>
+</section>
+<section id="guidelines-for-identifying-equivalence-classes">
+<h3><span class="section-number">2.6.2. </span>Guidelines for identifying equivalence classes<a class="headerlink" href="#guidelines-for-identifying-equivalence-classes" title="Permalink to this heading">#</a></h3>
+<section id="guideline-1-ranges">
+<h4><span class="section-number">2.6.2.1. </span>Guideline 1:  Ranges<a class="headerlink" href="#guideline-1-ranges" title="Permalink to this heading">#</a></h4>
+<p>If an input condition specifies a range of values, identify one valid equivalence class for the set of values in the range, and two invalid equivalence classes; one for the set of values below the range and one for the set of values above the range.</p>
+<div class="tip admonition" id="example-9">
+<p class="admonition-title">Example 9</p>
+<p>If we are given the range of values <span class="math notranslate nohighlight">\(1 .. 99\)</span>, then we require three equivalence classes:</p>
+<ul class="simple">
+<li><p>The valid equivalence class <span class="math notranslate nohighlight">\(1 .. 99\)</span>; and</p></li>
+<li><p>The two invalid equivalence classes <span class="math notranslate nohighlight">\(\{ x \mid x &lt; 1\}\)</span> and <span class="math notranslate nohighlight">\(\{x \mid x &gt; 99\}\)</span>.</p></li>
+</ul>
+</div>
+</section>
+<section id="guideline-2-discrete-sets">
+<h4><span class="section-number">2.6.2.2. </span>Guideline 2:  Discrete sets<a class="headerlink" href="#guideline-2-discrete-sets" title="Permalink to this heading">#</a></h4>
+<p>If an input condition specifies a set of possible input values and each is handled differently, identify a valid equivalence class for each element of the set and one invalid equivalence class for the elements that are not in the set.</p>
+<div class="tip admonition" id="example-10">
+<p class="admonition-title">Example 10</p>
+<p>If the input is selected from a set of vehicle types, such as <span class="math notranslate nohighlight">\(\{BUS, TRUCK, TAXI, MOTORCYCLE\}\)</span>, then we require:</p>
+<ul class="simple">
+<li><p>Four valid equivalence classes; one for each element of the set <span class="math notranslate nohighlight">\(\{BUS, TRUCK, TAXI, MOTORCYCLE\}\)</span>; and</p></li>
+<li><p>One invalid equivalence class for an element “outside” of the set; such as <span class="math notranslate nohighlight">\(TRAILER\)</span> or <span class="math notranslate nohighlight">\(NON\_VEHICLE\)</span>.</p></li>
+</ul>
+</div>
+</section>
+<section id="guideline-3-number-of-inputs">
+<h4><span class="section-number">2.6.2.3. </span>Guideline 3: Number of inputs<a class="headerlink" href="#guideline-3-number-of-inputs" title="Permalink to this heading">#</a></h4>
+<p>If the input condition specifies the number (say N) of valid inputs, define one valid equivalence class for the correct number of inputs and two invalid equivalence classes – one for values <span class="math notranslate nohighlight">\(&lt;N\)</span> and one for values <span class="math notranslate nohighlight">\(&gt;N\)</span>.</p>
+<div class="tip admonition" id="example-11">
+<p class="admonition-title">Example 11</p>
+<p>If the input condition specifies that the user should input exactly three preferences, then define one valid equivalence class for three preferences, and two invalid equivalence classes: one for <span class="math notranslate nohighlight">\(&lt;3\)</span> and one for <span class="math notranslate nohighlight">\(&gt;3\)</span>.</p>
+</div>
+</section>
+<section id="guideline-4-zero-one-many">
+<h4><span class="section-number">2.6.2.4. </span>Guideline 4: Zero-one-many<a class="headerlink" href="#guideline-4-zero-one-many" title="Permalink to this heading">#</a></h4>
+<ol class="arabic simple" start="4">
+<li><p>If the input condition specifies that an input is a collection of items, and the collection can be of varying size; for example, a list or set of elements; define one valid equivalence class for a collection of size 0, one valid equivalence class for a collection of size 1, and one valid equivalence class for a collection of size <span class="math notranslate nohighlight">\(&gt; 1\)</span>.</p></li>
+</ol>
+<p>Additionally, if the collection has <em>bounds</em>, such as a maximum number <span class="math notranslate nohighlight">\(N\)</span>, define one valid equivalence class for a collection of size <span class="math notranslate nohighlight">\(N\)</span>, and one invalid equivalence class for a collection of size <span class="math notranslate nohighlight">\(&gt;N\)</span>. Similarly for lower bounds, if they exist.</p>
+<div class="tip admonition" id="example-12">
+<p class="admonition-title">Example 12</p>
+<p>If the input condition specifies that the user should input a list of their preferences, with no bound on the list, then define valid equivalence classes for lists of size 0, 1, and <span class="math notranslate nohighlight">\(&gt; 1\)</span>.</p>
+<p>If the input condition is further constrained by a maximum size of 10, then define valid equivalence classes for lists of size 0, 1, <span class="math notranslate nohighlight">\(&gt;1 and \)</span>&lt;10<span class="math notranslate nohighlight">\(, and 10, as well as an invalid equivalence class for a list of size \)</span>&gt;11$.</p>
+</div>
+</section>
+<section id="guideline-5-must-rule">
+<h4><span class="section-number">2.6.2.5. </span>Guideline 5: Must rule<a class="headerlink" href="#guideline-5-must-rule" title="Permalink to this heading">#</a></h4>
+<p>If an input condition specifies a “must be” situation, identify one valid equivalence class and one invalid equivalence class.</p>
+<div class="tip admonition" id="example-13">
+<p class="admonition-title">Example 13</p>
+<p>If the first character of an input <em>must be</em> a numeric character, then we require two equivalence classes – a valid class</p>
+<div class="math notranslate nohighlight">
+\[\{s \mid {\rm the~first~character~of}~ s~{\rm is~a~numeric}\}\]</div>
+<p>and one invalid class</p>
+<div class="math notranslate nohighlight">
+\[\{s \mid {\rm the~first~character~of}~ s~{\rm is~ not~ a~ numeric}\}\]</div>
+</div>
+</section>
+<section id="guideline-6-intuition-experience-catch-all">
+<h4><span class="section-number">2.6.2.6. </span>Guideline 6: Intuition/experience/catch-all!<a class="headerlink" href="#guideline-6-intuition-experience-catch-all" title="Permalink to this heading">#</a></h4>
+<p>If there is any reason to believe that elements in an equivalence class are handled in a different manner than each other by the program, then split the equivalence class into smaller equivalence classes.</p>
+<p>This is a sort of “default” catch statement, which really says that you can derive tests based on intuition or your understanding of the program and domain, where none of the other guidelines fit.</p>
+<p>Notice that this particular set of guidelines has some very general rules such as the last one. In short, you will need to build up some judgement and experience in order to become good at selecting test cases.</p>
+</section>
+</section>
+<section id="step-2-eliminating-overlapping-equivalence-classes">
+<h3><span class="section-number">2.6.3. </span>Step 2 - Eliminating overlapping equivalence classes<a class="headerlink" href="#step-2-eliminating-overlapping-equivalence-classes" title="Permalink to this heading">#</a></h3>
+<p>If we apply the guidelines in Step 1, it is likely that we will end up with overlapping equivalence class. Figure <a class="reference internal" href="#f-2-7"><span class="std std-ref">2.7</span></a> shows an input domain that has two equivalence classes that overlap.</p>
+<figure class="align-center" id="ec-overlap">
+<span id="f-2-7"></span><a class="reference internal image-reference" href="_images/EC-overlap.png"><img alt="_images/EC-overlap.png" src="_images/EC-overlap.png" style="width: 50%;" /></a>
+</figure>
+<center>
+Figure 2.7: Overlapping equivalence classes on an input domain.
+</center>
+<p>Returning to our example of a binary search function, we may identify the following equivalence classes (in fact, we should identify even more):</p>
+<ul class="simple">
+<li><p>an empty list;</p></li>
+<li><p>a list with exactly one element;</p></li>
+<li><p>a list with at least two elements;</p></li>
+<li><p>a sorted list; and</p></li>
+<li><p>a unsorted list (an invalid input).</p></li>
+</ul>
+<p>Equivalence classes A, B, and C are disjoint, as are D and E. However, a list with at least two elements can both sorted or unsorted, so there is overlap between classes C and D, as well as C and E.</p>
+<p>Once these overlapping classes has been identified, they are eliminated by treating them as equivalence classes themselves. So, for the equivalence classes in Figure <a class="reference internal" href="#f-2-7"><span class="std std-ref">2.7</span></a>, the overlapping class becomes an equivalence class of its own, and the other two equivalence classes are re-calculated by removing the values in the overlapping class.</p>
+<p>In the binary search example, we identify the overlap, and re-calculate the new classes. As it turns out, a list with two or more elements must be either sorted or unsorted, so the set of values in class C is equal to the set of values in the union of D and E. As a result, we end up with the following equivalence classes:</p>
+<ol class="arabic simple">
+<li><p>an empty list;</p></li>
+<li><p>a list with exactly one element;</p></li>
+<li><p>a unsorted list with at least 2 elements;</p></li>
+<li><p>a sorted list with at least 2 elements;</p></li>
+</ol>
+<p>In this example, we end up with <em>less</em> equivalence classes, however, in other cases we can end up with more.</p>
+</section>
+<section id="step-3-selecting-test-cases">
+<h3><span class="section-number">2.6.4. </span>Step 3 - Selecting test cases<a class="headerlink" href="#step-3-selecting-test-cases" title="Permalink to this heading">#</a></h3>
+<p>Once the equivalence classes have been identified, selecting the test cases is straightforward. Any value from an equivalence class is identified to be as likely to produce a failure as any other value in that class, therefore <em>any element of the class serves as a test input</em>, and selecting any arbitrary element from the class is adequate.</p>
+<div class="tip admonition" id="example-14">
+<p class="admonition-title">Example 14: <em>Selecting Test Cases for the Triangle Program</em></p>
+<p>Recall the triangle program from Example <a class="reference internal" href="#example-8"><span class="std std-ref">8</span></a>. Consider the following <em>informal specification</em> for that program:</p>
+<blockquote>
+<div><p>The program reads three integer values from the standard input. The three values are interpreted as representing the lengths of the sides of a triangle. The program then prints a message to the standard output that states whether the triangle is</p>
+<ol class="arabic simple">
+<li><p><em>invalid</em>: at least one side does not have a positive length, or one side is greater then the sum of the other two sides;</p></li>
+<li><p><em>equilateral</em>: all sides are the same length;</p></li>
+<li><p><em>isosceles</em>: two sides are the same length; or</p></li>
+<li><p><em>scalene</em>: are sides are of different length.</p></li>
+</ol>
+</div></blockquote>
+<p>The triangle classification program requires three inputs to the program as well as the form of the output. Further we require that each of the inputs “must be” a positive integer. Table <a class="reference internal" href="#t-2-2"><span class="std std-ref">2.2</span></a> summarises the input conditions.</p>
+<table class="table" id="t-2-2">
+<thead>
+<tr class="row-odd"><th class="head"><p><em>Requirement</em></p></th>
+<th class="head"><p><em>Input Condition</em></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Input three integers</p></td>
+<td><p>Let the three integers be <span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\( y\)</span> and <span class="math notranslate nohighlight">\( z\)</span>; then <span class="math notranslate nohighlight">\(x\in int\)</span>, <span class="math notranslate nohighlight">\(y\in int\)</span> and <span class="math notranslate nohighlight">\(z\in  int\)</span> are the input conditions.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Integers must be positive</p></td>
+<td><p><span class="math notranslate nohighlight">\(x&gt;0\)</span>, <span class="math notranslate nohighlight">\( y&gt;0\)</span> and <span class="math notranslate nohighlight">\(z&gt;0\)</span></p></td>
+</tr>
+</tbody>
+</table>
+<center>
+Table 2.2: The input conditions for the triangle classification program.
+</center>
+<p>Now we can use the guidelines and the specification to determine valid and invalid equivalence classes for the input conditions. Guideline 1 is appropriate as we have a range of values. If the three integers we have called x, y and z are all greater than zero then there are three valid
+equivalence classes:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{array}{lll}
+ EC_{valid_1} &amp; = &amp;  \{ x  \mid  x &gt; 0 \} \\
+ EC_{valid_2} &amp; = &amp;  \{ y  \mid  y &gt; 0 \} \\
+ EC_{valid_3} &amp; = &amp;  \{ z  \mid  z &gt; 0 \} 
+\end{array}\end{split}\]</div>
+<p>for the input conditions <span class="math notranslate nohighlight">\( x &gt; 0\)</span>, <span class="math notranslate nohighlight">\( y &gt; 0\)</span> and <span class="math notranslate nohighlight">\( z &gt; 0\)</span>. However, these are not disjoint. After eliminating the overlapping cases, we are left with only one equivalence class:</p>
+<div class="math notranslate nohighlight">
+\[\begin{array}{lll}
+EC_{valid} &amp; = &amp;  \{ (x,y,z)  \mid x &gt; 0 \land y &gt; 0 \land z &gt; 0 \}
+\end{array}\]</div>
+<p>Adding the constraint that each side cannot be greater than the sum of the other two sides, and eliminating the equivalence classes leaves us with only one equivalence class again:</p>
+<div class="math notranslate nohighlight">
+\[\begin{array}{lll}
+EC_{valid} &amp; = &amp;  \{ (x,y,z)  \mid x &gt; 0 \land y &gt; 0 \land z &gt; 0 \land  x + y \geq z \land x + z \geq y \land y + z \geq x \}
+\end{array}\]</div>
+<p>The output domain consists of isosceles, scalene, equilateral and invalid. Now we will need to apply guideline 3 because different values in the input domain map to different elements of the output domain. For example, the equivalence class for equilateral triangles would be</p>
+<div class="math notranslate nohighlight">
+\[\begin{array}{lll}
+EC_{equilateral} &amp; = &amp;  \{ (x,y,z)  \mid x = y = z\}
+\end{array}\]</div>
+<p>If we create one equivalence class for each of the different values in the output domain, we split the initial equivalence classes into three disjoint classes.</p>
+<p>For the invalid classes we need to consider the case where each of the three variables in turn can be negative, or longer than the other two sides:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{array}{lll}
+EC_{Invalid_1} &amp; = &amp;  \{ x  \mid x \leq 0\} \\  
+EC_{Invalid_2} &amp; = &amp;  \{ y  \mid y \leq 0\} \\  
+EC_{Invalid_3} &amp; = &amp;  \{ z  \mid z \leq 0\}\\  
+EC_{Invalid_4} &amp; = &amp;  \{ (x,y,z)  \mid x + y \leq z\}\\  
+EC_{Invalid_5} &amp; = &amp;  \{ (x,y,z)  \mid x + z \leq y\}\\  
+EC_{Invalid_6} &amp; = &amp;  \{ (x,y,z)  \mid y + z \leq x\}
+\end{array}\end{split}\]</div>
+<p>Again, there is overlap here. It is possible that both x and y can be less than 0. So, the overlapping cases need to be eliminated. This is problematic, because there are a number of combinations here. This is discussed further in Section <a class="reference internal" href="#combining-partitions"><span class="std std-ref">Combining Partitions</span></a>. For now, we will add just one test case from each of the (overlapping) classes above.</p>
+<p>According to the equivalence partitioning method we only need to choose one element from each of the classes above in order to test the triangle program. Table <a class="reference internal" href="#t-2-3"><span class="std std-ref">2.3</span></a> gives the test cases that are obtained after <strong>Step 3</strong> has been completed.</p>
+<table class="table" id="t-2-3">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Equivalence class</strong></p></th>
+<th class="head"><p><strong>Test Input</strong></p></th>
+<th class="head"><p><strong>Expected Outputs</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\( EC_{equilateral}\)</span></p></td>
+<td><p>(7, 7, 7)</p></td>
+<td><p>equilateral</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\( EC_{isosceles}\)</span></p></td>
+<td><p>(2, 3, 3)</p></td>
+<td><p>isosceles</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\( EC_{scalene}\)</span></p></td>
+<td><p>(3, 5, 7)</p></td>
+<td><p>scalene</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\( EC_{invalid_1}\)</span></p></td>
+<td><p>(-1, 2, 3)</p></td>
+<td><p>invalid</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\( EC_{invalid_2}\)</span></p></td>
+<td><p>(1, -2, 3)</p></td>
+<td><p>invalid</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\( EC_{invalid_3}\)</span></p></td>
+<td><p>(1, 2, -3)</p></td>
+<td><p>invalid</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\( EC_{invalid_4}\)</span></p></td>
+<td><p>(1, 2, 5)</p></td>
+<td><p>invalid</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\( EC_{invalid_5}\)</span></p></td>
+<td><p>(1, 5, 2)</p></td>
+<td><p>invalid</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\( EC_{invalid_6}\)</span></p></td>
+<td><p>(5, 2, 1)</p></td>
+<td><p>invalid</p></td>
+</tr>
+</tbody>
+</table>
+<center>
+Table 2.3: The test cases for the triangle program.
+</center>
+<p>Selecting just <em>any</em> value in an equivalence class may not be <em>optimal</em> for finding faults. For example, consider the faulty implementation of the square function shown in Figure <a class="reference internal" href="Introduction-to-Testing.html#f-1-3"><span class="std std-ref">1.3</span></a>, Section <a class="reference internal" href="Introduction-to-Testing.html#the-language-of-failures-faults-and-errors"><span class="std std-ref">1.3.2</span></a>. Recall from the discussion in Section <a class="reference internal" href="Introduction-to-Testing.html#the-language-of-failures-faults-and-errors"><span class="std std-ref">The Language of Failures, Faults, and Errors</span></a> that the test input <span class="math notranslate nohighlight">\(2\)</span> for this function would not reveal a failure due to coincidental correctness. In the absence of any other information about the square function such as the maximum integer input or the largest possible result, the input domain and output domains for square are simply int and the valid equivalence class is some bounded subset of int. Selecting a test input of does not reveal a fault in the function, but the tester cannot know this.</p>
+<p><em>Is there a better way to select test inputs from equivalence classes to give a greater likelihood of finding faults</em>?</p>
+<p>Clearly, we can select <em>more than one input</em> from an equivalence class, which reduces the chances of coincidental correctness, but increases the size of our test suite. Hierons discusses how, in some cases, coincidental correctness in <em>boundary-value analysis</em> (see Chapter 3) can be avoiding using information in the specification. However, his ideas do not work for the square function.</p>
+</div>
+<div class="tip admonition" id="example-15">
+<p class="admonition-title">Example 15: <em>Selecting Test Cases for the GetWord Function</em></p>
+<p>Consider the following specification of a function, GetWord, that returns the next word in a string:</p>
+<ol class="arabic simple">
+<li><p>The GetWord function must accept a string and return two items: (1) the first word in the string; and (2) the string with the first word removed.</p></li>
+<li><p>Words are considered to be a string of characters not containing a blank character.</p></li>
+<li><p>The blank characters between words can be spaces, tabs, or newline characters.</p></li>
+<li><p>Strings can be a maximum of 200 characters in length.</p></li>
+</ol>
+<p>An algorithm for GetWord is given in Figure <a class="reference internal" href="#f-2-8"><span class="std std-ref">2.8</span></a></p>
+<p>There are at least three steps in implementing a specification:</p>
+<ul class="simple">
+<li><p>Step 1: choose a design that will implement all of the requirements in the specification;</p></li>
+<li><p>Step 2: choose algorithms and data structures that implement the functionality in the design;</p></li>
+<li><p>Step 3: write the actual program, using some programming, that implements the algorithm.</p></li>
+</ul>
+<p>In step 2 and step 3 there are choices and sometimes the programming language constructs that are chosen to implement an algorithm can introduce subtle behaviours that the specification writer did not anticipate.</p>
+<p>The algorithm in Figure <a class="reference internal" href="#f-2-8"><span class="std std-ref">2.8</span></a> makes some <em>design choices</em> about how to achieve the requirements. Requirement (1) requires a function that takes strings and returns a pair of strings: one for the word, and one for the rest of the line.</p>
+<p>The algorithm implements this requirement by a function that takes a string as an input argument, returns a string (the first word), and the input string (the parameter line line) to return the input with first word removed. Doing this is a distinct design choice.</p>
+<div class="highlight-python notranslate" id="f-2-8"><div class="highlight"><pre><span></span><span class="n">string</span> <span class="n">GetWord</span><span class="p">(</span><span class="n">string</span> <span class="n">line</span><span class="p">)</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="nb">next</span><span class="p">]</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">blank</span> <span class="n">character</span><span class="p">)</span> <span class="n">do</span>
+        <span class="nb">next</span> <span class="o">=</span> <span class="nb">next</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="n">line</span><span class="p">[</span><span class="nb">next</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">the</span> <span class="n">end</span> <span class="n">of</span> <span class="n">the</span> <span class="n">line</span> <span class="p">)</span> <span class="n">then</span>
+            <span class="k">while</span> <span class="p">(</span> <span class="n">line</span><span class="p">[</span><span class="nb">next</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">a</span> <span class="n">blank</span> <span class="n">character</span> <span class="p">)</span> <span class="n">do</span>
+                <span class="n">word</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="nb">next</span><span class="p">];</span>
+                <span class="nb">next</span> <span class="o">=</span> <span class="nb">next</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+            <span class="k">return</span> <span class="n">word</span><span class="p">;</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="nb">next</span><span class="o">.</span> <span class="o">.</span> <span class="o">.</span> <span class="n">length</span><span class="p">(</span><span class="n">line</span><span class="p">)];</span>
+    <span class="k">else</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+<center>
+Figure 2.8: The algorithm for the GetWord function.
+</center>
+<p>Equivalence partitioning requires only the specification of the program to derive test cases. This makes it ideal for system level testing and integration level testing. However, there are times when we have more information available to us than just the specification. Sometimes we have an algorithm that can be used to define “better” input conditions than those given by the specification alone, and to choose better equivalence classes.</p>
+<p>Let us assume that the input domain for the GetWord function is the set of strings of length 200 characters or less. The output domain is the set of pairs strings of 200 characters or less. Note that, as the input string is a maximum of 200 characters, any of its substrings will be a maximum of 200 characters in length.</p>
+<p>Using the guidelines from Section <a class="reference internal" href="#equivalence-partitioning"><span class="std std-ref">2.4</span></a> in combination with the specification for GetWord, we now have an input condition that the length of the input string must be in the range <span class="math notranslate nohighlight">\(0 \ldots 200\)</span> characters. Using guideline 1 we have one valid equivalence class and two invalid classes; the valid class consists of strings of length between <span class="math notranslate nohighlight">\(0\ldots 200\)</span> and an invalid class of length <code class="docutils literal notranslate"><span class="pre">&gt;</span></code> 200. The other invalid class consists of strings of length <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> 0 which is infeasible because we cannot supply a string with a negative length. So we have:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{array}{lll}  
+EC_{valid} &amp; = &amp;  \{ s \mid  { s}~is~a~string~and~length(s) \leq 200\}\\  
+EC_{invalid} &amp; = &amp;  \{ s \mid \ { s}~is~a~string~and~length(s) &gt; 200\}
+\end{array}\end{split}\]</div>
+<p>But we are not yet done. The class <span class="math notranslate nohighlight">\( EC_{valid}\)</span> can be partitioned into smaller classes — the algorithm in Figure <span class="xref myst">[fig:GetWord-alg]</span>{reference-type=”ref” reference=”fig:GetWord-alg”} specifies a number of possibilities. This is the creative part of testing — thinking about what can go wrong and finding test cases that show that a program <em>does</em> go wrong.</p>
+<p>Strings can be empty, they consist of one word or multiple words, there can be a single blank between words or a number of blanks between words, and words can contain legal characters or illegal characters. Using this information we can decompose <span class="math notranslate nohighlight">\( EC_{valid}\)</span> into smaller ECs as follows.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{array}{lll}
+   EC_{valid_1} &amp; = &amp;  \{ { s} \mid { s}~is~empty\,\}\\
+   EC_{valid_2} &amp; = &amp;  \{ { s} \mid { s}~has~a~single~word\,\}\\
+   EC_{valid_3} &amp; = &amp;  \{ { s} \mid { s} ~has ~more~than ~one ~word\,\}\\
+   EC_{valid_4} &amp; = &amp;  \{ { s} \mid words ~are~separated~by~single~blank\,\}\\
+   EC_{valid_5} &amp; = &amp;  \{ { s} \mid words ~are~separated~by~2~or~more~blanks\,\}\\
+\end{array}\end{split}\]</div>
+<p>Notice that the union of all of the smaller ECs covers our original valid EC, that is, <span class="math notranslate nohighlight">\(\bigcup_i EC_{valid_i} = EC_{valid}\)</span>.</p>
+<p>As with the triangle function in Example <a class="reference internal" href="#example-14"><span class="std std-ref">14</span></a>, there is overlap in the equivalences classes. In the GetWord case, strings with blanks must also have more than one word, so <span class="math notranslate nohighlight">\(EC_{valid_3}\)</span> is made redundant by <span class="math notranslate nohighlight">\(EC_{valid_4}\)</span> and <span class="math notranslate nohighlight">\(EC_{valid_5}\)</span>.</p>
+<p>The test cases that we obtain from these equivalence classes are given in Table <a class="reference internal" href="#t-2-4"><span class="std std-ref">2.4</span></a>. The invalid class consists of strings of more than 200 words in length.</p>
+<table class="table" id="t-2-4">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Equivalence Class</strong></p></th>
+<th class="head"><p><strong>Input</strong></p></th>
+<th class="head"><p><strong>Expected Output</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p></p></td>
+<td><p></p></td>
+<td><p>(word, line)</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\( EC_{valid_1}\)</span></p></td>
+<td><p>“”</p></td>
+<td><p>(“”, “”)</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\( EC_{valid_2}\)</span></p></td>
+<td><p>“word”</p></td>
+<td><p>(“word”, “”)</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\( EC_{valid_4}\)</span></p></td>
+<td><p>” two words”</p></td>
+<td><p>(“two”, ” words”)</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\( EC_{valid_5}\)</span></p></td>
+<td><p>”   two   words”</p></td>
+<td><p>(“two”,”   words”)</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\( EC_{invalid}\)</span></p></td>
+<td><p>” Story time …” (200+ chars)</p></td>
+<td><p>Error value</p></td>
+</tr>
+</tbody>
+</table>
+<center>
+Table 2.4: The test cases obtained from the equivalence classes.
+</center>
+</div>
+</section>
+</section>
+<section id="test-template-trees">
+<h2><span class="section-number">2.7. </span>Test Template Trees<a class="headerlink" href="#test-template-trees" title="Permalink to this heading">#</a></h2>
+<p>One complication of using equivalence partitioning is detecting and eliminating overlapping equivalence classes. However, taking a more structured approach to this using <em>test template trees</em>, we can avoid this problem by not introducing overlaps in the first place.</p>
+<p>A test template tree is an overview of an equivalence partitioning, but importantly, it is <em>hierarchical</em>. When applied correctly, it provides a graphical overview of equivalence classes and their <em>justification</em>, as well as avoiding overlap.</p>
+<p>The process for deriving a test template tree for a program is similar to doing equivalence partitioning.</p>
+<section id="start">
+<h3><span class="section-number">2.7.1. </span>Start<a class="headerlink" href="#start" title="Permalink to this heading">#</a></h3>
+<p>We start with the testable input domain, and aim to break this into smaller equivalence classes that make good tests.</p>
+</section>
+<section id="repeat">
+<h3><span class="section-number">2.7.2. </span>Repeat<a class="headerlink" href="#repeat" title="Permalink to this heading">#</a></h3>
+<p>At each step, we choose an equivalence partitioning guideline to apply to one or more <em>leaf nodes</em> in test template tree, breaking the leaf nodes into multiple new leaf nodes, each once more specific than its parent node, which is no longer a leaf node.</p>
+<p>When we partition each leaf node, we ensure that the partitioning is: (a) disjoint — the partitions do not overlap; and (b) they partitions cover their parent — that is, if we combine the new partitions, that combination will be equivalent to their parent. These two properties are the same as listed in Section <a class="reference internal" href="#equivalence-classes"><span class="std std-ref">Equivalence Classes</span></a> for equivalence classes. By avoiding creating overlap and by covering each parent, we ensure (inductively) that the resulting equivalence classes at the end of this entire process also do not overlap and their cover the root node (the input domain).</p>
+</section>
+<section id="end">
+<h3><span class="section-number">2.7.3. </span>End<a class="headerlink" href="#end" title="Permalink to this heading">#</a></h3>
+<p>The process ends when either: (a) there are no more sensible partitionings to apply; or (b) our tree grows too large and we can no longer manage the complexity (although there are ways to mitigate this as we will discuss soon).</p>
+</section>
+<section id="result">
+<h3><span class="section-number">2.7.4. </span>Result<a class="headerlink" href="#result" title="Permalink to this heading">#</a></h3>
+<p>To construct the equivalence classes, we simply take each leaf node and derive the equivalence from that lead node to the root of the tree.</p>
+<p>The resulting equivalence classes do not overlap and they cover the entire input domain. This is because, at each partition, we ensure this property held locally. This local property means that non-overlap and coverage also hold globally, which can be demonstrated inductively.</p>
+<div class="tip admonition" id="example-16">
+<p class="admonition-title">Example 16</p>
+<p><em>As an example, consider the triangle program. At the start, we have the testable input domain, which is just three integers:</em></p>
+<img alt="_images/TTT-triangle-input-domain.png" class="align-center" src="_images/TTT-triangle-input-domain.png" />
+<p>We apply guideline 2 to break this into valid and invalid triangles, giving us two new leaf nodes:</p>
+<img alt="_images/TTT-triangle-first-partition.png" class="align-center" src="_images/TTT-triangle-first-partition.png" />
+<p>Then, we apply guideline 2 again to the three different types of triangle: equilateral, isosceles, and scalene, breaking the valid triangle node into three new leaf nodes:</p>
+<img alt="_images/TTT-triangle-second-partition.png" class="align-center" src="_images/TTT-triangle-second-partition.png" />
+<p>Continue the process several more times, we end up with the following test template tree:</p>
+<img alt="_images/TTT-triangle-final.png" class="align-center" src="_images/TTT-triangle-final.png" />
+<p>Note that the leaf nodes: (a) do not overlap, because we were careful to always break leaf nodes into non-overlapping cases; and (b) cover the entire input space, because we were careful to always ensure that each breakdown covered its parent node.</p>
+<p>From here, the 11 equivalence classes fall out directly from the test template tree:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{array}{lll}
+  EC1\_V  &amp; = &amp;   \{x,y,z \in int \mid valid(x,y,z) \land x=y=z\} \\
+  EC2\_V  &amp; = &amp;   \{x,y,z \in int \mid valid(x,y,z) \land x=y \land   y\neq z\} \\
+  EC3\_V  &amp; = &amp;   \{x,y,z \in int \mid valid(x,y,z) \land x\neq y \land y=z\} \\
+  EC4\_V  &amp; = &amp;   \{x,y,z \in int \mid valid(x,y,z) \land x\neq y \land \land y\neq z x=z\} \\
+  EC5\_V  &amp; = &amp;   \{x,y,z \in int \mid valid(x,y,z) \land x\neq y \land y\neq z \land x\neq z\} \\
+  EC6\_V  &amp; = &amp;   \{x,y,z \in int \mid \neg valid(x,y,z) \land x \leq 0\} \\
+  ... \\
+  EC11\_V &amp; = &amp;   \{x,y,z \in int \mid \neg valid(x,y,z) \land y+z &lt; z\}
+\end{array}\end{split}\]</div>
+</div>
+</section>
+<section id="mitigating-tree-explosion">
+<h3><span class="section-number">2.7.5. </span>Mitigating Tree Explosion<a class="headerlink" href="#mitigating-tree-explosion" title="Permalink to this heading">#</a></h3>
+<p>Generating partitions like this can result in trees that are prohibitively large. Even the tree for the triangle example above starts to become tedious, and this is a tiny program. The problem is caused by the nature of the partitioning: if we apply a guideline to every leaf node of a tree, then the number of nodes grows exponentially with the depth of the tree.</p>
+<p>To mitigate the problem of explosion, we can apply a couple of rules of thumb:</p>
+<ol class="arabic simple">
+<li><p><em>Test invalid, exceptional, and error cases only once</em>: Many test inputs involve invalid or exceptional cases, such as throwing an exception or returning an error codes. For these cases, aim to have only one node in the tree that corresponds to each trigger for these exceptional cases. Applying guidelines to exceptional cases will <em>probably</em> not (but not certainly not) provide good test inputs. This is because most people use defensive programming, and therefore errors/exceptions are detected at the start of programs and the error/exception is thrown immediately. As such, the remainder of the program is not executed. So, if a node in a test template tree is designed to throw an exception due to an ill-formed input, creating child partitions that test several different inputs for ‘normal case’ functionality are unlikely to find any additional faults because the corresponding code will not be executed.</p></li>
+<li><p><em>Look at variable interactions</em>: When applying a guideline, use your experience and intuition and apply only to the current leaf nodes in which this partition is likely to involve some interaction between variables. For example, consider a system for recording loans from a library, with inputs such as date of loan, length of loan, name of
+book/DVD, author, etc. There is a clear interaction between the date of the loan and the length of the loan, because these two variables determine the due date. However, the name of the book and the author (probably) do not affect the due date. As such, when testing different values of loan length, it would be better to prioritise the nodes that focus on the loan date, rather than on the book name and author. This reduces the number of partitions applied, and therefore mitigates the problem of explosion.</p></li>
+</ol>
+</section>
+<section id="practical-use">
+<h3><span class="section-number">2.7.6. </span>Practical use<a class="headerlink" href="#practical-use" title="Permalink to this heading">#</a></h3>
+<p>In reality, software engineers/testers do not tend to capture these test template trees in diagrams. The idea of the test template tree is merely as a way to structure one’s thinking in a divide-and-conquer approach to testing. The trees can be constructed loosely in one’s head to provide a top-down view of testing, or can be sketched when the task is too large to contain mentally.</p>
+<p>That said, I have been in projects where these types of models are sketched out on whiteboards for system-level testing to provide an overview of a high-level testing strategy. So, this idea can be used as a communication tool about testing in an industry project in the same way that we are using it in these notes.</p>
+</section>
+</section>
+<section id="combining-partitions">
+<span id="id4"></span><h2><span class="section-number">2.8. </span>Combining Partitions<a class="headerlink" href="#combining-partitions" title="Permalink to this heading">#</a></h2>
+<p>The partitioning techniques in this section advocate looking at the variables of a program, and using test case selection techniques to derive equivalence classes. However, we quickly run into problems in which we use multiple criteria, or one criteria over multiple variables.</p>
+<p>For example, recall in Example <a class="reference internal" href="#example-14"><span class="std std-ref">14</span></a>, in which we derived test cases for the triangle program using equivalence partitioning, that we generated six overlapping equivalence classes for invalid triangles. This was done by using two different criteria over three different variables. Removing the overlapping cases would generate a large number of test cases, many of which would be of little use. For example, three of these cases would be the following:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+{\bf x \leq 0} \land y &gt; 0 \land  z &gt; 0 \land x + y \ldots\\
+ x &gt; 0 \land y &gt; 0 \land {\bf z \leq 0} \land x + y \ldots\\
+{\bf x \leq 0} \land y &gt; 0 \land {\bf z \leq 0} \land x + y \ldots
+\end{aligned}\end{split}\]</div>
+<p>The bold in these represent the values that make the triangle invalid. However, programs statements are executed in sequence, so an implementation of the triangle problem would check for non-positive x and z, but would check one before the other. This makes the third case redundant.</p>
+<p>Redundancy is not the only issue. If we consider using a partitioning method on three different variables, one with the domain of non-negative integers (variable x), one with the domain of non-positive integers (variable y, and one with the domain of characters z, we may end up with the following partitions:</p>
+<ul class="simple">
+<li><p>For x: <span class="math notranslate nohighlight">\({ x = 0}\)</span>, <span class="math notranslate nohighlight">\({ 0 &lt; x &lt; 10}\)</span>, and <span class="math notranslate nohighlight">\({ x \geq 10}\)</span> (three equivalence classes).</p></li>
+<li><p>For y: <span class="math notranslate nohighlight">\({ y = 0}\)</span> and <span class="math notranslate nohighlight">\({ y &gt; 0}\)</span> (two equivalence classes).</p></li>
+<li><p>For z: <span class="math notranslate nohighlight">\({ z}\)</span> is a lower-case letter, <span class="math notranslate nohighlight">\({ z}\)</span> is an upper-case letter, and <span class="math notranslate nohighlight">\({ z}\)</span> is a non-letter character (three equivalence classes).</p></li>
+</ul>
+<p>Ammann and Offutt call these <em>block</em> combinations, in that, while the equivalence classes overlap, there are distinct blocks that are different to each other in some way. In the above case, the blocks are based on the variables, and there are equivalence classes for each variables.</p>
+<p>When we combine the variables, we encounter overlap. The question is how to resolve the overlap so that we do not derive too many test cases. We present three different criteria to solve the problem: the <em>all combinations</em> criterion, the <em>pair-wise combinations</em> criterion, and the <em>each choice combinations</em> criterion.</p>
+<section id="all-combinations">
+<h3><span class="section-number">2.8.1. </span>All Combinations<a class="headerlink" href="#all-combinations" title="Permalink to this heading">#</a></h3>
+<p>The <em>all combinations</em> criterion specifies that every combination of each equivalence class between blocks must be used. This is analogous to the <em>cross product</em> of sets. So, if we considering the program with the inputs x, y, and z, then we would require 18 test cases (<span class="math notranslate nohighlight">\(3 \times 2 \times 3\)</span>), satisfying the following 18 equivalence classes, consisting of the following 6 equivalence classes:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{array}{ccccc}
+  x = 0 &amp; \land &amp; y = 0 &amp; \land &amp; z~is~lowercase\\
+  x = 0 &amp; \land &amp; y = 0 &amp; \land &amp; z~is~uppercase\\
+  x = 0 &amp; \land &amp; y = 0 &amp; \land &amp; z~is~a~non\text{-}letter\\
+  x = 0 &amp; \land &amp; y &gt; 0 &amp; \land &amp; z~is~lowercase\\
+  x = 0 &amp; \land &amp; y &gt; 0 &amp; \land &amp; z~is~uppercase\\
+  x = 0 &amp; \land &amp; y &gt; 0 &amp; \land &amp; z~is~a~non\text{-}letter
+\end{array}\end{split}\]</div>
+<p>and the remaining twelve, which are as above except with <span class="math notranslate nohighlight">\(0 &lt; x &lt; 10\)</span> and <span class="math notranslate nohighlight">\(x \geq 10\)</span>.</p>
+<p>The number of test cases is a product of the number of blocks and the number of equivalence classes in each block. In this case, it relates to the number of variables, and the number of equivalence classes for each variable. Therefore, if there was two additional variables, each with three equivalence classes, the number of test cases would be <span class="math notranslate nohighlight">\(3 \times 2 \times 3 \times 3 \times 3 = 162\)</span> test cases. This is likely to be more test cases than necessary, as we saw with the triangle program.</p>
+</section>
+<section id="each-choice-combinations">
+<h3><span class="section-number">2.8.2. </span>Each Choice Combinations<a class="headerlink" href="#each-choice-combinations" title="Permalink to this heading">#</a></h3>
+<p>The <em>each choice</em> criterion specifies that just one test case must be chosen from each equivalence class. This is the approach we took in the testing of triangle program in Example <a class="reference internal" href="#example-14"><span class="std std-ref">14</span></a>.</p>
+<p>Taking the example of the three variable program, the each choice criterion could be satisfied by choosing inputs that satisfy the following three equivalence classes:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{array}{ccccc}
+   x = 0 &amp; \land &amp; y = 0 &amp;  \land &amp; z~is~lowercase\\
+   0 &lt; x &lt; 10 &amp;  \land &amp; y &gt; 0 &amp; \land &amp; z~is~uppercase\\
+   x \geq 10 &amp;  \land &amp; y = 0 &amp; \land &amp; z~is~a~non\text{-}letter
+\end{array}\end{split}\]</div>
+<p>This is significantly weaker that the all combinations criterion, and does not consider combinations of values.</p>
+</section>
+<section id="pair-wise-combinations">
+<h3><span class="section-number">2.8.3. </span>Pair-Wise Combinations<a class="headerlink" href="#pair-wise-combinations" title="Permalink to this heading">#</a></h3>
+<p>The <em>pair-wise combinations</em> criterion aims to combine values, but not an exhaustive enumeration of all possible combinations. As the name suggests, an equivalence class from each block must be paired with every other equivalence class from all other blocks.</p>
+<p>In our above example, this implies that we must have test cases to satisfy the following 21 pair-wise combinations:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{array}{llll}
+x = 0 \land y = 0 &amp; 0 &lt; x &lt; 10 \land y = 0 &amp; x \geq 10 \land y = 0 &amp; y=0 \land z~is~lowercase\\
+x = 0 \land y &gt; 0 &amp; 0 &lt; x &lt; 10 \land y &gt; 0 &amp; x \geq 10 \land y &gt; 0 &amp; y=0 \land z~is~uppercase\\
+x = 0 \land z~is~lowercase &amp; 0 &lt; x &lt; 10 \land z~is~lowercase &amp; x \geq 10 \land z~is~lowercase &amp; y=0 \land z~is~a~non-letter\\
+x = 0 \land z~is~uppercase &amp; 0 &lt; x &lt; 10 \land z~is~uppercase &amp; x \geq 10 \land z~is~uppercase &amp; y &gt; 0 \land z~is~lowercase\\
+x = 0 \land z~is~a~non-letter &amp; 0 &lt; x &lt; 10 \land z~is~a~non\text{-}letter &amp; x \geq 10 \land z~is~a~non\text{-}letter &amp; y&gt;0 \land z~is~uppercase\\
+       &amp; &amp; &amp; y&gt;0 \land z~is~a~non\text{-}letter
+\end{array}\end{split}\]</div>
+<p>However, a single test input can cover more than one of these. For example, the test input:</p>
+<p><span class="math notranslate nohighlight">\(x = 0 \land y = 0 \land z~is~lowercase\)</span> covers both <span class="math notranslate nohighlight">\(x = 0 \land y = 0\)</span> and <span class="math notranslate nohighlight">\(x = 0 \land z~is~lowercase\)</span>.</p>
+<p>With this in mind, we can select test cases that satisfy only nine equivalence classes; the three classes below:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{array}{ccccc}
+   x = 0 &amp; \land &amp; y = 0 &amp; \land &amp; z~is~lowercase\\
+   x = 0 &amp; \land &amp; y &gt; 0 &amp; \land &amp; z~is~uppercase\\
+   x = 0 &amp; \land &amp; y &gt; 0 &amp; \land&amp;  z~is~a~non\text{-}letter
+\end{array}\end{split}\]</div>
+<p>and the remaining six, which are as above except with <span class="math notranslate nohighlight">\(0 &lt; x &lt; 10\)</span> and <span class="math notranslate nohighlight">\(x \geq 10\)</span>.</p>
+<p>One can generalise this to <em>T-Wise Combinations</em>, in which we require <span class="math notranslate nohighlight">\(T\)</span> number of combinations instead of pairs. It <span class="math notranslate nohighlight">\(T\)</span> is equal to the number of blocks, then this is equivalent to the all combinations criterion.</p>
+</section>
+</section>
+<section id="references">
+<h2><span class="section-number">2.9. </span>References<a class="headerlink" href="#references" title="Permalink to this heading">#</a></h2>
+<p>P. Ammann and J. Offutt, <em>Introduction to Software Testing</em>, Cambridge University Press, 2008.</p>
+<p>R. Hierons, Avoiding coincidental correctness in boundary value analysis, <em>ACM Transactions on Software Engineering and Methodology</em>, 15(3):227–241, 2006.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Introduction-to-Testing.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">1. </span>Introduction to Software Testing</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Boundary-Value.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">3. </span>Boundary-Value Analysis</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-of-this-chapter">2.1. Learning outcomes of this chapter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-introduction">2.2. Chapter Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#equivalence-classes">2.3. Equivalence Classes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#input-conditions-valid-inputs-and-invalid-inputs">2.3.1. Input conditions, valid inputs, and invalid inputs</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#partioning-and-equivalence-classes">2.4. Partioning and equivalence classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#domain-testing">2.5. Domain Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#compound-predicates">2.5.1. Compound Predicates</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loops-in-programs">2.5.2. Loops in Programs</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#equivalence-partitioning">2.6. Equivalence Partitioning</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-identify-the-initial-equivalence-classes">2.6.1. Step 1 - Identify the initial equivalence classes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#guidelines-for-identifying-equivalence-classes">2.6.2. Guidelines for identifying equivalence classes</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#guideline-1-ranges">2.6.2.1. Guideline 1:  Ranges</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#guideline-2-discrete-sets">2.6.2.2. Guideline 2:  Discrete sets</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#guideline-3-number-of-inputs">2.6.2.3. Guideline 3: Number of inputs</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#guideline-4-zero-one-many">2.6.2.4. Guideline 4: Zero-one-many</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#guideline-5-must-rule">2.6.2.5. Guideline 5: Must rule</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#guideline-6-intuition-experience-catch-all">2.6.2.6. Guideline 6: Intuition/experience/catch-all!</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-eliminating-overlapping-equivalence-classes">2.6.3. Step 2 - Eliminating overlapping equivalence classes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-selecting-test-cases">2.6.4. Step 3 - Selecting test cases</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-template-trees">2.7. Test Template Trees</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start">2.7.1. Start</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#repeat">2.7.2. Repeat</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#end">2.7.3. End</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#result">2.7.4. Result</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mitigating-tree-explosion">2.7.5. Mitigating Tree Explosion</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-use">2.7.6. Practical use</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#combining-partitions">2.8. Combining Partitions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#all-combinations">2.8.1. All Combinations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#each-choice-combinations">2.8.2. Each Choice Combinations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pair-wise-combinations">2.8.3. Pair-Wise Combinations</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">2.9. References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By SWEN90006
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,602 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>7. Testing-and-Integration &#8212; SWEN90006 Software &amp; Security Testing</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/book-style.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Testing-and-Integration';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="8. Security Testing" href="Security-Testing.html" />
+    <link rel="prev" title="6. Property-based Testing and Test Oracles" href="Property-based-testing.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/uom.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/uom.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Subject Introduction
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">LECTURE NOTES</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Introduction-to-Testing.html">1. Introduction to Software Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-Partitioning.html">2. Input Partitioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Boundary-Value.html">3. Boundary-Value Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Coverage-Based-Testing.html">4. Coverage-Based Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Testing-Modules.html">5. Testing Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Property-based-testing.html">6. Property-based Testing and Test Oracles</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">7. Testing-and-Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Security-Testing.html">8. Security Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Coverage-Guided-Fuzzing.html">9. Code Coverage-Guided Fuzzing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Symbolic-Execution.html">10. Automated test generation using symbolic execution</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">APPENDIX</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Probabilities.html">A Brief Review of Some Probability Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Maximum.html">Maximum Likelihood Estimation</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/Testing-and-Integration.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Testing-and-Integration</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-of-this-chapter">7.1. Learning outcomes of this chapter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-introduction">7.2. Chapter Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integrating-the-system">7.3. Integrating the System</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-big-bang-integration-strategy">7.3.1. The Big-bang Integration Strategy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-top-down-integration-strategy">7.3.2. A Top-Down Integration Strategy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-bottom-up-integration-strategy">7.3.3. The Bottom-Up Integration Strategy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-threads-based-or-iterative-integration-strategy">7.3.4. A Threads-Based or Iterative Integration Strategy</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#types-and-levels-of-testing">7.4. Types and Levels of Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unit-testing">7.4.1. Unit Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-testing">7.4.2. Integration Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#system-testing">7.4.3. System Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#regression-testing">7.4.4. Regression testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exploratory-testing">7.4.5. Exploratory testing</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="testing-and-integration">
+<h1><span class="section-number">7. </span>Testing-and-Integration<a class="headerlink" href="#testing-and-integration" title="Permalink to this heading">#</a></h1>
+<section id="learning-outcomes-of-this-chapter">
+<h2><span class="section-number">7.1. </span>Learning outcomes of this chapter<a class="headerlink" href="#learning-outcomes-of-this-chapter" title="Permalink to this heading">#</a></h2>
+<p>At the end of this chapter, you should be able to:</p>
+<ul class="simple">
+<li><p>Map different integration strategies to test strategies.</p></li>
+<li><p>Describe the purpose of the different levels of testing: unit,
+integration, system, user acceptance, and regression.</p></li>
+<li><p>Compare and contrast exploratory testing to systematic forms of
+testing.</p></li>
+</ul>
+</section>
+<section id="chapter-introduction">
+<h2><span class="section-number">7.2. </span>Chapter Introduction<a class="headerlink" href="#chapter-introduction" title="Permalink to this heading">#</a></h2>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>Informally, latent faults are faults that remain undiscovered during development until after the system has been released and a specific state of the system or specific external circumstances trigger the fault.</p>
+</div>
+</aside>
+<p>In this chapter, we look at the process of building up systems from their component. The relationship between integration (or creating system <em>builds</em>) and testing is an important one. The order in which modules are integrated and tested can make the process of finding faults easier if a good strategy is chosen and may result in fewer latent faults [1].</p>
+<p>The process of <em>developing</em> and <em>debugging</em> your programs, <em>building</em> your programs, <em>validating</em> and <em>verifying</em> your programs and <em>testing</em> your programs are inter-related and depend upon each other.</p>
+<p>In general terms, a <em>software system</em> is a collection of programs. You may be developing a single (often referred to as a <em>monolithic</em>) program, or you may need to develop a <em>suite</em> of programs that must work together to achieve a common goal. We will use the word “system” to mean either a single program or a collection of programs.</p>
+<p>The development of a system typically follows a process that involves requirements, design, implementation and testing phases. The process also typically uses various methods for validating and verifying the documents, plans, programs and other artifacts that are developed in each phase. This is where the various life-cycles and techniques from the Software Processes and Management subject are used.</p>
+</section>
+<section id="integrating-the-system">
+<h2><span class="section-number">7.3. </span>Integrating the System<a class="headerlink" href="#integrating-the-system" title="Permalink to this heading">#</a></h2>
+<p>In the process of designing a system, you will have decomposed your system into modules, packages or classes. If the system is complicated then you may have decomposed each module into sub-modules and so on.</p>
+<p><em>Integrating</em> your system refers to putting the modules, packages or classes together to create subsystems, and eventually the system itself. Generally speaking, integration and testing go together. Good integration strategies can give help you to minimise testing effort required. Poor integration strategies generally cause more work, and lead to lower quality software.</p>
+<p>Normally, a system integration is organised into a series of <em>builds</em>. Each build combines and tests one subset of the modules, packages or objects of the system.</p>
+<p>The aim for most integration strategies is to divide the modules into subsets based on their <em>dependencies</em>. Typical build strategies then try and integrate all those modules with no dependencies first, the modules that depend on these second, and so on. Here are some examples of integration strategies.</p>
+<section id="the-big-bang-integration-strategy">
+<h3><span class="section-number">7.3.1. </span>The Big-bang Integration Strategy<a class="headerlink" href="#the-big-bang-integration-strategy" title="Permalink to this heading">#</a></h3>
+<p>The <em>Big-Bang</em> method involves coding all of the modules in a sub-system, or indeed the whole system, separately and then combining them all at once. Each module is typically unit tested first, before integrating it into the system. The modules can be implemented in any order so programmers can work in parallel.</p>
+<p>Once integrated, the completely integrated system is tested. The problem is that if the integrated systems fails a test then it is often difficult to determine which module or interface caused the failure. There is also a huge load on resources when modules are combined (machine demand and personnel).</p>
+<p>The other problem with a Big-Bang integration strategy is that the number of input combinations becomes extremely large — testing all of the possible input combinations is often impossible and consequently we there may be latent faults in the integrated sub-system</p>
+</section>
+<section id="a-top-down-integration-strategy">
+<h3><span class="section-number">7.3.2. </span>A Top-Down Integration Strategy<a class="headerlink" href="#a-top-down-integration-strategy" title="Permalink to this heading">#</a></h3>
+<p>The <em>top-down</em> method involves implementing and integrating the modules on which no other modules depend, first. The modules on which the these <em>top-level</em> modules depend are implemented and integrated next and so on until the whole system is complete.</p>
+<p>The advantages over a Big-Bang approach are that the machine demand is spread throughout integration phase. Also, if a module fails a test then it is easier to isolate the faults leading to those failures. Because testing is done incrementally, is is more straightforward to explore the input for program faults.</p>
+<p>The top-down integration strategy requires <em>stubs</em> to be written. A stub is an implementation used to stand in for some other program. A stub may simulate the behaviour of an existing implementation, or be a temporary substitute for a yet-to-be-developed implementation.</p>
+</section>
+<section id="the-bottom-up-integration-strategy">
+<h3><span class="section-number">7.3.3. </span>The Bottom-Up Integration Strategy<a class="headerlink" href="#the-bottom-up-integration-strategy" title="Permalink to this heading">#</a></h3>
+<p>The <em>bottom-up</em> method is essentially the opposite of the top-down. Lowest-level modules are implemented first, then modules at the next level up are implemented forming subsystems and so on until the whole system is complete and integrated.</p>
+<p>This is a common method for integration of object-oriented programs, starting with the testing and integration of base classes, and then integrating the classes that depend on the base classes and so on.</p>
+<p>The bottom-up integration strategy requires <em>drivers</em> to be written. A driver is a piece of code use to supply input data to another piece of code. Typically, the piece modules being tested need to have input data supplied to them via their interfaces. The driver program typically calls the modules under test supplying the input data for the tests as it does so.</p>
+</section>
+<section id="a-threads-based-or-iterative-integration-strategy">
+<h3><span class="section-number">7.3.4. </span>A Threads-Based or Iterative Integration Strategy<a class="headerlink" href="#a-threads-based-or-iterative-integration-strategy" title="Permalink to this heading">#</a></h3>
+<p>The <em>threads-based</em> integration method attempts to gain all of the advantages of the top-down and bottom-up methods while avoiding their weaknesses. The idea is to is to select a minimal set of modules that perform a program function or program capability, called a <strong>thread</strong>, and then integrate and test this set of modules using either the top-down or bottom-up strategy.</p>
+<p>Ideally, a thread should include some I/O and some processing where the modules are selected from all levels of the module hierarchy. Once a thread is tested and built other modules can be added to start building up a complete the system.</p>
+<p>This idea is common in agile methodologies. Threads are focussed on user requirements, or user stories. Given a coherent piece of functionality from a set of user requirements, we build that small piece of functionality to deliver some value to the user. However, this is NOT an integration strategy on its own: we will still have to bring together parts of this as we go, using top-down and bottom-up strategies.</p>
+</section>
+</section>
+<section id="types-and-levels-of-testing">
+<h2><span class="section-number">7.4. </span>Types and Levels of Testing<a class="headerlink" href="#types-and-levels-of-testing" title="Permalink to this heading">#</a></h2>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>[2] The diagram in Figure <a class="reference internal" href="#f-7-1"><span class="std std-ref">7.1</span></a> is called the V Model. The V Model is not (necessarily) a process model. Instead, it is used to demonstrate that you design your system tests against requirements specifications, integration tests against high level design specifications and unit tests against detailed design specifications.</p>
+</div>
+</aside>
+<p>There are various types of testing that systems typically undergo. Each type of testing is aimed at detecting different kinds of failures and making different kinds of measurements. Figure <a class="reference internal" href="#f-7-1"><span class="std std-ref">7.1</span></a> is a representative diagram that shows how each type of testing corresponds to a stage in the development[^2].</p>
+<figure class="align-center" id="f-7-1">
+<a class="reference internal image-reference" href="_images/V-Model.png"><img alt="_images/V-Model.png" src="_images/V-Model.png" style="width: 70%;" /></a>
+</figure>
+<p style="text-align: center;">Figure 7.1: A simplified view of the relation between testing levels and development artifacts.</p>
+<section id="unit-testing">
+<h3><span class="section-number">7.4.1. </span>Unit Testing<a class="headerlink" href="#unit-testing" title="Permalink to this heading">#</a></h3>
+<p>The first task in unit testing is to work out exactly what a unit is for the purpose of testing. In most cases, a unit is a module: a collection of procedures or functions that manipulate a shared state. In these cases, the module is tested as a whole, because changes in one procedure can effect others. In other cases, a unit is a single procedure or function. In these cases, the only inputs and outputs are parameters and return values — there is no state.</p>
+<p>Units, if they are functions or classes, are tested for correctness, completeness and consistency. Unit testing measures the attributes of units. They can be tested for performance but almost never for reliability; units are far too small in size to have the statistical properties required for reliability modelling.</p>
+<p>If each unit is thoroughly tested before integration there will be far fewer faults to track down later when they are harder to find.</p>
+</section>
+<section id="integration-testing">
+<h3><span class="section-number">7.4.2. </span>Integration Testing<a class="headerlink" href="#integration-testing" title="Permalink to this heading">#</a></h3>
+<p>Integration testing tests collections of modules working together. Which collection of modules are integrated and tested depends on the integration strategy. The aim is to test the interfaces between modules to confirm that the modules interface together properly. Integration testing also aims to test that subsystems meet their requirements.</p>
+<p>Integration tests are derived from high level component designs and requirements specifications.</p>
+</section>
+<section id="system-testing">
+<h3><span class="section-number">7.4.3. </span>System Testing<a class="headerlink" href="#system-testing" title="Permalink to this heading">#</a></h3>
+<p>System testing test the entire system against the requirements, use cases or scenarios from requirements specification and design goals. Sometimes system testing is broken down into three groups of related testing activities:</p>
+<div class="admonition-definition admonition">
+<p class="admonition-title">Definition</p>
+<ul class="simple">
+<li><p><strong>System Functional Test</strong>: tests the entire system against the functional requirements and other external sources that determine requirements such as the user manual.</p></li>
+<li><p><strong>System Performance Test</strong>: test the non-functional requirements of the system for example, the load that the system can handle, response times and can test usability (although this latter testing is more like a survey than what we would call an actual <em>test</em>).</p></li>
+<li><p><strong>User Acceptance Test</strong>: is a set of tests that the software must pass before it is accepted by the clients. This is typically a form of <em>validation</em>, whereas testing against the specification is a form of <em>verification</em>.</p></li>
+</ul>
+</div>
+</section>
+<section id="regression-testing">
+<h3><span class="section-number">7.4.4. </span>Regression testing<a class="headerlink" href="#regression-testing" title="Permalink to this heading">#</a></h3>
+<p>Programs undergo changes but the changes do not always effect the entire program. Rather certain functions or modules are changed to reflect new requirements, system evolution or even just bug fixes. History shows that, after making a change to a system, testing only the part of the system that has changed is not enough. A change in one part of a system can effect other parts of the system in ways that are difficult to predict. Therefore, after any change, the entire test suite of a system must be run again. This is called <em>regression testing</em>.</p>
+<p>Regression testing is one of the key reasons for wanting to be able to execute test suites automatically. To test an entire system by hand is costly even for the smallest of systems, and infeasible for many others.</p>
+</section>
+<section id="exploratory-testing">
+<h3><span class="section-number">7.4.5. </span>Exploratory testing<a class="headerlink" href="#exploratory-testing" title="Permalink to this heading">#</a></h3>
+<blockquote>
+<div><p>“<em>Exploratory testing is simultaneous learning, test design, and test &gt; execution.</em>” – James Bach, Exploratory Testing Explained.</p>
+</div></blockquote>
+<p>Exploratory testing is a form of <em>unstructured</em> testing. It is done typically by experienced testers, preferably with some domain knowledge about the application. All they do is explore the software, using their experience from years of software engineering and what they have learnt about the piece of software during their exploratory testing to find faults.</p>
+<p>It is typically conducted at a system level (but not always), simply by having people sit and explore the application, trying out different parts, observing what happens, and then repeating. It aims to exploit human insight to find faults. By exploring the application, the human tester gains insight that they could not gain by just writing tests.</p>
+<p>Exploratory testing has several advantages over other types of structured testing. First, the knowledge gained by the tester during the testing process can lead to them understanding the requirements better than someone doing structure testing, so they may think of things that they wouldn’t have otherwise. Second, structured tests require both a test input and an expected output. So, the tester will be focused on the test output, and may completely ignore other things that are going on. Consider a web application, in which a tester executes a test, and looks at a specific field to get the actual output to compare to the expected output. They are less likely to notice other anomalies on the page compared to an exploratory tester.</p>
+<p>It also have disadvantages. First, it does not really offer any type of structure around the testing, such as how to maximise chances of finding faults. Second, it is difficult to repeat, and difficult to run regression tests, because we do not really record what is happening.</p>
+<p>Exploratory testing is best used in combination with structured techniques. Although it is less scientific in the way test selection and execution is done, its advantage is the use of human insight to find faults.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Property-based-testing.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">6. </span>Property-based Testing and Test Oracles</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Security-Testing.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">8. </span>Security Testing</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-of-this-chapter">7.1. Learning outcomes of this chapter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-introduction">7.2. Chapter Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integrating-the-system">7.3. Integrating the System</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-big-bang-integration-strategy">7.3.1. The Big-bang Integration Strategy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-top-down-integration-strategy">7.3.2. A Top-Down Integration Strategy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-bottom-up-integration-strategy">7.3.3. The Bottom-Up Integration Strategy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-threads-based-or-iterative-integration-strategy">7.3.4. A Threads-Based or Iterative Integration Strategy</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#types-and-levels-of-testing">7.4. Types and Levels of Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unit-testing">7.4.1. Unit Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-testing">7.4.2. Integration Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#system-testing">7.4.3. System Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#regression-testing">7.4.4. Regression testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exploratory-testing">7.4.5. Exploratory testing</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By SWEN90006
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

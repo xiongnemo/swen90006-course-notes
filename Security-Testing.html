@@ -1,0 +1,872 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>8. Security Testing &#8212; SWEN90006 Software &amp; Security Testing</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/book-style.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Security-Testing';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="9. Code Coverage-Guided Fuzzing" href="Coverage-Guided-Fuzzing.html" />
+    <link rel="prev" title="7. Testing-and-Integration" href="Testing-and-Integration.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/uom.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/uom.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Subject Introduction
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">LECTURE NOTES</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Introduction-to-Testing.html">1. Introduction to Software Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-Partitioning.html">2. Input Partitioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Boundary-Value.html">3. Boundary-Value Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Coverage-Based-Testing.html">4. Coverage-Based Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Testing-Modules.html">5. Testing Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Property-based-testing.html">6. Property-based Testing and Test Oracles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Testing-and-Integration.html">7. Testing-and-Integration</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">8. Security Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Coverage-Guided-Fuzzing.html">9. Code Coverage-Guided Fuzzing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Symbolic-Execution.html">10. Automated test generation using symbolic execution</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">APPENDIX</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Probabilities.html">A Brief Review of Some Probability Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Maximum.html">Maximum Likelihood Estimation</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/Security-Testing.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Security Testing</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-of-this-chapter">8.1. Learning outcomes of this chapter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-introduction">8.2. Chapter Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-to-penetration-testing">8.3. Introduction to Penetration Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#random-testing">8.4. Random Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advantages">8.4.1. Advantages</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#disadvantages">8.4.2. Disadvantages</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutation-based-fuzzing">8.5. Mutation-based Fuzzing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">8.5.1. Advantages</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">8.5.2. Disadvantages</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tool-support">8.5.3. Tool support</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generation-based-fuzzing">8.6. Generation-based Fuzzing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">8.6.1. Advantages</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">8.6.2. Disadvantages</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">8.6.3. Tool support</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-debuggers">8.7. Memory Debuggers</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-cost">8.7.1. Performance Cost</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">8.7.2. Tool Support</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#undefined-behaviour">8.8. Undefined Behaviour</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">8.8.1. Tool Support</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="security-testing">
+<h1><span class="section-number">8. </span>Security Testing<a class="headerlink" href="#security-testing" title="Permalink to this heading">#</a></h1>
+<section id="learning-outcomes-of-this-chapter">
+<h2><span class="section-number">8.1. </span>Learning outcomes of this chapter<a class="headerlink" href="#learning-outcomes-of-this-chapter" title="Permalink to this heading">#</a></h2>
+<p>At the end of this chapter, you should be able to:</p>
+<ul class="simple">
+<li><p>Discuss the purpose of security testing.</p></li>
+<li><p>Explain the potential security implications (in terms of integrity, confidentiality, availability, arbitrary code execution etc.) of security faults</p></li>
+<li><p>Explain the relative strengths and weaknesses of random fuzzing vs mutation based fuzzing vs generation based fuzzing</p></li>
+<li><p>Choose (and justify) which security testing technique (random fuzzing, mutation based fuzzing, generation based fuzzing, or some combination) is most appropriate for testing a particular software component</p></li>
+<li><p>Explain the security implications of undefined behaviour in C code</p></li>
+<li><p>Discuss the advantages and disadvantages of using a memory debugger to check for memory errors, and undefined behaviour sanitizers to check for undefined behaviour</p></li>
+<li><p>Explain in general terms how general-purpose greybox fuzzers like AFL or libFuzzer operate and their advantages and disadvantages as compared to random, mutation and generation-based fuzzing.</p></li>
+</ul>
+</section>
+<section id="chapter-introduction">
+<h2><span class="section-number">8.2. </span>Chapter Introduction<a class="headerlink" href="#chapter-introduction" title="Permalink to this heading">#</a></h2>
+<p>In this chapter, we will look at a few systematic and automated approaches to testing security of systems. Specifically, we will look at three different ways of <em>penetration testing</em>.</p>
+<p>Penetration testing (or <em>pentesting</em>) is the process of attacking a piece of software with the purpose of finding security vulnerabilities. In practice, pentesting is just hacking, with the difference being that in pentesting, you have the permission of the system owners to attack the system.</p>
+<p>In other words, penetration testing is <em>hacking with permission</em>.</p>
+<p>One way to perform penetration testing is to just try out a whole load of tricks that have worked before. For experienced pentesters, this is an excellent and fruitful approach; and in fact, many people make their career out of intelligently trying to break systems. However, this is exceedingly difficult to teach in a few week period off a university subject. Instead, in this chapter, we are going to focus on <em>automated</em> pentesting, which is generally called <em>fuzzing</em> or <em>fuzz testing</em>, which is a systematic and repeatable approach to pentesting, and one which is used by many great penetration testers.</p>
+</section>
+<section id="introduction-to-penetration-testing">
+<h2><span class="section-number">8.3. </span>Introduction to Penetration Testing<a class="headerlink" href="#introduction-to-penetration-testing" title="Permalink to this heading">#</a></h2>
+<p>First, some terminology. The aim of penetration testing is to find <em>vulnerabilities</em>. A vulnerability is a security hole in the hardware or software (including operating system) of a system that provides the possibility to attack that system; e.g., gaining unauthorised access. Vulnerabilities can be weak passwords that are easy to guess, buffer overflows that permit access to memory outside of the running process, or unescaped SQL commands that provide unauthorised access to data in a database.</p>
+<div class="tip admonition" id="example-66">
+<p class="admonition-title">Example 66</p>
+<p>As an example of an SQL vulnerability, consider a request that allows a user to lookup their information based on their email address via a textbox, resulting in the following query to a database:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">*</span> <span class="pre">FROM</span> <span class="pre">really_personal_details</span> <span class="pre">WHERE</span> <span class="pre">email</span> <span class="pre">=</span> <span class="pre">’$EMAIL_ADDRESS’</span> </code></p>
+</div></blockquote>
+<p>in which <code class="docutils literal notranslate"><span class="pre">$EMAIL_ADDRESS</span></code> is the text copied from the text box.</p>
+<p>If the text <code class="docutils literal notranslate"><span class="pre">myemail&#64;somedomain.com</span></code> is entered, then this works fine. However, if the user is aware of such a vulnerability, they may instead enter: <code class="docutils literal notranslate"><span class="pre">myemail&#64;somedomain.com’</span> <span class="pre">OR</span> <span class="pre">’1=1</span></code> (note the unopened and unclosed quotation marks here). If the developers have not been careful, this <em>may</em> result in the following query being issued:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">*</span> <span class="pre">FROM</span> <span class="pre">really_personal_details</span> <span class="pre">WHERE</span> <span class="pre">email</span> <span class="pre">=</span> <span class="pre">’myemail&#64;somedomain.com’</span> <span class="pre">OR</span> <span class="pre">’1=1’</span> </code></p>
+</div></blockquote>
+<p>The <code class="docutils literal notranslate"><span class="pre">WHERE</span></code> clause evaluates to <span class="math notranslate nohighlight">\(true\)</span>, and therefore, the user will be able to gain unauthorised access to all data in the table, including that of other users.</p>
+</div>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>[1]: Taken from <a class="reference external" href="https://en.wikipedia.org/wiki/Stack_buffer_overflow">https://en.wikipedia.org/wiki/Stack_buffer_overflow</a></p>
+</div>
+</aside>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>[2]: Taken from <a class="reference external" href="https://en.wikipedia.org/wiki/Stack_buffer_overflow">https://en.wikipedia.org/wiki/Stack_buffer_overflow</a></p>
+</div>
+</aside>
+<p>Buffer overflows are another common security vulnerability. These occur when data is written into a buffer (in memory) that is too small to handle the size of the data. In some languages, such as C and C++, the additional data simply overwrites the memory that is located immediately after the buffer. If carefully planned, attacker-generated data and code can be written here.</p>
+<div class="tip admonition" id="example-67">
+<p class="admonition-title">Example 67</p>
+<p>Consider the following example of a stack buffer overflow[1].</p>
+<p>The following C program takes a string as input, and allocates it to a buffer 12 characters long:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="nf">foo</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">bar</span><span class="p">)</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">char</span><span class="w">  </span><span class="n">c</span><span class="p">[</span><span class="mi">12</span><span class="p">];</span>
+
+<span class="w">        </span><span class="n">strcpy</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">bar</span><span class="p">);</span><span class="w">  </span><span class="c1">// no bounds checking</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">**</span><span class="n">argv</span><span class="p">)</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="n">foo</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+<span class="w">      </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Now, consider the two cases in Figure <a class="reference internal" href="#f-9-1"><span class="std std-ref">9.1</span></a>[2]. On the left is the case where the input string, <code class="docutils literal notranslate"><span class="pre">hello\0</span></code>, is small enough to fit into the buffer. The frame pointer and return address for the <code class="docutils literal notranslate"><span class="pre">foo</span></code> function sit next to the buffer in memory. On the right side is an example where the input string, <code class="docutils literal notranslate"><span class="pre">AA...\x08\x35\xC0\x80</span></code>, is longer than the buffer. This writes over the frame pointer and the return address. Now, when <code class="docutils literal notranslate"><span class="pre">foo</span></code> finishes executing, the execution will jump to the address specified in the return address spot, which is at the start of <code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">c[12]</span></code>. In this case, the contents of <code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">c[12]</span></code> is meaningless, but in an attack, the string would contain payload that could be a malicious program, which would have privileges equivalent to the program being executed; e.g., it could have superuser/admin access.</p>
+<figure class="align-center" id="f-9-1">
+<a class="reference internal image-reference" href="_images/Stack_Overflow_3.png"><img alt="_images/Stack_Overflow_3.png" src="_images/Stack_Overflow_3.png" style="width: 85%;" /></a>
+</figure>
+<p style="text-align: center;">Figure 9.1: An example of expect buffer usage (left) and overflow (right)</p>
+</div>
+<p>Clearly, there are many ways to try to reduce the chance such attacks: defensive programming that checks for array bounds, using programming languages that do this automatically, or finding and eliminating these problems. We can find these problems using reviews and inspections, letting hackers find them for us (not recommended), or using verification techniques.</p>
+<p>In this chapter, we look at verification techniques, specifically, fuzz testing.</p>
+<div class="admonition-definition admonition">
+<p class="admonition-title">Definition</p>
+<p><em>Fuzz testing</em> (or <em>fuzzing</em>) is a (semi-)automated approach for penetration testing that involves the randomisation of input data to locate vulnerabilities.</p>
+</div>
+<p>Typically, a fuzz testing tool (or <em>fuzzer</em>) generates many test inputs and monitors the program behaviour on these inputs, looking for things such as exceptions, segmentation faults, and memory leaks; rather than testing for functional correctness. Typically, this is done live: that is, one input is generated, executed, and monitored, then the next input, and so on.</p>
+<p>We will look at three techniques for fuzzing:</p>
+<ol class="arabic simple">
+<li><p>Random testing: tests generated randomly from a specified distribution.</p></li>
+<li><p>Mutation-based fuzzing: starting with a well-formed input and randomly modifying (mutating) parts of that input</p></li>
+<li><p>Generation-based fuzzing: using some specification of the input data, such as a grammar of the input.</p></li>
+</ol>
+</section>
+<section id="random-testing">
+<span id="sec-security-testing-random-testing"></span><h2><span class="section-number">8.4. </span>Random Testing<a class="headerlink" href="#random-testing" title="Permalink to this heading">#</a></h2>
+<p>Random testing is one approach to fuzzing. In random fuzzing, tests are chosen according to some probability distribution (possible uniform) to permit a large amount of inputs to be generated in a fast and unbiased way.</p>
+<section id="advantages">
+<h3><span class="section-number">8.4.1. </span>Advantages<a class="headerlink" href="#advantages" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>It is often (but not always) cheap and easy to generate random tests, and cheap to run many such tests automatically.</p></li>
+<li><p>Is is <em>unbiased</em>, unlike tests selected by humans. This is useful for pentesting because the cases that are missed during programming are often due to lack of human understanding, and random testing may search these out.</p></li>
+</ul>
+</section>
+<section id="disadvantages">
+<h3><span class="section-number">8.4.2. </span>Disadvantages<a class="headerlink" href="#disadvantages" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>A prohibitively large number of test inputs may need to be generated in order to be confident that the input domain has been adequately covered.</p></li>
+<li><p>The distribution of random inputs simply misses the program faults (recall the Pareto-Zipf principle from Chapter <a class="reference external" href="https://swen90006.github.io/notes/intro.html">1</a>).</p></li>
+<li><p>It is highly unlikely to achieve good coverage.</p></li>
+</ul>
+<p>The final point deserves some discussion. If we take any non-trivial program and blast it with millions of random tests, it is unlikely that we will achieve good coverage, where coverage could be based on any reasonable criteria (control-flow, mutation, etc.).</p>
+<p>Consider the following example, in which we have a “fault” at line 7 where the program unexpectedly aborts.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="w">      </span><span class="mf">1.</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">good_bad</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">s</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="mf">2.</span><span class="w">   </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">      </span><span class="mf">3.</span><span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;b&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">count</span><span class="o">++</span><span class="p">;</span>
+<span class="w">      </span><span class="mf">4.</span><span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;a&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">count</span><span class="o">++</span><span class="p">;</span>
+<span class="w">      </span><span class="mf">5.</span><span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;d&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">count</span><span class="o">++</span><span class="p">;</span>
+<span class="w">      </span><span class="mf">6.</span><span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;!&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">count</span><span class="o">++</span><span class="p">;</span>
+<span class="w">      </span><span class="mf">7.</span><span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">count</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="n">abort</span><span class="p">();</span><span class="w">  </span><span class="c1">//fault</span>
+<span class="w">      </span><span class="mf">8.</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>This program will only fail on the input “bad!”. Using random testing, random arrays of four characters will be generated, but encountering the fault at line 7 is highly unlikely. Since each char data type (in C programming lanague) occupies 8 bit in the memory, the probability of randomly generating the string “bad!” requires us to randomly choose ‘b’ at index 0 (probability of 1 in <span class="math notranslate nohighlight">\(2^{8}\)</span>, ‘a’ at location 1 (probability of <span class="math notranslate nohighlight">\(1\)</span> in <span class="math notranslate nohighlight">\(2^{8}\)</span>), etc., leaving us with the probability of <span class="math notranslate nohighlight">\(1\)</span> in <span class="math notranslate nohighlight">\(2^{32}\)</span> that the code will be executed. In fact, almost every randomly generated test will execute false for every branch.</p>
+<p>While this example is a fabricated example, such cases are common place in real programs. For example, consider any branch of the form <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">==</span> <span class="pre">y</span></code> (unlikely that <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> will have the same value). Or, more interestingly, consider the chance of randomly generating a correct username and password to get into a system, or generating the correct checksum for a packet of data that is received. This latter case is common in security-critical applications: only if we have the correct checksum, we can “do something interesting”:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="w">     </span><span class="mf">1.</span><span class="w"> </span><span class="n">boolean</span><span class="w"> </span><span class="n">my_program</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">checksum</span><span class="p">)</span><span class="w"> </span>
+<span class="w">     </span><span class="mi">2</span><span class="w">  </span><span class="p">{</span>
+<span class="w">     </span><span class="mf">3.</span><span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">calc_checksum</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">checksum</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="mf">4.</span><span class="w">     </span><span class="c1">//do something interesting</span>
+<span class="w">     </span><span class="mf">5.</span><span class="w">     </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">     </span><span class="mf">6.</span><span class="w">   </span><span class="p">}</span>
+<span class="w">     </span><span class="mf">7.</span><span class="w">   </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="mf">8.</span><span class="w">     </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w">  </span>
+<span class="w">     </span><span class="mf">9.</span><span class="w">   </span><span class="p">}</span>
+<span class="w">    </span><span class="mf">10.</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>In cases such as this, a random testing tool will likely spend most of its time just testing the false case over and over, which is not particularly useful.</p>
+<p>A standard way to address this is to (if possible) measure the code coverage achieved by your tests after a certain amount of time, and look for cases like these. Then, modify your random testing tool to first send some data with a correct checksum, and then use random testing for the remainder of inputs. Rinse and repeat.</p>
+</section>
+</section>
+<section id="mutation-based-fuzzing">
+<h2><span class="section-number">8.5. </span>Mutation-based Fuzzing<a class="headerlink" href="#mutation-based-fuzzing" title="Permalink to this heading">#</a></h2>
+<p>Mutation-based fuzzing is a simple process that takes valid test inputs, and mutates small parts of the input, generating (possibly invalid) test inputs. The mutation (not to be confused with mutation analysis discussed in Section <a class="reference internal" href="Coverage-Based-Testing.html#mutation-analysis"><span class="std std-ref">Mutation Analysis</span></a>) can be either random or based on some heuristics.</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>[3]: Taken from <a class="reference external" href="http://pages.cs.wisc.edu/~rist/642-fall-2012/toorcon.pdf">http://pages.cs.wisc.edu/~rist/642-fall-2012/toorcon.pdf</a></p>
+</div>
+</aside>
+<p>As an example, consider a mutation-based fuzzer for testing web servers[3]. A standard HTTP GET request for the index page could be a valid input:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  GET /index.html HTTP/1.1
+</pre></div>
+</div>
+<p>From this, many anomalous test inputs, which should all be handled by the server, can be generated by randomly changing parts of that input:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  AAAAAA...AAAA /index.html HTTP/1.1
+  GET ///////index.html HTTP/1.1
+  GET %n%n%n%n%n%n.html HTTP/1.1
+  GET /AAAAAAAAAAAAA.html HTTP/1.1
+  GET /index.html HTTTTTTTTTTTTTP/1.1
+  GET /index.html HTTP/1.1.1.1.1.1.1.1
+</pre></div>
+</div>
+<p>One can imagine a simple program being set up to generate such inputs and deliver them to a web server.</p>
+<p>As an example of a more heuristic-based mutation fuzzer, consider a text field in a web form in which a user enters their email address, as in Example <a class="reference internal" href="#example-66"><span class="std std-ref">66</span></a>. Attacks such as those presented are common, so an heuristic mutation fuzzer will add targets such as that to fields, instead of random data. So, a valid input such as:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  &#39;myemail@somedomain.com&#39;
+</pre></div>
+</div>
+<p>could be mutated to things such as:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  &#39;myemail@somedomain.com&#39; OR &#39;1=1&#39;  
+  &#39;myemail@somedomain.com&#39; AND email IS NULL
+  &#39;myemail@somedomain.com&#39; AND username IS NULL
+  &#39;myemail@somedomain.com&#39; AND userID IS NULL
+</pre></div>
+</div>
+<p>These last three attempt to guess the name of the field for the email address. If any of these give a valid response, we know that we guess the name of the field correctly; otherwise a server error will be thrown.</p>
+<section id="id1">
+<h3><span class="section-number">8.5.1. </span>Advantages<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<p>The main advantages of fuzzing are compared to random testing are:</p>
+<ul class="simple">
+<li><p>It generally achieves higher code coverage than random testing. While issues such as the checksum issue discussed earlier still occur, they often occur less of the time if the valid inputs that are mutated have the correct values to get passed these tricky branches. Even though the mutated tests may change these, some will change different parts of the input, and the e.g., checksum will still be valid.</p></li>
+</ul>
+</section>
+<section id="id2">
+<h3><span class="section-number">8.5.2. </span>Disadvantages<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>The success is highly dependent on the valid inputs that are mutated.</p></li>
+<li><p>It still suffers from low code coverage due to unlikely cases (but not to the extent of random testing).</p></li>
+</ul>
+</section>
+<section id="tool-support">
+<h3><span class="section-number">8.5.3. </span>Tool support<a class="headerlink" href="#tool-support" title="Permalink to this heading">#</a></h3>
+<p>There are many tools to support mutation-based fuzzing.</p>
+<ul class="simple">
+<li><p>Radamsa (<a class="gitlab reference external" href="https://gitlab.com/akihe/radamsa">akihe/radamsa</a>) is typically used to test how well a program can withstand malformed and potentially malicious inputs. It works by reading sample files of valid data and generating interestringly different outputs from them.</p></li>
+<li><p>zzuf (<a class="reference external" href="http://caca.zoy.org/wiki/zzuf">http://caca.zoy.org/wiki/zzuf</a>) is a commonly-used tool for “corrupting” valid input data to produce new anomaly tests. It uses randomisation, and has controllable properties such as how much of the input should be changed for each test.</p></li>
+<li><p>Peach (<a class="reference external" href="http://www.peachfuzzer.com/">http://www.peachfuzzer.com/</a>) is a well-known fuzzer that supports mutation fuzzing, and has reached a level of maturity that make it applicable to many projects.</p></li>
+</ul>
+</section>
+</section>
+<section id="generation-based-fuzzing">
+<h2><span class="section-number">8.6. </span>Generation-based Fuzzing<a class="headerlink" href="#generation-based-fuzzing" title="Permalink to this heading">#</a></h2>
+<p>Generation-based fuzzers (or <em>intelligent fuzzers</em>) typically generate their own input from such existing models, rather than mutating existing input (although many tools combine the two approaches).</p>
+<p>Typically, generation-based fuzzers have some information about the format of the input that is required; for example, a grammar of the input language (e.g., SQL grammar), knowledge of the file format. Using this knowledge, a generated-based fuzzer can create inputs that preserve the structure of the input, but it can randomly or heuristically modify parts of the input based on that knowledge. Therefore, instead of randomly modifying parts of a string representing an SQL query, it can produce syntactically-correct SQL, but with random data within that structure.</p>
+<p>Further to this, by knowing the input protocol and the interactions that are required, a generation-based fuzzer can more intelligently select inputs. For example, by knowing a protocol for a web server, it can behave as a true web client would, allowing generation of correct, dynamic responses to server responses, rather than just random data.</p>
+<p>In essence, the strategies applied, such as which parts to change and how fine-grained the changes are, affect the “intelligence” of the fuzzer.</p>
+<div class="tip admonition">
+<p class="admonition-title">Example 69</p>
+<p>As an example, consider generating a HTTP POST call with a SOAP action:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  POST / HTTP/1.1
+  Host: unimelb.edu.au
+  Content-Type: text/xml; charset=utf-8
+  Content-Length: 372
+  SOAPAction: &quot;http://wheverer.com/somewhere&quot;
+
+  &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+  &lt;soap:Envelope xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;...
+  &lt;soap:Body&gt;
+    &lt;firstName&gt;A name&lt;/firstName&gt;
+    &lt;lastName&gt;Another name&lt;/lastName&gt;
+    &lt;paramsXML&gt;param 1&lt;/paramsXML&gt;
+  &lt;/soap:Body&gt;
+  &lt;/soap:Envelope&gt;
+</pre></div>
+</div>
+<p>A mutation-based fuzzer will take an input such as this and randomly modify parts of it; for example, by replacing some random characters. In most cases, this would result in a query that cannot be parsed by the server. Non-parsable inputs can be valuable for testing the parser, but we want to also test other parts.</p>
+<p>A generation-based fuzzer, on the other hand, would know the HTTP and SOAP protocols, so would first generate the skeleton for a parsable query, and then generate the values in between the tags of the SOAP query (randomly or heuristically). For example, it may randomly change the value in the <code class="docutils literal notranslate"><span class="pre">firstName</span></code> tag to a much longer string. This would result in a SOAP query that is longer than specified in the <code class="docutils literal notranslate"><span class="pre">Content-Length</span></code> HTTP parameter (372 chars), perhaps resulting in a case where the SOAP query overflows the buffer that is allocated — presumably 373 chars (although one would hope that the server is using a library that does not do this!).</p>
+</div>
+<section id="id3">
+<h3><span class="section-number">8.6.1. </span>Advantages<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Knowledge the input protocol means that valid sequences of inputs can be generated that explore parts of the program, thus generally giving higher coverage.</p></li>
+</ul>
+</section>
+<section id="id4">
+<h3><span class="section-number">8.6.2. </span>Disadvantages<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Compared to random testing and mutation fuzzing, it requires some knowledge about the input protocol.</p></li>
+<li><p>The setup time is generally much higher, due to the requirement of knowing the input protocol; although in some cases, the grammar may already be known (e.g., XML, RFC).</p></li>
+</ul>
+</section>
+<section id="id5">
+<h3><span class="section-number">8.6.3. </span>Tool support<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Peach(<a class="reference external" href="http://www.peachfuzzer.com/">http://www.peachfuzzer.com/</a>), which is mentioned also at a mutation fuzzer, supports both mutation and generation-based fuzzing. For smarter generation-based fuzzing, it also monitors feedback sent to it via network protocols (for fuzzing e.g., web servers) to intelligent select new tests.</p></li>
+</ul>
+</section>
+</section>
+<section id="memory-debuggers">
+<h2><span class="section-number">8.7. </span>Memory Debuggers<a class="headerlink" href="#memory-debuggers" title="Permalink to this heading">#</a></h2>
+<p>A <em>memory debugger</em> is a tool for finding memory leaks and buffer overflows. Memory debuggers are important in fuzzing, especially in languages with little support for memory management.</p>
+<p>The reason why memory debuggers are important is because anomalies such as buffer overflows are difficult to observe using system behaviour. For example, consider the stack buffer overflow presented earlier in this chapter. If the overflow is just by a few characters, it would be difficult to detect unless that particular part of memory is accessed again, which may not be the case.</p>
+<p>Generally, memory debuggers monitor looking for four issues:</p>
+<ol class="arabic simple">
+<li><p>Uninitialised memory: references made to memory blocks that are uninitialised at the time of reference.</p></li>
+<li><p>Freed memory: reads and writes to/from memory blocks that have been freed.</p></li>
+<li><p>Memory overflows: writes to memory blocks past the end of the block being written to.</p></li>
+<li><p>Memory leaks: memory that is allocated but no longer able to be referenced.</p></li>
+</ol>
+<p>Memory debuggers typically work by modifying the source code at compile type to include specific code that checks for these issues; for example, by keeping track of a buffer size, and then inserting code directly before a write to check whether the memory being written is larger than the target buffer.</p>
+<section id="performance-cost">
+<h3><span class="section-number">8.7.1. </span>Performance Cost<a class="headerlink" href="#performance-cost" title="Permalink to this heading">#</a></h3>
+<p>While monitoring for these properties is useful, it is generally at a high performance cost. The overhead of keeping track of the allocated memory, plus the checks made, is expensive. For example, programs running using the well-known <em>Valgrind</em> tool run between 20-30 times slower than with no memory debugging.</p>
+</section>
+<section id="id6">
+<h3><span class="section-number">8.7.2. </span>Tool Support<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h3>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>[4]: See <a class="reference external" href="http://valgrind.org/">http://valgrind.org/</a></p>
+<p>[5]: See <a class="reference external" href="http://unicomsi.com/products/purifyplus/">http://unicomsi.com/products/purifyplus/</a></p>
+</div>
+</aside>
+<ul class="simple">
+<li><p><em>Valgrind</em>[4] (and its tool <em>memcheck</em>) is a well-known open-source memory debugger for Linux, Mac OS, and Android. It works by inserting monitoring code directly into the source, and replaces the standard C memory allocation tools (e.g., alloc, malloc) with its own implementation that monitors references and memory block sizes, etc.</p></li>
+<li><p><em>Rational Purify</em>[5] is a commercial memory debugger for Linux, Solaris, and Windows.</p></li>
+</ul>
+</section>
+</section>
+<section id="undefined-behaviour">
+<h2><span class="section-number">8.8. </span>Undefined Behaviour<a class="headerlink" href="#undefined-behaviour" title="Permalink to this heading">#</a></h2>
+<p>Buffer overflows are a form of <em>undefined behaviour</em>: something that a program does that causes its future behaviour to be unknown. It might continue working or it might do something totally unpredictable, such as executing attacker-supplied code in the case of a successful remote code execution attack.</p>
+<p>Programming languages like C define many forms of undefined behaviour, besides buffer overflows. Examples of undefined behaviour in C include:</p>
+<ul class="simple">
+<li><p>Dividing by 0</p></li>
+<li><p>Dereferencing a NULL pointer</p></li>
+<li><p>Overflowing a signed integer</p></li>
+<li><p>Underflowing a signed integer</p></li>
+<li><p>plus many more.</p></li>
+</ul>
+<p>Testing for undefined behaviour, as with buffer overflows, requires special tool support. This is because the behaviour a program exhibits when performing an operation involving undefined behaviour cannot be relied upon. Compilers use this fact when optimising programs which can sometimes lead to very surprising results.</p>
+<p>As an example, consider the following program <code class="docutils literal notranslate"><span class="pre">signed_overflow.c</span></code>:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span>
+<span class="w">    </span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdlib.h&gt;</span>
+<span class="w">    </span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">argv</span><span class="p">[]){</span>
+<span class="w">      </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">;</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">argc</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">3</span><span class="p">){</span>
+<span class="w">        </span><span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span><span class="s">&quot;Usage: %s num1 num2</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="w">        </span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+<span class="w">      </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">x</span><span class="p">){</span>
+<span class="w">        </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Overflow happens!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>It reads two integers <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> given as command line arguments. If the second one, <span class="math notranslate nohighlight">\(y\)</span>, is positive, it then tries to test whether adding them together would cause overflow. It does so by checking whether <span class="math notranslate nohighlight">\(x + y\)</span> is less than <span class="math notranslate nohighlight">\(x\)</span>. Given that <span class="math notranslate nohighlight">\(y\)</span> is known to be positive, this should happen only if overflow occurs when they’re added together.</p>
+<p>The program behaves as expected when compiled (under Clang 7.3.0) with no optimisation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w">    </span>$<span class="w"> </span>clang<span class="w"> </span>-O0<span class="w"> </span>signed_overflow.c<span class="w"> </span>-o<span class="w"> </span>signed_overflow
+<span class="w">    </span>$<span class="w"> </span>./signed_overflow<span class="w"> </span><span class="m">2147483647</span><span class="w"> </span><span class="m">10</span>
+<span class="w">    </span>Overflow<span class="w"> </span>happens!
+<span class="w">    </span>$
+</pre></div>
+</div>
+<p>Let’s see what happens, however, when compiled with even the most mild optimisation level:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w">    </span>$<span class="w"> </span>clang<span class="w"> </span>-O1<span class="w"> </span>signed_overflow.c<span class="w"> </span>-o<span class="w"> </span>signed_overflow
+<span class="w">    </span>$<span class="w"> </span>./signed_overflow<span class="w"> </span><span class="m">2147483647</span><span class="w"> </span><span class="m">10</span>
+<span class="w">    </span>$
+</pre></div>
+</div>
+<p>Surprisingly, the program <em>doesn’t</em> print “Overflow happens!”.</p>
+<p>While this behaviour might seem odd, the program has been legally compiled: signed overflow is undefined behaviour. Therefore, in any situation where the original program is guaranteed to perform undefined behaviour, the compiler is allowed to make it do anything it wants. In this case, the compiler has chosen to have the program do the thing that speeds up the program the most. Specifically, it has chosen to entirely omit the section of the program that does:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">x</span><span class="p">){</span>
+<span class="w">        </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Overflow happens!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Whenever this bit of code doesn’t perform undefined behaviour (i.e. doesn’t cause signed overflow), it is equivalent to doing nothing. On the other hand, whenever it does perform undefined behaviour, the compiler is allowed to have the program do whatever it wants. Thus removing this section of code is entirely legal: in all cases where undefined behaviour doesn’t occur the program behaves identically.</p>
+<p>In general, a compiler is allowed to perform any transformation on a program so long as it ensures that the program’s behaviour remains unchanged in all cases where it doesn’t exhibit undefined behaviour.</p>
+<p>Bugs similar to the one in the program above have led to vulnerabilities in Linux kernel drivers when the compiler has optimised away an overflow test of the above form that was being used to guard against accessing a buffer out-of-bounds.</p>
+<p>Numerous articles exist online that detail how to rewrite overflow checks like the one in the faulty program above to ensure that they correctly check for over or underflow while avoiding undefined behaviour.</p>
+<p>The unpredictability of how a program will behave when performing undefined behaviour means that undefined behaviour is important to test for. However, for the same reason, testing for undefined behaviour requires special help from the compiler. Essentially, the compiler produces a program that includes checks to ensure that execution is halted with an error whenever undefined behaviour is about to occur.</p>
+<p>As with memory debuggers, these checks necessarily incur some performance overhead.</p>
+<section id="id7">
+<h3><span class="section-number">8.8.1. </span>Tool Support<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h3>
+<p>The Clang C compiler provides options for compiling code to enable it to be tested for undefined behaviour. With these options turned on, Clang builds programs so that they generate an error whenever they perform undefined behaviour, as shown in the following example.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w">    </span>$<span class="w"> </span>clang<span class="w"> </span>signed_overflow.c<span class="w"> </span>-o<span class="w"> </span>signed_overflow<span class="w"> </span><span class="se">\</span>
+<span class="w">            </span>-fsanitize<span class="o">=</span>undefined-trap<span class="w"> </span>-fsanitize-undefined-trap-on-error
+<span class="w">    </span>$<span class="w"> </span>./signed_overflow<span class="w"> </span><span class="m">2147483647</span><span class="w"> </span><span class="m">10</span>
+<span class="w">    </span>Illegal<span class="w"> </span>instruction:<span class="w"> </span><span class="m">4</span>
+<span class="w">    </span>$<span class="w"> </span>
+</pre></div>
+</div>
+<p>Here we see that the <code class="docutils literal notranslate"><span class="pre">Illegal</span> <span class="pre">instruction</span></code> error is generated when signed overflow occurs.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Testing-and-Integration.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">7. </span>Testing-and-Integration</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Coverage-Guided-Fuzzing.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">9. </span>Code Coverage-Guided Fuzzing</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-of-this-chapter">8.1. Learning outcomes of this chapter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-introduction">8.2. Chapter Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-to-penetration-testing">8.3. Introduction to Penetration Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#random-testing">8.4. Random Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advantages">8.4.1. Advantages</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#disadvantages">8.4.2. Disadvantages</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutation-based-fuzzing">8.5. Mutation-based Fuzzing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">8.5.1. Advantages</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">8.5.2. Disadvantages</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tool-support">8.5.3. Tool support</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generation-based-fuzzing">8.6. Generation-based Fuzzing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">8.6.1. Advantages</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">8.6.2. Disadvantages</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">8.6.3. Tool support</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-debuggers">8.7. Memory Debuggers</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-cost">8.7.1. Performance Cost</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">8.7.2. Tool Support</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#undefined-behaviour">8.8. Undefined Behaviour</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">8.8.1. Tool Support</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By SWEN90006
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

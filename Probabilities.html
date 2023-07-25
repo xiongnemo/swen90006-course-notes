@@ -1,0 +1,568 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>A Brief Review of Some Probability Definitions &#8212; SWEN90006 Software &amp; Security Testing</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/book-style.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Probabilities';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Maximum Likelihood Estimation" href="Maximum.html" />
+    <link rel="prev" title="10. Automated test generation using symbolic execution" href="Symbolic-Execution.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/uom.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/uom.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Subject Introduction
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">LECTURE NOTES</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Introduction-to-Testing.html">1. Introduction to Software Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-Partitioning.html">2. Input Partitioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Boundary-Value.html">3. Boundary-Value Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Coverage-Based-Testing.html">4. Coverage-Based Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Testing-Modules.html">5. Testing Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Property-based-testing.html">6. Property-based Testing and Test Oracles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Testing-and-Integration.html">7. Testing-and-Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Security-Testing.html">8. Security Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Coverage-Guided-Fuzzing.html">9. Code Coverage-Guided Fuzzing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Symbolic-Execution.html">10. Automated test generation using symbolic execution</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">APPENDIX</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">A Brief Review of Some Probability Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Maximum.html">Maximum Likelihood Estimation</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/Probabilities.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>A Brief Review of Some Probability Definitions</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#random-variables">Random Variables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#probability-density-functions">Probability Density Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#probability-in-reliability-measurement">Probability in Reliability Measurement</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="a-brief-review-of-some-probability-definitions">
+<h1>A Brief Review of Some Probability Definitions<a class="headerlink" href="#a-brief-review-of-some-probability-definitions" title="Permalink to this heading">#</a></h1>
+<p>Probability theory is concerned with <em>chance</em>. Whenever there is an event or an activity where the outcome is uncertain, then probabilities are involved. We normally think of any activity or event with an uncertain outcome as an <em>experiment</em> whose outcome we observe. Probabilities are then measures of the likelihood of any of the possible outcomes.</p>
+<p>An <em>experiment</em> represents an activity whose output is subject to chance (or variation). The output of the experiment is referred to as the <em>outcome</em> of the experiment. The set of all possible outcomes is called the <em>sample space</em>.</p>
+<div class="admonition-definition admonition">
+<p class="admonition-title">Definition</p>
+<p>The <em>sample space</em> for an experiment is the set of all possible outcomes that might be observed.</p>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">Some examples of experiments and their outcomes</p>
+<ul class="simple">
+<li><p>An experiment involving the flipping of a coin has two possible outcomes Heads or Tails. The sample space is thus <span class="math notranslate nohighlight">\(\sf S = \{Heads,~Tails\}\)</span>.</p></li>
+<li><p>An experiment involving testing a software system and counting the number of failures experienced after T = 1 hour has many possible outcomes: we may experience no failures, 1 failure, 2 failures, 3 failures, …. The sample space is thus <span class="math notranslate nohighlight">\(\sf N = \{0, ~1, ~2, ~3, \ldots\}\)</span>.</p></li>
+<li><p>An experiment involving the testing of a software system and recording the time at which the first failure occurs has a real valued sample space <span class="math notranslate nohighlight">\(R\)</span>, although in practice this is more likely to be a time interval.</p></li>
+</ul>
+</div>
+<p>Probabilities are usually assigned to events.</p>
+<div class="admonition-definition admonition">
+<p class="admonition-title">Definition</p>
+<p>Let <span class="math notranslate nohighlight">\(S\)</span> be a sample space. An <em>event</em> is a subset <span class="math notranslate nohighlight">\(A\)</span> of the sample space <span class="math notranslate nohighlight">\(S\)</span>, that is, <span class="math notranslate nohighlight">\(A\subset S\)</span>. An event is said to have <em>occurred</em> if any one of its elements is the outcome observed in an experiment.</p>
+</div>
+<p>The probability of an event <span class="math notranslate nohighlight">\(A\)</span> is a non-negative real number that relates to the number of times we observe an outcome in <span class="math notranslate nohighlight">\(A\)</span>. Often this real number is just the fraction of times that we observe an outcome in <span class="math notranslate nohighlight">\(A\)</span> over the total number of possible outcomes. We write:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}P\{A\} = \lim\begin{array}[c]{c} m \\\hline n \end{array}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(m\)</span> is the number of outcomes in <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(n\)</span> is the total number of possible outcomes, that is, the number of elements in <span class="math notranslate nohighlight">\(S\)</span>. For two events, <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span>, <span class="math notranslate nohighlight">\(A \cup B\)</span> to refer to event <span class="math notranslate nohighlight">\(A\)</span> occurring or event <span class="math notranslate nohighlight">\(B\)</span> occurring, or both, and, <span class="math notranslate nohighlight">\(A \cap B\)</span> to refer to event <span class="math notranslate nohighlight">\(A\)</span> and event <span class="math notranslate nohighlight">\(B\)</span> both occurring. Therefore <span class="math notranslate nohighlight">\(P\{A \cap B\}\)</span> is the probability of events <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> both occurring. The <em>conditional probability</em> of an event <span class="math notranslate nohighlight">\(A\)</span> is the probability of <span class="math notranslate nohighlight">\(A\)</span> given that <span class="math notranslate nohighlight">\(B\)</span> has occurred. This is written <span class="math notranslate nohighlight">\(P\{A|B\}\)</span>. In conditional probabilities <span class="math notranslate nohighlight">\(B\)</span> is often called the <em>conditioning event</em>.</p>
+<p>Probabilities must satisfy certain <em>probability laws</em> in order to be meaningful measures of likelihood. The following probability laws hold for any event <span class="math notranslate nohighlight">\(A\)</span> and any state space <span class="math notranslate nohighlight">\(S\)</span>:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(0\leq P\{A\} \leq 1\)</span>; and</p></li>
+<li><p><span class="math notranslate nohighlight">\(P\{\lnot A\} = 1 - P\{A\}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(P(S) = 1\)</span>.</p></li>
+</ul>
+<p>That is: (i) the probability of an event occurring is between <span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(1\)</span> inclusive; (ii) the probability of <span class="math notranslate nohighlight">\(A\)</span> not occurring is <span class="math notranslate nohighlight">\(1\)</span> minus the probability that it will; and (iii) the sum of the probabilities of all events in the state space is <span class="math notranslate nohighlight">\(1\)</span>, and no events outside the sample space can occur.</p>
+<p>Two events are said to be <em>independent</em> if the occurrence of one event does not depend on the other and the converse. For example, if we have two dice, the probability of one falling on the outcome <span class="math notranslate nohighlight">\(6\)</span> is independent of the outcome of the other dice. However, if we throw both dice, but one falls on the floor out of sight, while the other shows a <span class="math notranslate nohighlight">\(3\)</span>, then the probability of their total equaling <span class="math notranslate nohighlight">\(7\)</span> is dependent on the probability of the second dice.</p>
+<p>If events <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> are <em>dependent</em>, then the following laws hold:</p>
+<p><span class="math notranslate nohighlight">\(P\{A \cap B\}\)</span>   =   <span class="math notranslate nohighlight">\(P\{A|B\} P\{B\}\)</span>                                                 <em>Multiplicative Law</em></p>
+<p><span class="math notranslate nohighlight">\(P\{A|B\}\)</span>        =   <span class="math notranslate nohighlight">\(\begin{array}[c]{c} P\{A\cap B\} \\ \hline P\{B\} \end{array}\)</span>   <em>Conditional Probability</em></p>
+<p>If events <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> are <em>independent</em> then the following laws hold:</p>
+<p><span class="math notranslate nohighlight">\(P\{A \cap B\}\)</span>   =   <span class="math notranslate nohighlight">\(P\{A\} P\{B\}\)</span>   <em>Multiplicative Law</em></p>
+<p><span class="math notranslate nohighlight">\(P\{A|B\}\)</span>        =   <span class="math notranslate nohighlight">\(P\{A\}\)</span>          <em>Conditional Probability</em></p>
+<p>The independent and dependent cases are related. For example, if <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> are independent, then <span class="math notranslate nohighlight">\(P\{A \cap B\}\)</span> = <span class="math notranslate nohighlight">\(P\{A\} P\{B\}\)</span>, and therefore <span class="math notranslate nohighlight">\(P\{A|B\}\)</span> is equal to <span class="math notranslate nohighlight">\((P\{A\}P\{B\}) / P\{B\}\)</span> (the first conditional probability law), which is clearly <span class="math notranslate nohighlight">\(P\{A\}\)</span> (the second conditional probability law).</p>
+<p>Two events are said to be <em>mutually exclusive</em> if they cannot both occur. For example, if we throw a single die, then it is not possible that both 1 and 2 will result. If events <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> are not mutually exclusive, then the following law holds:</p>
+<p><span class="math notranslate nohighlight">\(P\{A \cup B\}\)</span>   =   <span class="math notranslate nohighlight">\(P\{A\} + P\{B\} - P\{ A \cap B\}\)</span>   <em>Additive Law</em></p>
+<p>If events <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> are mutually exclusive, then the following laws hold:</p>
+<p><span class="math notranslate nohighlight">\(P\{A \cup B\}\)</span>   =   <span class="math notranslate nohighlight">\(P\{A\} + P\{B\}\)</span>   <em>Additive Law</em></p>
+<p><span class="math notranslate nohighlight">\(P\{A \cap B\}\)</span>   =   <span class="math notranslate nohighlight">\(0\)</span>                 <em>Mutual Exclusion</em></p>
+<p>These laws are also related. If <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> are mutually exclusive, then <span class="math notranslate nohighlight">\(P\{A \cap B\}\)</span>, and therefore <span class="math notranslate nohighlight">\(P\{A\} + P\{B\} - P\{ A \cap B\}\)</span> (the first additive law) is <span class="math notranslate nohighlight">\(P\{A\} + P\{B\} - 0\)</span>, which is equivalent to the second additive law.</p>
+<section id="random-variables">
+<h2>Random Variables<a class="headerlink" href="#random-variables" title="Permalink to this heading">#</a></h2>
+<p>Now, suppose that we can represent each element of the sample space by a number. If we perform an experiment then for each element <span class="math notranslate nohighlight">\(E\)</span> of the sample space <span class="math notranslate nohighlight">\(S\)</span>, there is a certain probability that we will observe <span class="math notranslate nohighlight">\(E\)</span> as the outcome. A <em>random variable</em> assigns a number to each outcome in the sample space. Random variables that we will encounter in this subject are:</p>
+<ol class="arabic simple">
+<li><p>Number of failures at time <span class="math notranslate nohighlight">\(T\)</span>, which is <em>discrete</em> a integer number. The sample space is <span class="math notranslate nohighlight">\(T\)</span> and the number that we assign to it as the random variable is the number of failures.</p></li>
+<li><p>Time to first failure, which is a <em>continuous</em> real-valued number. The sample space is again <span class="math notranslate nohighlight">\(T\)</span> and the random variable in this case is the time <span class="math notranslate nohighlight">\(\tau\)</span> to the first failure observed.</p></li>
+</ol>
+<p>As an example, consider an experiment in which we execute random test cases on a piece of software for a period of 1 hour and observe the number of failures.</p>
+<ol class="arabic simple">
+<li><p>The sample space that we will consider (and its not the only one possible either) is <span class="math notranslate nohighlight">\( N = \{0, 1, 2, 3, \ldots\}\)</span>.</p></li>
+<li><p>Let <span class="math notranslate nohighlight">\(X\)</span> be a random variable that returns the number of failures experienced after 1 hour of testing (assuming we can suitably quantify failure).</p></li>
+<li><p>Then we can ask questions such as what is the probability that there are fewer than <span class="math notranslate nohighlight">\(N\)</span> failures after 1 hour – written <span class="math notranslate nohighlight">\(P\{ X
++&lt;+ N\}\)</span> – or what is the probability that we will have no failures after 1 hour – <span class="math notranslate nohighlight">\(P\{X\} = 0\)</span>. The random variable which we have called <span class="math notranslate nohighlight">\(X\)</span> is the number of failures experienced in 1 hour.</p></li>
+</ol>
+</section>
+<section id="probability-density-functions">
+<h2>Probability Density Functions<a class="headerlink" href="#probability-density-functions" title="Permalink to this heading">#</a></h2>
+<p>Normally associated with each random variable is a <em>probability density function</em>, or sometimes a <em>probability law</em>, that assigns a probability to every outcome in the random variable’s sample space. A random variable can be discrete or continuous.</p>
+<ul class="simple">
+<li><p>The sample space of a discrete random variable takes on specific values at discrete points <span class="math notranslate nohighlight">\(\{a_1,\ldots,a_k\}\)</span>.</p></li>
+<li><p>A continuous random variable takes on all values in the real line or an interval of the real line.</p></li>
+</ul>
+<p>We think of the probability density function as a function <span class="math notranslate nohighlight">\(f\)</span> that maps each value of the sample space <span class="math notranslate nohighlight">\(S\)</span> to <span class="math notranslate nohighlight">\([0,1]\)</span> so that <span class="math notranslate nohighlight">\(f : S\rightarrow [0,1]\)</span>. For example, the probability density function of throwing a die is <span class="math notranslate nohighlight">\(f(o) = \frac{1}{6}\)</span> for all outcomes <span class="math notranslate nohighlight">\(o\)</span>.</p>
+<p>The two key properties that we require of probability density functions are as follows.</p>
+<p>For Discrete Random Variables: we require that</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\( (f(X) \geq 0) for all (x\in S) \)</span>; and</p></li>
+<li><p><span class="math notranslate nohighlight">\( (\sum_{ x \in S}\, f(x) = 1) \)</span>.</p></li>
+</ul>
+<p>For Continuous Random Variables: we require that</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\( (f(X) \geq 0) for all (x\in S)\)</span>; and</p></li>
+<li><p><span class="math notranslate nohighlight">\( (\int^{+\infty}_{\rm -\infty} f(x) = 1)\)</span>.</p></li>
+</ul>
+<p>The cumulative density function for a discrete random variable <span class="math notranslate nohighlight">\(X\)</span> is defined as</p>
+<div class="math notranslate nohighlight">
+\[F_X(T) = \sum_{X \leq T} f(X)\]</div>
+<p>that is, a sum of all of the probabilities for outcomes less than or equal to <span class="math notranslate nohighlight">\(T\)</span>. If we wish to calculate the probability <span class="math notranslate nohighlight">\(P\{A &lt; X \leq B \}\)</span> then this is simply</p>
+<div class="math notranslate nohighlight">
+\[P\{A &lt; X \leq B\} = F_X(B) - F_X(A).\]</div>
+<p>For a continuous random variable <span class="math notranslate nohighlight">\(X\)</span> the cumulative density function is defined as</p>
+<div class="math notranslate nohighlight">
+\[F_X(T) = P\{X \leq A\} = \int^{A}_{-\infty} f(X)\]</div>
+</section>
+<section id="probability-in-reliability-measurement">
+<h2>Probability in Reliability Measurement<a class="headerlink" href="#probability-in-reliability-measurement" title="Permalink to this heading">#</a></h2>
+<p>Random variables and their distributions will be important to us because many of our reliability measures are expressed in terms of random variables and their distributions. Some examples are:</p>
+<ol class="arabic simple">
+<li><p>Let <span class="math notranslate nohighlight">\(T\)</span> be a random variable representing the time of failure of a particular system. Then the <em>failure probability</em> is expressed as a cumulative density function:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[F(t) = P\{ T \leq t\}.\]</div>
+<ol class="arabic simple" start="2">
+<li><p>Reliability is simply the converse – it is the probability that a particular systems survives — that is, does not experience a failure — until after time t:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[R(t) = 1 - F(t) = P\{T+&gt;+ t\}.\]</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Symbolic-Execution.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">10. </span>Automated test generation using symbolic execution</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Maximum.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Maximum Likelihood Estimation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#random-variables">Random Variables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#probability-density-functions">Probability Density Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#probability-in-reliability-measurement">Probability in Reliability Measurement</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By SWEN90006
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

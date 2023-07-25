@@ -1,0 +1,885 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>10. Automated test generation using symbolic execution &#8212; SWEN90006 Software &amp; Security Testing</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/book-style.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Symbolic-Execution';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="A Brief Review of Some Probability Definitions" href="Probabilities.html" />
+    <link rel="prev" title="9. Code Coverage-Guided Fuzzing" href="Coverage-Guided-Fuzzing.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/uom.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/uom.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Subject Introduction
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">LECTURE NOTES</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Introduction-to-Testing.html">1. Introduction to Software Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-Partitioning.html">2. Input Partitioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Boundary-Value.html">3. Boundary-Value Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Coverage-Based-Testing.html">4. Coverage-Based Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Testing-Modules.html">5. Testing Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Property-based-testing.html">6. Property-based Testing and Test Oracles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Testing-and-Integration.html">7. Testing-and-Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Security-Testing.html">8. Security Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Coverage-Guided-Fuzzing.html">9. Code Coverage-Guided Fuzzing</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">10. Automated test generation using symbolic execution</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">APPENDIX</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Probabilities.html">A Brief Review of Some Probability Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Maximum.html">Maximum Likelihood Estimation</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/Symbolic-Execution.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Automated test generation using symbolic execution</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-of-this-chapter">10.1. Learning outcomes of this chapter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-introduction">10.2. Chapter introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#symbolic-execution">10.3. Symbolic execution</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#early-symbolic-execution">10.3.1. Early symbolic execution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#constraint-solving">10.3.2. Constraint solving</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#symbolic-states">10.3.3. Symbolic states</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#some-examples">10.3.4. Some examples</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#a-real-fault">10.3.4.1. A real fault</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#symbolic-test-oracles">10.3.5. Symbolic test oracles</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-input-generation">10.3.6. Test input generation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations">10.3.7. Limitations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tools">10.3.8. Tools</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dynamic-symbolic-execution">10.4. Dynamic symbolic execution</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">10.4.1. Overview</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advantages">10.4.2. Advantages</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#advantages-over-random-testing">10.4.2.1. Advantages over random testing</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#advantages-over-symbolic-execution">10.4.2.2. Advantages over symbolic execution</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">10.4.3. Limitations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">10.4.4. Tools</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#into-the-future">10.5. Into the future…</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="automated-test-generation-using-symbolic-execution">
+<h1><span class="section-number">10. </span>Automated test generation using symbolic execution<a class="headerlink" href="#automated-test-generation-using-symbolic-execution" title="Permalink to this heading">#</a></h1>
+<section id="learning-outcomes-of-this-chapter">
+<h2><span class="section-number">10.1. </span>Learning outcomes of this chapter<a class="headerlink" href="#learning-outcomes-of-this-chapter" title="Permalink to this heading">#</a></h2>
+<p>At the end of this chapter, you should be able to:</p>
+<ul class="simple">
+<li><p>Explain the concepts of symbolic execution and dynamic symbolic execution, and discuss their strengths and weaknesses.</p></li>
+<li><p>Compare and contrast (dynamic) symbolic execution with other forms of testing, such as random testing and equivalence partitioning.</p></li>
+<li><p>Manually perform symbolic execution on a small program, deriving the path condition for that program.</p></li>
+<li><p>Compare and contrast symbolic execution and dynamic symbolic execution.</p></li>
+</ul>
+</section>
+<section id="chapter-introduction">
+<h2><span class="section-number">10.2. </span>Chapter introduction<a class="headerlink" href="#chapter-introduction" title="Permalink to this heading">#</a></h2>
+<p>One of the downfalls of standard testing is that, even if we run 1 million tests and have no failures, there is no guarantee that the next test we run will not fail. Recall Dijkstra’s famous quote from Chapter 1:</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>[1]: In Notes on Structured Programming.</p>
+</div>
+</aside>
+<blockquote>
+<div><p>“<em>Program testing can be used to show the presence of bugs, but never &gt; to show their absence!</em>” — Edsger W. Dijkstra[1]</p>
+</div></blockquote>
+<p>However, what if we <em>could</em> run every possible input on a program, even if there were an infinite number?</p>
+<p><em>Symbolic execution</em> is one approach to software verification that aims to do just that. The idea behind symbolic execution is that, instead of executing a program with concrete values, we execute it with <em>symbolic</em> values, which effectively execute multiple values at one time.</p>
+<p>In this chapter, we will look at symbolic execution, and its variant <em>dynamic</em> symbolic execution, and how they can be used to verify software.</p>
+</section>
+<section id="symbolic-execution">
+<h2><span class="section-number">10.3. </span>Symbolic execution<a class="headerlink" href="#symbolic-execution" title="Permalink to this heading">#</a></h2>
+<section id="early-symbolic-execution">
+<h3><span class="section-number">10.3.1. </span>Early symbolic execution<a class="headerlink" href="#early-symbolic-execution" title="Permalink to this heading">#</a></h3>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>[2]: J. C. King, “Symbolic execution and program testing”. Communications of the ACM, 19(7):(385–394), 1976.</p>
+</div>
+</aside>
+<p>Although first proposed by James King in 1976[2], symbolic execution is still in its infancy, and has only recently emerged as a realistic way to verify software.</p>
+<p>While early work by researchers such as King were promising, symbolic execution suffered from two major problems:</p>
+<ol class="arabic simple">
+<li><p>Computers were small with limited memory and slow processors, compared to today’s machines.</p></li>
+<li><p>The constraint solving tools required for symbolic execution were limited.</p></li>
+</ol>
+<p>Modern computers are significantly faster than those in the 70s, and memory is cheap. Further, constraint solving technology has improved by several orders of magnitude since the later 1970s, meaning that symbolic execution has become a hot topic of research again.</p>
+</section>
+<section id="constraint-solving">
+<h3><span class="section-number">10.3.2. </span>Constraint solving<a class="headerlink" href="#constraint-solving" title="Permalink to this heading">#</a></h3>
+<p>A key technology required for symbolic execution is <em>constraint solving</em>. Constraint solving is an approach to generating solutions for mathematical problems expressed as constraints over a set of objects.</p>
+<p>Each constraint to be solved has three parts: (1) a set of variables; (2) a <em>domain</em> for each variable (e.g. the integers, characters, or real numbers); and (3) the set of the constraints.</p>
+<p>The easiest way to understand constraint solving problems is via an example. Consider the following constraint over the set of integers and variables <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span>:</p>
+<div class="math notranslate nohighlight" id="equation-10-1">
+\[ x \leq 0,\ y &gt; 0,\ x + y &gt; 100 ~~~~~~~~~~~~~~(10.1) \]</div>
+<p>Constraint solvers can be used to answer three types of questions:</p>
+<ol class="arabic simple">
+<li><p>Is there a solution to this problem?</p></li>
+<li><p>If “yes” to 1, what is a solution to the problem?</p></li>
+<li><p>Is one constraint entailed by another?</p></li>
+</ol>
+<p>There are, of course, many solutions to the constraint in Equation <a class="reference internal" href="#equation-10-1"><span class="std std-ref">10.1</span></a> so a constraint solver will answer “yes” to the first question. If asked to provide a solution to the constraint, it could return a number of answers, such as <span class="math notranslate nohighlight">\(x = 0,\ y = 101\)</span>, or <span class="math notranslate nohighlight">\(x = -10000,\ y = 200000\)</span> (although the former more likely in most constraint systems!).</p>
+<p>An example of a constraint that is not solvable is:</p>
+<div class="math notranslate nohighlight" id="equation-10-2">
+\[x &lt; 0,\ y &lt; 0,\ x + y &gt; 0 ~~~~~~~~~~~~~~(10.2)\]</div>
+<p>If <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> are both negative, then their sum cannot be positive. As such, a constraint solver will answer that this is <em>unsatisfiable</em>.</p>
+<p>For checking constraint entailment, we ask the solver if constraint <span class="math notranslate nohighlight">\(C\)</span> <em>entails</em> constraint <span class="math notranslate nohighlight">\(D\)</span>, written <span class="math notranslate nohighlight">\(C \vdash D\)</span>. Entailment is similar to logical implication, and <span class="math notranslate nohighlight">\(C \vdash D\)</span> is asking: is any solution for <span class="math notranslate nohighlight">\(C\)</span> also a valid solution for constraint <span class="math notranslate nohighlight">\(D\)</span>. In essence, if <span class="math notranslate nohighlight">\(C\)</span> stronger than <span class="math notranslate nohighlight">\(D\)</span>? That is, if everything on the left of <span class="math notranslate nohighlight">\(\vdash\)</span> is true, does that mean that everything on the right is also true?</p>
+<p>As an example, the entailment <span class="math notranslate nohighlight">\(x &gt; 0 \vdash x \geq 0\)</span> holds: if <span class="math notranslate nohighlight">\(x\)</span> is strictly positive, then it is also weakly positive. That is, any value of <span class="math notranslate nohighlight">\(x\)</span> that satisfies <span class="math notranslate nohighlight">\(x &gt; 0\)</span> also satisfied <span class="math notranslate nohighlight">\(x \geq 0\)</span>.</p>
+<p>However, the inverse, <span class="math notranslate nohighlight">\(x \geq 0 \vdash x &gt; 0\)</span>, does not hold, because <span class="math notranslate nohighlight">\(x=0\)</span> is a solution for the former but not the latter.</p>
+<p>Constraint solvers can also answer more complicated problems, such as:</p>
+<div class="math notranslate nohighlight">
+\[x &lt; 200, y &gt; 200, z=x-100 ~~~\vdash~~~ y \geq 2z\]</div>
+<p>A constraint solver should infer that <span class="math notranslate nohighlight">\(z &lt; 100\)</span>, and therefore <span class="math notranslate nohighlight">\(2z &lt; 200\)</span>; so because <span class="math notranslate nohighlight">\(y &gt; 200\)</span>, it must always by the case that <span class="math notranslate nohighlight">\(y \geq 2z\)</span>.</p>
+</section>
+<section id="symbolic-states">
+<h3><span class="section-number">10.3.3. </span>Symbolic states<a class="headerlink" href="#symbolic-states" title="Permalink to this heading">#</a></h3>
+<p>Constraints, such as those used in Equation <a class="reference internal" href="#equation-10-1"><span class="std std-ref">10.1</span></a> can be used to assign <em>symbolic</em> values to program variables. By symbolic, we mean values that represent possible more than one value. For example, the constraint <span class="math notranslate nohighlight">\(x &lt; 0\)</span> can be a symbolic value for a variable <span class="math notranslate nohighlight">\(x\)</span>, indicating that <span class="math notranslate nohighlight">\(x\)</span> is negative. This is in contrast to a <em>concrete</em> value of <span class="math notranslate nohighlight">\(x\)</span>, such as <span class="math notranslate nohighlight">\(x=1\)</span>, which defines a specific value for <span class="math notranslate nohighlight">\(x\)</span>.</p>
+<p>When we perform standard software testing, we provide a program with concrete inputs, and those inputs are executed. Exploring the entire input space with concrete values is impossible for even the most trivial examples.</p>
+<p>At any point during execution of a program, the program will have a <em>state</em>, which is a mapping from all variables to their concrete values at that time. As a program executes, calculations (instructions) are executed on the variables in that state, and their values are updated. For example, the concrete state may be <span class="math notranslate nohighlight">\(x = 5, y = 10\)</span>, and the instruction <span class="math notranslate nohighlight">\(x := y + 1\)</span> (assignment) will update the state to <span class="math notranslate nohighlight">\(x = 11, y = 10\)</span>.</p>
+<p>The key idea behind symbolic execution is to replace the concrete state with a <em>symbolic state</em>, in which the variables map to symbolic values, and to perform calculations on those symbolic values. By doing this, a program can be executed for many inputs at one time.</p>
+</section>
+<section id="some-examples">
+<h3><span class="section-number">10.3.4. </span>Some examples<a class="headerlink" href="#some-examples" title="Permalink to this heading">#</a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Example 70</p>
+<p>As an example, consider the example program in Figure <a class="reference internal" href="#f-10-1"><span class="std std-ref">10.1</span></a>, which swaps the values of two integers, <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code>, if and only if <code class="docutils literal notranslate"><span class="pre">x</span></code> is less than <code class="docutils literal notranslate"><span class="pre">y</span></code>. The result is that <code class="docutils literal notranslate"><span class="pre">x</span></code> is always greater than <code class="docutils literal notranslate"><span class="pre">y</span></code>.</p>
+<div class="highlight-c notranslate" id="f-10-1"><div class="highlight"><pre><span></span><span class="w">    </span><span class="mf">1.</span><span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">swap</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">    </span><span class="mf">2.</span><span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="mf">3.</span><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="mf">4.</span><span class="w">      </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span><span class="p">;</span>
+<span class="w">    </span><span class="mf">5.</span><span class="w">      </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">y</span><span class="p">;</span>
+<span class="w">    </span><span class="mf">6.</span><span class="w">      </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">y</span><span class="p">;</span>
+<span class="w">    </span><span class="mf">7.</span><span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="mf">8.</span><span class="w">    </span><span class="n">assert</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">y</span><span class="p">);</span>
+<span class="w">    </span><span class="mf">9.</span><span class="w">  </span><span class="p">}</span>
+</pre></div>
+</div>
+<p style="text-align: center;">Figure 10.1: A program for swapping two integers.</p>
+<p>We can execute this program on a concrete state, providing concrete values for <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code>; for example, <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">4</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">10</span></code>. The concrete state of the program would be updated as follows:</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/table_1.png"><img alt="_images/table_1.png" src="_images/table_1.png" style="width: 70%;" /></a>
+</figure>
+<p>Executing the program for this pair of inputs will execute one path out of two, but for just one possible execution of that path. Any input in which <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">&lt;</span> <span class="pre">y</span></code> will also execute that path. If we are testing, we would (hopefully) select a value such that <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">&gt;=</span> <span class="pre">y</span></code>, covering the other path. In both cases, the assertion at the end of the function will be true.</p>
+<p>However, if we replace the concrete state with a symbolic state, starting with the variable <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> being completely unconstrained, we can cover every possible input by symbolically executing just the two paths. At the branch, we split the symbolic execution into the two paths, executing all inputs on both paths by executing all instructions symbolically. At each point in time, the value of the variables is represented as a constraint, called the <em>path constraint</em>, which summarises all possible values of the program variables at that point.</p>
+<p>The following illustrates how the symbolic state is modified during execution. In this illustration, we use capitalised variable names, <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">Y</span></code>, to represent the symbolic values of <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> at the start of the execution:</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/table_2.png"><img alt="_images/table_2.png" src="_images/table_2.png" style="width: 70%;" /></a>
+</figure>
+<p>At line 5, the assignment <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">x</span> <span class="pre">-</span> <span class="pre">y</span></code> means that <code class="docutils literal notranslate"><span class="pre">y=(X+Y)-Y</span></code>, which simplifies to just <code class="docutils literal notranslate"><span class="pre">y=X</span></code>. A similar simplification occurs at line 6. The constraint solvers are used to simplify these expressions.</p>
+<p>From the symbolic execution above, we can see that the assertion <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">&gt;=</span> <span class="pre">y</span></code> holds at the end of both parts. Because symbolic values are used instead of concrete values, both of the paths are executed for all possible values of <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code>. Therefore, we have executed the program for all possible inputs, and shown that the assertion at line 8 will always be true; that is, there is no test input that will violate it. We can show this by taking the path constraints at the assert statement and checking if they entail the assertion. The entailments <code class="docutils literal notranslate"><span class="pre">x=Y,</span> <span class="pre">y=X,</span> <span class="pre">X&lt;Y</span></code> <span class="math notranslate nohighlight">\(\vdash\)</span> <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">&gt;=</span> <span class="pre">y</span></code> and <code class="docutils literal notranslate"><span class="pre">x=X,</span> <span class="pre">y=Y,</span> <span class="pre">X&gt;=Y</span></code> <span class="math notranslate nohighlight">\(\vdash\)</span> <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">&gt;=</span> <span class="pre">y</span></code> both hold, so the assertion always holds.</p>
+<p>If the programmer had made a mistake on line 6 and used addition instead of subtraction, the final constraint for the first path would be: <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">(X+Y)</span> <span class="pre">+</span> <span class="pre">X,</span> <span class="pre">y</span> <span class="pre">=</span> <span class="pre">X,</span> <span class="pre">X</span> <span class="pre">&lt;</span> <span class="pre">Y</span></code>, and the assertion would be violated. The constraint solver can easily find a solution for the pair of symbolic variables (X, Y), say X = -5 and Y =4, that satisfies the path constraint but it violates the assertion. Indeed, with this solution: x - y = (2X + Y) - X = X + Y = -5 + 4 = -1. It means x - y &lt; 0, violating x &gt;= y.</p>
+</div>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>[3]: Adapted from the example at <a class="reference external" href="http://martinsprogrammingblog.blogspot.com.au/2011/11/symbolic-execution.html">http://martinsprogrammingblog.blogspot.com.au/2011/11/symbolic-execution.html</a></p>
+</div>
+</aside>
+<div class="tip admonition">
+<p class="admonition-title">Example 71</p>
+<p>As a more complicated example, consider the following function [3] written in C, which allocates memory to a pointer:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="w">        </span><span class="mf">1.</span><span class="w"> </span><span class="kt">int</span><span class="o">*</span><span class="w"> </span><span class="n">func</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">;</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span>
+<span class="w">        </span><span class="mf">2.</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="mf">3.</span><span class="w">   </span><span class="kt">int</span><span class="o">*</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="mf">4.</span><span class="w">   </span><span class="kt">int</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span><span class="p">;</span>
+<span class="w">        </span><span class="mf">5.</span><span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="mf">6.</span><span class="w">     </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">malloc</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+<span class="w">        </span><span class="mf">7.</span><span class="w">   </span><span class="p">}</span>
+<span class="w">        </span><span class="mf">8.</span><span class="w">   </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="mf">9.</span><span class="w">     </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">malloc</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+<span class="w">       </span><span class="mf">10.</span><span class="w">   </span><span class="p">}</span>
+<span class="w">       </span><span class="mf">11.</span><span class="w">   </span><span class="k">return</span><span class="w"> </span><span class="n">p</span><span class="p">;</span>
+<span class="w">       </span><span class="mf">12.</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>A common property for symbolic execution tools are used to check is whether functions can return null. Let’s assume then that we want to analyse whether this function can return <code class="docutils literal notranslate"><span class="pre">null</span></code> (that is, the value of <code class="docutils literal notranslate"><span class="pre">p</span></code> is 0).</p>
+<p>Figure <span class="xref myst">10.2</span> shows the symbolic execution tree for this program. There are three possible paths through the program. The constraints <code class="docutils literal notranslate"><span class="pre">x=X</span></code> and <code class="docutils literal notranslate"><span class="pre">y=Y</span></code> are in every node, and have been omitted for readability.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/p-null-execution-tree.png"><img alt="_images/p-null-execution-tree.png" src="_images/p-null-execution-tree.png" style="width: 70%;" /></a>
+</figure>
+<p style="text-align: center;">Figure 10.2: Execution tree for the function func</p>
+<p>To check whether the pointer can possibly be null, we have to check whether for at least one path, whether the final path constraint conjoined with the constraint <code class="docutils literal notranslate"><span class="pre">p=0</span></code> is satisfiable. If it is satisfiable, there is at least one execution of the program that results in a null pointer.</p>
+<p>From the execution tree, it is clear that the path on the right is one such path, with <code class="docutils literal notranslate"><span class="pre">p=0</span></code> being part of the path constraint.</p>
+</div>
+<section id="a-real-fault">
+<h4><span class="section-number">10.3.4.1. </span>A real fault<a class="headerlink" href="#a-real-fault" title="Permalink to this heading">#</a></h4>
+<p>Symbolic execution can find considerably more subtle faults than the one above. For example, consider the following program fragment from the GNU CoreUtils package.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="w">         </span><span class="mi">1322</span><span class="o">:</span><span class="w">     </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xmalloc</span><span class="p">(</span><span class="n">MAX</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="n">chars_per_input_tab</span><span class="p">));</span>
+<span class="w">         </span><span class="p">....</span>
+<span class="w">         </span><span class="mi">2655</span><span class="o">:</span><span class="w">     </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">chars_per_c</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="n">input_position</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">chars_per_c</span><span class="p">);</span>
+<span class="w">         </span><span class="mi">2666</span><span class="o">:</span>
+<span class="w">         </span><span class="mi">2667</span><span class="o">:</span><span class="w">     </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">untabify_input</span><span class="p">)</span>
+<span class="w">         </span><span class="mi">2668</span><span class="o">:</span><span class="w">     </span><span class="p">{</span>
+<span class="w">         </span><span class="mi">2669</span><span class="o">:</span><span class="w">       </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">width</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="p">;</span><span class="w"> </span><span class="o">--</span><span class="n">i</span><span class="p">)</span>
+<span class="w">         </span><span class="mi">2670</span><span class="o">:</span><span class="w">         </span><span class="o">*</span><span class="n">s</span><span class="o">++</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">&#39; &#39;</span><span class="p">;</span>
+<span class="w">         </span><span class="mi">2671</span><span class="o">:</span><span class="w">       </span><span class="n">chars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">width</span><span class="p">;</span>
+<span class="w">         </span><span class="mi">2672</span><span class="o">:</span><span class="w">     </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>In this case, the program may be asked to “untabify” some input, meaning to remove tabs and replace them with spaces. The variable <code class="docutils literal notranslate"><span class="pre">width</span></code> is used to calculate the amount of spaces that need to be inserted. The programmer has made the incorrect assumption that <code class="docutils literal notranslate"><span class="pre">width</span></code> is always between 0 and <code class="docutils literal notranslate"><span class="pre">chars_per_c</span> <span class="pre">-</span> <span class="pre">1</span></code>. When <code class="docutils literal notranslate"><span class="pre">input_position</span></code> is positive, this assumption holds; however, because backspaces are permitted in the input string, <code class="docutils literal notranslate"><span class="pre">input_position</span></code> can be negative, meaning that <code class="docutils literal notranslate"><span class="pre">width</span></code> can become larger than the size of <code class="docutils literal notranslate"><span class="pre">s</span></code>, and an overflow can occur at line 2670, as spaces are added past the end of the string.</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>[4]: See the following paper for details on KLEE: C. Cadar, D. Dunbar, and D. Engler. “KLEE: Unassisted and Automatic Generation of High-Coverage Tests for Complex Systems Programs.” OSDI. Vol. 8. 2008.</p>
+</div>
+</aside>
+<p>This subtle fault was found by the KLEE symbolic execution tool[4] in 2008, and had been in the GNU CoreUtils package at least since it was first uploaded onto a CVS repository in 1992, despite the CoreUtils package having an unusually comprehensive test suite, and having been used for many years.</p>
+<p>Such subtle faults are difficult to detect using dynamic software testing, and are where symbolic execution can be useful.</p>
+</section>
+</section>
+<section id="symbolic-test-oracles">
+<h3><span class="section-number">10.3.5. </span>Symbolic test oracles<a class="headerlink" href="#symbolic-test-oracles" title="Permalink to this heading">#</a></h3>
+<p>Symbolic execution is only a way to explore test inputs for a program, but it cannot tell us whether that program meets its requirements. For this, we need the equivalent of a test oracle for symbolic execution. In the example above, we use assertions as test oracle; however, most programs do not contain useful assertions that can be used.</p>
+<p>Standard test oracle solutions, discussed in Chapter 6, cannot necessarily be applied directly, because they are designed for concrete examples, not symbolic examples.</p>
+<p>Despite this, some of these solutions would work well. For example, if we have a golden program, then we can execute a path the  using symbolic execution, and compare the final path constraint to the path constraint generated when executing the same symbolic input on the golden program. Also, the idea of metamorphic oracles can be applied to symbolic execution: for some programs, a specific symbolic value may return a particular output.</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>[5]: See the following paper for details on KLEE: C. Cadar, D. Dunbar, and D. Engler. “KLEE: Unassisted and Automatic Generation of High-Coverage Tests for Complex Systems Programs.” OSDI. Vol. 8. 2008.</p>
+</div>
+</aside>
+<p>In most cases, symbolic execution is used to look for <em>generic</em> faults, such as accessing arrays out of bounds, dividing by zero, returning null pointers, or certain security violations. These can be checked for any program using a generic “oracle”, and empirical evaluation shows that they work very effectively. Cadar et al.[5] found many faults in the GNU CoreUtils package, such as the one discussed above, several of which had been present for over a decade.</p>
+</section>
+<section id="test-input-generation">
+<h3><span class="section-number">10.3.6. </span>Test input generation<a class="headerlink" href="#test-input-generation" title="Permalink to this heading">#</a></h3>
+<p>Recall from earlier in this section that constraint solvers can be asked to provide a solution for a constraint. As such, an important part of symbolic execution is test input generation: test inputs can be generated by asking the constraint solver for a solution to the path constraint.</p>
+<p>For example, consider the earlier program that allocated memory to the pointer <code class="docutils literal notranslate"><span class="pre">p</span></code>. We can ask for test inputs for each path, giving us tests that achieve path coverage for the program.</p>
+<p>More importantly, if our symbolic execution tool finds that the program can indeed return a null pointer, then we can also ask for a <em>concrete</em> test input that produces this case. This provides programmers with a value concrete case for debugging, which are much easier for humans to reason about than symbolic traces.</p>
+<p>In the example, the fourth path results in a null point (<code class="docutils literal notranslate"><span class="pre">p</span> <span class="pre">=</span> <span class="pre">0</span></code>), and we can ask the constraint solver to generate inputs for <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> can be solving the path constraint in the final node of that path:</p>
+<div class="math notranslate nohighlight">
+\[x = X, y = Y, p = 0, s = X + Y, X + Y = 0, Y != 0\]</div>
+<p>Thus, the constraint solver must generate values <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">Y</span></code> equal 0, but <code class="docutils literal notranslate"><span class="pre">Y</span></code> itself does not. Any values such that <code class="docutils literal notranslate"><span class="pre">X</span> <span class="pre">=</span> <span class="pre">-Y</span></code> will suffice, such as <code class="docutils literal notranslate"><span class="pre">X</span> <span class="pre">=</span> <span class="pre">1</span></code> and <code class="docutils literal notranslate"><span class="pre">Y</span> <span class="pre">=</span> <span class="pre">-1</span></code>. Execute these inputs on the program will return a null pointer.</p>
+</section>
+<section id="limitations">
+<h3><span class="section-number">10.3.7. </span>Limitations<a class="headerlink" href="#limitations" title="Permalink to this heading">#</a></h3>
+<p>There are several challenges related to the scalability of symbolic execution, limiting their uptake, but which also present some interesting research problems.</p>
+<p><strong>Constraint solving</strong>: Symbolically executing all inputs on a path is expensive due to the cost of the underlying constraint solving. Current evaluations put the cost of symbolically executing a path at about 80 times that of concrete execution. This means that even a small set of unit tests covering a set of paths that take one minute to execute would take over an hour to symbolically execute.</p>
+<p>There are two general solutions that significantly reduce the execution cost of symbolic execution:</p>
+<ol class="arabic">
+<li><p><em>Removing unnecessary constraints</em>: Each branch in a program generally depends on a small number of variables (1 or 2), so to solve a constraint at the branch (to fork the symbolic execution process), we can eliminate those constraints that are not relevant.</p>
+<p>For example, consider a symbolic execution tool encountering a branch <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(x</span> <span class="pre">&lt;</span> <span class="pre">0)</span></code>, with the path constraint <span class="math notranslate nohighlight">\(x + y &gt; 0, z &lt; 2a, y &lt; 10\)</span>, and wants to check if it is feasible that <code class="docutils literal notranslate"><span class="pre">x</span></code> can be less than 0, the constraint <span class="math notranslate nohighlight">\(z &lt; 2a\)</span> can be removed from this check, as it will not influence the result.</p>
+</li>
+<li><p><em>Caching solutions</em>: Branches in programs tend to have lots of constraints that are similar to each other. As such, when solutions are required; e.g. generating a test input; the symbolic execution tool can cache solutions are try to reuse them later.</p>
+<p>The field of constraint solving is a very active research area, and
+much progress is being made to speed up how efficiently constraints
+can be solved; however, the problem will persist, as reasoning over
+an entire collection of inputs will always take much longer than a
+single input.</p>
+</li>
+</ol>
+<p><strong>Path explosion</strong>: The examples that we have seen so far are toy examples used to illustrate how symbolic execution works. If we want our symbolic execution tool to explore all possible paths through a program, the resulting number of paths explodes exponentially as the number of branches in the program increases.</p>
+<p>For example, consider the control-flow graph in Figure <span class="xref myst">10.3</span> from a real program that is non-trivial, but not unusually large. Exhaustively symbolically executing every path through this program is not feasible.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/cfg-real.png"><img alt="_images/cfg-real.png" src="_images/cfg-real.png" style="width: 70%;" /></a>
+</figure>
+<p style="text-align: center;">Figure 10.3: A control-flow graph for a non-trivial program.</p>
+<p>Much research has gone into mitigating the path explosion problem, sacrificing completeness for scalability. Most of this research looks heuristics for executing only a small subset of possible paths while minimising the impact this has on fault finding. Some typical solutions are:</p>
+<ol class="arabic simple">
+<li><p><em>Coverage-based search</em>, which iteratively chooses the path with the highest number of unexplored statements/branches to achieve branch coverage rather than path coverage, or the paths with code that was just added to the program.</p></li>
+<li><p><em>Random path search</em>, which works surprisingly well, but not as systematically as coverage-based search.</p></li>
+</ol>
+<p><strong>Loops!</strong>: In our examples, the programs contained no loops. Loops further exacerbates the path explosion problem by giving us a potentially infinite number of paths. Further to this, while we can use testing heuristics, such as the 0-1-many rule to select a small set of paths from a loop, executing certain paths after a loop may require the loop to execute a specific number of times. The automatic search algorithms employed by symbolic execution tools are not intelligent enough to determine these, and proceed rather blindly, resulting in the tool getting “stuck”.</p>
+<p><strong>Unsolvable paths</strong>: A final issue is with unsolvable paths: those paths that cannot be symbolically executed, effectively halting exploration of the path. Paths are typically unsolvable for two reasons:</p>
+<ol class="arabic simple">
+<li><p><em>Unsolvable constraints</em>: a branch or instruction contains a statement that is outside of the scope of the constraint solver. For example, many state-of-the-art constraint solvers consider only linear constraints (e.g. of the form <span class="math notranslate nohighlight">\(z \geq 2x + 4y\)</span>) over integers, meaning that they can handle only integers and sometimes arrays [6]. So, when encountering a program with real numbers or nonlinear constraints, the symbolic execution will fail at a point that these are used, or must revert to approximate evaluation, which may be unsound.</p></li>
+<li><p><em>External calls</em>: if a program contains a call to an external function, such as a library, or a function that reads user input, then it cannot reason about this symbolically, as it does not have access to the source code. As such, the symbolic execution algorithm must either halt, or approximate what the answer will be for the output.</p></li>
+</ol>
+<p>The KLEE symbolic execution tool has its own model of the Linux system library, which it uses to get around this problem; however, this is not a generalisable solution.</p>
+</section>
+<section id="tools">
+<h3><span class="section-number">10.3.8. </span>Tools<a class="headerlink" href="#tools" title="Permalink to this heading">#</a></h3>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>[6]: <a class="reference external" href="https://stp.github.io/">https://stp.github.io/</a></p>
+<p>[7]: <a class="reference external" href="http://babelfish.arc.nasa.gov/trac/jpf">http://babelfish.arc.nasa.gov/trac/jpf</a></p>
+<p>[8]: <a class="reference external" href="http://klee.github.io/klee/">http://klee.github.io/klee/</a></p>
+<p>[9]: <a class="github reference external" href="https://github.com/diffoperator/Sypy">diffoperator/Sypy</a></p>
+</div>
+</aside>
+<p>There are a handful of mature symbolic execution tools, primarily built from research prototypes.</p>
+<p>Java PathFinder[7] is a model checker and symbolic execution tool for Java, built and maintained at the NASA Ames Research Centre.</p>
+<p>KLEE[8] is the most mature symbolic execution tool for LLVM (Low Level Virtual Machine), and many research projects have built on KLEE since its release in 2008. KLEE is still actively maintained.</p>
+<p>Sypy[9] is a symbolic execution tool for Python, which has not been systematically evaluated. It appears that the development on the tool has halted.</p>
+</section>
+</section>
+<section id="dynamic-symbolic-execution">
+<h2><span class="section-number">10.4. </span>Dynamic symbolic execution<a class="headerlink" href="#dynamic-symbolic-execution" title="Permalink to this heading">#</a></h2>
+<p><em>Dynamic symbolic execution</em> (DSE) is a test input generation technique that is a cross between random testing and symbolic execution, with the aim of overcoming the weaknesses of each of these.</p>
+<p>It is perhaps more accurately described as a combination of dynamic execution and symbolic execution. Essentially, a DSE tool runs a concrete input on a program, and simultaneously performs symbolic execution on the path that this input executes. It then uses the path constraint generated by the symbolic execution to generate a new test.</p>
+<section id="overview">
+<h3><span class="section-number">10.4.1. </span>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h3>
+<p>DSE is used for dynamic test input generation. It uses symbolic execution, but the approach to test input generation is different to that of symbolic execution.</p>
+<div class="tip admonition">
+<p class="admonition-title">Example 72</p>
+<p>We illustrate this with an example. Consider the following program, with a fault at the line that says “abort()”:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="w">      </span><span class="mf">1.</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">good_bad</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">s</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="mf">2.</span><span class="w">   </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">      </span><span class="mf">3.</span><span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;b&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">count</span><span class="o">++</span><span class="p">;</span>
+<span class="w">      </span><span class="mf">4.</span><span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;a&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">count</span><span class="o">++</span><span class="p">;</span>
+<span class="w">      </span><span class="mf">5.</span><span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;d&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">count</span><span class="o">++</span><span class="p">;</span>
+<span class="w">      </span><span class="mf">6.</span><span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;!&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">count</span><span class="o">++</span><span class="p">;</span>
+<span class="w">      </span><span class="mf">7.</span><span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">count</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="n">abort</span><span class="p">();</span><span class="w">  </span><span class="c1">//fault</span>
+<span class="w">      </span><span class="mf">8.</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>This program will only fail on the input “bad!”. Using random testing, random arrays of four characters will be generated, but encountering the fault at line 7 is highly unlikely. If we consider a 32-bit architecture, the probability of randomly generating the string “bad!” requires us to randomly choose ‘b’ at index 0 (probability of 1 in <span class="math notranslate nohighlight">\(2^{8}\)</span>, ‘a’ at location 1 (probability of <span class="math notranslate nohighlight">\(1\)</span> in <span class="math notranslate nohighlight">\(2^{8}\)</span>), etc., leaving us with the probability of <span class="math notranslate nohighlight">\(1\)</span> in <span class="math notranslate nohighlight">\(2^{32}\)</span> that the fault will be encountered.</p>
+<p>If we use dynamic symbolic execution on that program, we first generate a random input, and symbolically execute the path on that input while also executing the concrete input. For illustration’s sake, let’s consider that the randomly generated input is the string “good”. The path constraint will be: <span class="math notranslate nohighlight">\(s_0 \neq\)</span> <code class="docutils literal notranslate"><span class="pre">b</span></code>, <span class="math notranslate nohighlight">\(s_1 \neq\)</span> <code class="docutils literal notranslate"><span class="pre">a</span></code>, <span class="math notranslate nohighlight">\(s_2 \neq\)</span> <code class="docutils literal notranslate"><span class="pre">d</span></code>, <span class="math notranslate nohighlight">\(s_3 \neq\)</span> <code class="docutils literal notranslate"><span class="pre">!</span></code>, resulting in <code class="docutils literal notranslate"><span class="pre">count</span></code> being 0, and the fault not being executed.</p>
+<p>Next, we use a constraint solver to generate a <em>new</em> test. With symbolic execution, we would use the path constraint to generate a concrete input for the path, however, we have already executed a concrete input for that path: the input “good”. So instead, we generate a new test by <em>negating</em> one of the branches in the path constraint; e.g. the final branch: <span class="math notranslate nohighlight">\(s_0 \neq\)</span> <code class="docutils literal notranslate"><span class="pre">b</span></code>, <span class="math notranslate nohighlight">\(s_1 \neq\)</span> <code class="docutils literal notranslate"><span class="pre">a</span></code>, <span class="math notranslate nohighlight">\(s_2 \neq\)</span> <code class="docutils literal notranslate"><span class="pre">d</span></code>, <span class="math notranslate nohighlight">\(s_3 =\)</span> <code class="docutils literal notranslate"><span class="pre">!</span></code>. This will generate a new input, such as “goo!”.</p>
+<p>We can systematically repeat this for all 16 combinations of branches, symbolically executing each time, which will provide us with complete path coverage. One of the 16 combinations will be the constraint <span class="math notranslate nohighlight">\(s_0 =\)</span> <code class="docutils literal notranslate"><span class="pre">b</span></code>, <span class="math notranslate nohighlight">\(s_1 =\)</span> <code class="docutils literal notranslate"><span class="pre">a</span></code>, <span class="math notranslate nohighlight">\(s_2 =\)</span> <code class="docutils literal notranslate"><span class="pre">d</span></code>, <span class="math notranslate nohighlight">\(s_3 =\)</span> <code class="docutils literal notranslate"><span class="pre">!</span></code>, which generates the input “bad!”, and will execute the fault.</p>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">Example 73</p>
+<p>The above example illustrates how DSE differs from symbolic execution, but does not illustrate why using concrete values can be advantageous. For this, consider the following example, which contains a call to an external function called <code class="docutils literal notranslate"><span class="pre">hash(char</span> <span class="pre">s[8])</span></code>, which calculates a hash value for a string:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="w">      </span><span class="mf">1.</span><span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">hash_example</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">s</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span>
+<span class="w">      </span><span class="mf">2.</span><span class="w">  </span><span class="p">{</span>
+<span class="w">      </span><span class="mf">3.</span><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">hash</span><span class="p">(</span><span class="n">s</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="mf">4.</span><span class="w">      </span><span class="c1">//do something good</span>
+<span class="w">      </span><span class="mf">5.</span><span class="w">    </span><span class="p">}</span>
+<span class="w">      </span><span class="mf">6.</span><span class="w">  </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>In this example, the input <code class="docutils literal notranslate"><span class="pre">x</span></code> must be equal to the hash value of <code class="docutils literal notranslate"><span class="pre">s</span></code> to execute the code block inside. Such code is common in applications with security restrictions, and to test most of the application’s functionality, the branch needs to evaluate to true for most tests.</p>
+<p>Now, consider a case in which we cannot symbolically execute <code class="docutils literal notranslate"><span class="pre">hash</span></code>; either because we do not have the source code (it is an external function), or its logic is too complex for the constraint solver being used. If we used random testing, we are unlikely to execute a test such that the branch is true. If we used symbolic execution, the execution would halt at the branch.</p>
+<p>However, if we use DSE, we can overcome this problem. First, the DSE algorithm will pick random values for <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">s</span></code>; for example, <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">1019</span></code> and <code class="docutils literal notranslate"><span class="pre">s</span> <span class="pre">=</span> <span class="pre">“s3fpmi”</span></code>. When the branch is symbolically evaluated, we cannot evaluate <code class="docutils literal notranslate"><span class="pre">hash(y)</span></code>, so we instead record the concrete value; e.g. 74233. Next, we add the concrete value to the path constraint instead of the symbolic value, to get the condition <span class="math notranslate nohighlight">\(x \neq 74223\)</span>.</p>
+<p>To generate a new test, we negate this path constraint (<span class="math notranslate nohighlight">\(x = 74223\)</span>), solve this constraint, and get the input <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">74223</span></code>, and the branch will evaluate to true, executing the code block instead the if statement. Brilliant!</p>
+<p>Of course, if <em>both</em> sides of the equality are not symbolically executable (e.g. <code class="docutils literal notranslate"><span class="pre">hash(x)</span> <span class="pre">==</span> <span class="pre">hash(y)</span></code>), this will not work; but this solution works for a large number of cases in which we can access the concrete values but not the symbolic values of function calls.</p>
+</div>
+<p>In summary, the difference between symbolic execution and DSE is two things:</p>
+<ol class="arabic simple">
+<li><p>The concrete input is executed simultaneously with the symbolic input, instead of generating the test after symbolically executing a path. The first input is chosen arbitrarily (perhaps randomly).</p></li>
+<li><p>Path constraints are modified to generate a <em>new</em> test after each path is executed.</p></li>
+</ol>
+</section>
+<section id="advantages">
+<h3><span class="section-number">10.4.2. </span>Advantages<a class="headerlink" href="#advantages" title="Permalink to this heading">#</a></h3>
+<section id="advantages-over-random-testing">
+<h4><span class="section-number">10.4.2.1. </span>Advantages over random testing<a class="headerlink" href="#advantages-over-random-testing" title="Permalink to this heading">#</a></h4>
+<p>Clearly, the advantage of DSE over random testing is that it is not so random. While the first test case is random, using the program’s control-flow to explore the input space provides a much better coverage of the program structure than with random testing.</p>
+</section>
+<section id="advantages-over-symbolic-execution">
+<h4><span class="section-number">10.4.2.2. </span>Advantages over symbolic execution<a class="headerlink" href="#advantages-over-symbolic-execution" title="Permalink to this heading">#</a></h4>
+<p>Using DSE to generate test inputs has a major advantage over using just symbolic execution: when an unsolvable path (e.g. unsolvable constraint or external function call) is encountered, DSE uses the concrete values for those variables that cannot be solved, and adds these to the symbolic state. This effectively under-approximates the symbolic values of those variables, but it allows execution to continue.</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>[10]: See <a class="reference external" href="https://patricegodefroid.github.io/public_psfiles/ndss2008.pdf">https://patricegodefroid.github.io/public_psfiles/ndss2008.pdf</a></p>
+</div>
+</aside>
+<p>A second advantage is that it opens up to new search strategies to deal with the path explosion problem. For example, for their SAGE DSE tool[10], Microsoft researchers proposed a technique known as <em>generational</em> search. In generational search, one symbolically executed path is used to generate multiple new tests.</p>
+<p>For example, in our good/bad example above, instead of generating one new test from the path constraint <span class="math notranslate nohighlight">\(s_0 \neq\)</span> <code class="docutils literal notranslate"><span class="pre">b</span></code>, <span class="math notranslate nohighlight">\(s_1 \neq\)</span> <code class="docutils literal notranslate"><span class="pre">a</span></code>, <span class="math notranslate nohighlight">\(s_2 \neq\)</span> <code class="docutils literal notranslate"><span class="pre">d</span></code>, <span class="math notranslate nohighlight">\(s_3 \neq\)</span> <code class="docutils literal notranslate"><span class="pre">!</span></code>, and executing this using DSE, SAGE generates four new inputs by negating <em>each</em> of the constraints in the path constraint, giving four new path constraints:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(s_0 =\)</span> <code class="docutils literal notranslate"><span class="pre">b</span></code>, <span class="math notranslate nohighlight">\(s_1 \neq\)</span> <code class="docutils literal notranslate"><span class="pre">a</span></code>, <span class="math notranslate nohighlight">\(s_2 \neq\)</span> <code class="docutils literal notranslate"><span class="pre">d</span></code>, <span class="math notranslate nohighlight">\(s_3 \neq\)</span> <code class="docutils literal notranslate"><span class="pre">!</span></code>   <span class="math notranslate nohighlight">\(\Rightarrow\)</span>   “bood”</p></li>
+<li><p><span class="math notranslate nohighlight">\(s_0 \neq\)</span> <code class="docutils literal notranslate"><span class="pre">b</span></code>, <span class="math notranslate nohighlight">\(s_1 =\)</span> <code class="docutils literal notranslate"><span class="pre">a</span></code>, <span class="math notranslate nohighlight">\(s_2 \neq\)</span> <code class="docutils literal notranslate"><span class="pre">d</span></code>, <span class="math notranslate nohighlight">\(s_3 \neq\)</span> <code class="docutils literal notranslate"><span class="pre">!</span></code>   <span class="math notranslate nohighlight">\(\Rightarrow\)</span>   “gaod”</p></li>
+<li><p><span class="math notranslate nohighlight">\(s_0 \neq\)</span> <code class="docutils literal notranslate"><span class="pre">b</span></code>, <span class="math notranslate nohighlight">\(s_1 \neq\)</span> <code class="docutils literal notranslate"><span class="pre">a</span></code>, <span class="math notranslate nohighlight">\(s_2 =\)</span> <code class="docutils literal notranslate"><span class="pre">d</span></code>, <span class="math notranslate nohighlight">\(s_3 \neq\)</span> <code class="docutils literal notranslate"><span class="pre">!</span></code>   <span class="math notranslate nohighlight">\(\Rightarrow\)</span>   “godd”</p></li>
+<li><p><span class="math notranslate nohighlight">\(s_0 \neq\)</span> <code class="docutils literal notranslate"><span class="pre">b</span></code>, <span class="math notranslate nohighlight">\(s_1 \neq\)</span> <code class="docutils literal notranslate"><span class="pre">a</span></code>, <span class="math notranslate nohighlight">\(s_2 \neq\)</span> <code class="docutils literal notranslate"><span class="pre">d</span></code>, <span class="math notranslate nohighlight">\(s_3 =\)</span> <code class="docutils literal notranslate"><span class="pre">!</span></code>   <span class="math notranslate nohighlight">\(\Rightarrow\)</span>   “goo!”</p></li>
+</ol>
+<p>This gives four new inputs having executed only one symbolic path, reducing the cost of DSE significantly. As these four tests are executed, the next “generation” is born, which negates the constraints in the path constraints that have not been executed previously. For example, the test “bood” will generate three more constraint that result in the test inputs: (1) “baod”; (2) “bodd”; and (3) “boo!”. The test “good” is not generated again because that path has already been covered. Another generation is executed, until we get the test “bad!”.</p>
+<p>This generational search algorithm could allow DSE to scale much better than using a more complete algorithm, such as depth-first or breadth-first search.</p>
+</section>
+</section>
+<section id="id1">
+<h3><span class="section-number">10.4.3. </span>Limitations<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<p>DSE still suffers from all of the same limitations as symbolic execution: path explosion, expensive constraint solving, loops, and unsolvable paths. However, the use of concrete information during execution helps to mitigate all of these at some level, significantly improving the scalability.</p>
+<p>However, DSE suffers from a problem that is not found in symbolic execution: <em>divergence</em>. Because a concrete input is used to drive which path is executed next, a DSE algorithm does not fork at each branch, but instead just collects the symbolic values of the path being executed. However, if a new test is generated and the path it executes is different to the path we expected, we say that a <em>divergence</em> has occurred. This is caused by the limitations in the constraint solvers used.</p>
+<p>For example, consider the following program:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="w">      </span><span class="mf">1.</span><span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">divergent</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">      </span><span class="mf">2.</span><span class="w">  </span><span class="p">{</span>
+<span class="w">      </span><span class="mf">3.</span><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">s</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
+<span class="w">      </span><span class="mf">4.</span><span class="w">    </span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
+<span class="w">      </span><span class="mf">5.</span><span class="w">    </span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">      </span><span class="mf">6.</span><span class="w">    </span><span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">      </span><span class="mf">6.</span><span class="w">    </span><span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">      </span><span class="mf">7.</span><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">[</span><span class="n">y</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="mf">8.</span><span class="w">      </span><span class="n">abort</span><span class="p">();</span><span class="w"> </span><span class="c1">//error</span>
+<span class="w">      </span><span class="mf">9.</span><span class="w">    </span><span class="p">}</span>
+<span class="w">     </span><span class="mf">10.</span><span class="w">  </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>If our first randomly generated input is <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">1</span></code>, then the branch statement at line 7 will be false: <code class="docutils literal notranslate"><span class="pre">s[x]</span> <span class="pre">=</span> <span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">s[y]</span> <span class="pre">+</span> <span class="pre">2</span> <span class="pre">=</span> <span class="pre">2</span></code>. Because constraint solvers are not sophisticated enough to reason about symbolic addresses (or arrays) completely, the concrete values of <code class="docutils literal notranslate"><span class="pre">s[0]</span></code> (0 is the concrete value of <code class="docutils literal notranslate"><span class="pre">x</span></code>) and <code class="docutils literal notranslate"><span class="pre">s[1]</span></code> (1 is the concrete value of <code class="docutils literal notranslate"><span class="pre">y</span></code>) are used instead. The symbolic value of <code class="docutils literal notranslate"><span class="pre">s[0]</span></code> is <code class="docutils literal notranslate"><span class="pre">X</span></code>, and for <code class="docutils literal notranslate"><span class="pre">s[1]</span></code> it is 0. Because <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">==</span> <span class="pre">0</span> <span class="pre">+</span> <span class="pre">2</span></code> is false, the path constraint generated is <span class="math notranslate nohighlight">\(x \neq 2\)</span>. Negating this results in the new test inputs <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">2,</span> <span class="pre">y</span> <span class="pre">=</span> <span class="pre">1</span></code>. However, because the value of <code class="docutils literal notranslate"><span class="pre">s[x]</span></code> is dependent on the input, we get the values <code class="docutils literal notranslate"><span class="pre">s[x]</span> <span class="pre">=</span> <span class="pre">1</span></code> and <code class="docutils literal notranslate"><span class="pre">s[y]</span> <span class="pre">+</span> <span class="pre">2</span> <span class="pre">=</span> <span class="pre">2</span></code>, so the branch at line 6 again evaluates to false, and the fault is missed. The DSE algorithm will then terminate, and will miss the case <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">3,</span> <span class="pre">y</span> <span class="pre">=</span> <span class="pre">1</span></code>, which finds the fault.</p>
+<p>In this case, concretisation results in divergence, which would not happen using symbolic execution. However, considering that the constraint solver is not able to reason about symbolic addresses, the symbolic execution could not continue at this point, so using concretisation will help in some cases.</p>
+<p>Recent research studies how to analyse such problems with arrays and pointer arithmetic to provide better solutions, but these do not always work due to the complicated nature of pointers.</p>
+</section>
+<section id="id2">
+<h3><span class="section-number">10.4.4. </span>Tools<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h3>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>[11]: <a class="reference external" href="http://research.microsoft.com/en-us/um/people/pg/public_psfiles/sage-in-one-slide.pdf">http://research.microsoft.com/en-us/um/people/pg/public_psfiles/sage-in-one-slide.pdf</a></p>
+<p>[12]<a class="reference external" href="http://s2e.epfl.ch">http://s2e.epfl.ch</a>.</p>
+<p>[13]<a class="reference external" href="http://jburnim.github.io/crest/">http://jburnim.github.io/crest/</a></p>
+<p>[14]<a class="reference external" href="http://osl.cs.illinois.edu/software/jcute/">http://osl.cs.illinois.edu/software/jcute/</a></p>
+</div>
+</aside>
+<p>The most successful DSE tool to date is Microsoft SAGE [11]. SAGE is not available for download, however, it has been used successfully internally at Microsoft since 2008, finding over one third of all security vulnerabilities found in Windows 7. Microsoft currently host a lab of over 200 machines dedicated to running SAGE over their development code.</p>
+<p>S<span class="math notranslate nohighlight">\(^2\)</span>e[12] is an open-source DSE tool for the LLVM, built on KLEE, which contains a sophisticated approach for generating sequences of method calls to find vulnerabilities in programs.</p>
+<p>CREST[13] and jCUTE[14] are open-source DSE tools for C and Java respectively, primarily designed to allow researchers to modify and experiment with DSE.</p>
+</section>
+</section>
+<section id="into-the-future">
+<h2><span class="section-number">10.5. </span>Into the future…<a class="headerlink" href="#into-the-future" title="Permalink to this heading">#</a></h2>
+<p>Symbolic analysis, and dynamic symbolic execution in particular, are likely to play a significant role in testing in the future, as the complexity of software systems increase to the point where manual test generation is simply not feasible to achieve high coverage.</p>
+<p>As constraint solvers continue to improve, the effect is passed on to symbolic execution tools who build on these. Constraint solvers are improving at a remarkable rate as researchers find new tricks to improve reasoning without the loss of precision, and find heuristics to give approximate answers. Further, researchers are increasing the domains in which constraint solvers can find answers in reasonable times, including real numbers and certain nonlinear domains.</p>
+<p>Symbolic execution and DSE are exciting research topics, with research being done in this department on those topics, as well as other symbolic reasoning approaches such as abstract interpretation.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Coverage-Guided-Fuzzing.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">9. </span>Code Coverage-Guided Fuzzing</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Probabilities.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">A Brief Review of Some Probability Definitions</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-of-this-chapter">10.1. Learning outcomes of this chapter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-introduction">10.2. Chapter introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#symbolic-execution">10.3. Symbolic execution</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#early-symbolic-execution">10.3.1. Early symbolic execution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#constraint-solving">10.3.2. Constraint solving</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#symbolic-states">10.3.3. Symbolic states</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#some-examples">10.3.4. Some examples</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#a-real-fault">10.3.4.1. A real fault</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#symbolic-test-oracles">10.3.5. Symbolic test oracles</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-input-generation">10.3.6. Test input generation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations">10.3.7. Limitations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tools">10.3.8. Tools</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dynamic-symbolic-execution">10.4. Dynamic symbolic execution</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">10.4.1. Overview</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advantages">10.4.2. Advantages</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#advantages-over-random-testing">10.4.2.1. Advantages over random testing</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#advantages-over-symbolic-execution">10.4.2.2. Advantages over symbolic execution</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">10.4.3. Limitations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">10.4.4. Tools</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#into-the-future">10.5. Into the future…</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By SWEN90006
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

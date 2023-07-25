@@ -1,0 +1,865 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>3. Boundary-Value Analysis &#8212; SWEN90006 Software &amp; Security Testing</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/book-style.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Boundary-Value';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="4. Coverage-Based Testing" href="Coverage-Based-Testing.html" />
+    <link rel="prev" title="2. Input Partitioning" href="Input-Partitioning.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/uom.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/uom.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Subject Introduction
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">LECTURE NOTES</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Introduction-to-Testing.html">1. Introduction to Software Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-Partitioning.html">2. Input Partitioning</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">3. Boundary-Value Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Coverage-Based-Testing.html">4. Coverage-Based Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Testing-Modules.html">5. Testing Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Property-based-testing.html">6. Property-based Testing and Test Oracles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Testing-and-Integration.html">7. Testing-and-Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Security-Testing.html">8. Security Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Coverage-Guided-Fuzzing.html">9. Code Coverage-Guided Fuzzing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Symbolic-Execution.html">10. Automated test generation using symbolic execution</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">APPENDIX</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Probabilities.html">A Brief Review of Some Probability Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Maximum.html">Maximum Likelihood Estimation</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/Boundary-Value.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Boundary-Value Analysis</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-of-this-chapter">3.1. Learning outcomes of this chapter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-introduction">3.2. Chapter Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#values-and-boundaries">3.3. Values and Boundaries</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#guidelines-for-boundary-value-analysis">3.4. Guidelines for Boundary-Value Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#domains-with-multiple-variables">3.4.1. Domains with Multiple Variables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#detecting-boundary-shifts-in-inequalities">3.4.2. Detecting Boundary Shifts in Inequalities</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#detecting-boundary-shifts-in-equalities">3.4.3. Detecting Boundary Shifts in Equalities</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boolean-boundaries">3.4.4. Boolean Boundaries</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="boundary-value-analysis">
+<h1><span class="section-number">3. </span>Boundary-Value Analysis<a class="headerlink" href="#boundary-value-analysis" title="Permalink to this heading">#</a></h1>
+<section id="learning-outcomes-of-this-chapter">
+<h2><span class="section-number">3.1. </span>Learning outcomes of this chapter<a class="headerlink" href="#learning-outcomes-of-this-chapter" title="Permalink to this heading">#</a></h2>
+<p>At the end of this chapter, you should be able to:</p>
+<ul class="simple">
+<li><p>Explain why boundary-value analysis is valuable compared to standard equivalence partitioning</p></li>
+<li><p>Given a set of equivalence classes for a program, identify the boundaries of those equivalence classes, including the on points and off points.</p></li>
+<li><p>From a set of equivalence classes, select test inputs that adequately cover the boundaries of a program.</p></li>
+</ul>
+</section>
+<section id="chapter-introduction">
+<h2><span class="section-number">3.2. </span>Chapter Introduction<a class="headerlink" href="#chapter-introduction" title="Permalink to this heading">#</a></h2>
+<p>The input partitioning methods presented in Chapter 2 can be improved by trying to find better test cases within equivalence classes. <em>Boundary-value analysis</em> is both a refinement of input partitioning and an extension of it. Boundary-value analysis selects test cases to explore conditions on, and around, the edges of equivalence classes obtained by input partitioning.</p>
+<div class="admonition-definition admonition">
+<p class="admonition-title">Definition</p>
+<p><em>Boundary conditions</em> are predicates that apply directly on, above, and beneath the boundaries of input equivalence classes and output equivalence classes.</p>
+</div>
+<p>Intuitively, boundary-value analysis aims to select test cases to explore the boundary conditions of a program. Boundary-value analysis and input partitioning are closely related. Both of them exploit the idea that each element in an equivalence class should execute the same paths in a program. However, boundary-value analysis works on the theory that, if a programmer makes a mistake in the logic of the program, such that some inputs in an equivalence class execute the incorrect paths, then those mistakes will often occur at the <em>boundary</em> between equivalence classes, because these boundaries are related to flow control constructs such as if statements and while loops in programs.</p>
+<div class="admonition-definition admonition">
+<p class="admonition-title">Definition</p>
+<p>A <em>computational fault</em> is a fault that occurs during a computation in a program; for example, an arithmetic computation or a string processing error.</p>
+</div>
+<p>Consider the following statement to calculate the average of two numbers:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>    average = (left + right) / 2
+</pre></div>
+</div>
+<p>A computational fault would be:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>    average = left + right / 2
+</pre></div>
+</div>
+<p>In the above, the division operator binds tighter than the addition operator, so the computation is incorrect as it calculates <code class="docutils literal notranslate"><span class="pre">average</span> <span class="pre">=</span> <span class="pre">left</span> <span class="pre">+</span> <span class="pre">(right</span> <span class="pre">/</span> <span class="pre">2)</span></code>.</p>
+<div class="admonition-definition admonition">
+<p class="admonition-title">Definition</p>
+<p>A <em>boundary shift</em> is when a predicate in a branch statement is incorrect, effectively ‘shifting’ the boundary away from its intended place.</p>
+</div>
+<p>For example, if our program should do something if a list has more than 10 elements, we would have:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>    if (length(list) &gt; 10) then ...
+    else ...
+</pre></div>
+</div>
+<p>However, a programmer could make a simple mistake of using <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code> instead of <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>    if (length(list) &gt;= 10) then ...
+    else ...
+</pre></div>
+</div>
+<p>Here, the boundary has ‘shifted’ across one value from where it should be <em>according to the specification</em>.</p>
+<p>Boundary-value analysis attempts to find these faults near the boundary by selecting test cases on and around the boundary. In the example above, after identifying the equivalence classes, we would select <em>at least</em> test cases that satisfy the condition cases: <span class="math notranslate nohighlight">\({ length(list) = 10}\)</span> (the top end of the first EC); and <span class="math notranslate nohighlight">\({ length(list) &gt; 10}\)</span> (the bottom end of the second EC).</p>
+<p>If we arbitrarily choose values of the equivalence classes, such as a list of length 5 and one of length 15, then our tests would fail to find the above fault.</p>
+<p>Collected defect data supports the theory behind boundary-value analysis. Many faults are boundary shifts introduced at boundary conditions because programmers either: (1) are unsure of the correct boundary for an input condition; or (2) have incorrectly tested the boundary.</p>
+<p>Many computational faults are also found in defect data, however, it is important to note the tests on the boundaries can detect both computational faults and boundary shifts, while those away from the boundary defect only computational faults. Therefore, test cases that explore the boundary conditions have a more important role that test cases that do not.</p>
+<p>Boundary-value analysis requires one <em>or more</em> test cases be selected from the edge of the equivalence class or close to the edge of the equivalence class, whereas equivalence partitioning simply requires that any element in the equivalence class will do. Boundary-value analysis also requires that test cases be derived from the output conditions. This is different to equivalence partitioning where only the input domain is usually considered.</p>
+</section>
+<section id="values-and-boundaries">
+<span id="id1"></span><h2><span class="section-number">3.3. </span>Values and Boundaries<a class="headerlink" href="#values-and-boundaries" title="Permalink to this heading">#</a></h2>
+<p>Before we discuss how to apply boundary-value analysis, we define some related terms.</p>
+<div class="admonition-definition-path-condition-domain-and-domain-boundary admonition">
+<p class="admonition-title">Definition — Path condition, domain, and domain boundary</p>
+<p>A <em>path condition</em> is the condition that must be satisfied by the input data for that path to be executed.</p>
+<p>A <em>domain</em> is the set of input data satisfying a path condition.</p>
+<p>A <em>domain boundary</em> is the boundary of a domain. It typically corresponds to a simple predicate.</p>
+</div>
+<p>Test inputs are chosen to be <em>on</em> or around the boundary. However, there are two distinctly different types of boundary: <em>closed boundaries</em> and <em>open boundaries</em>.</p>
+<div class="admonition-definition-open-and-closed-boundaries admonition">
+<p class="admonition-title">Definition — Open and closed boundaries</p>
+<p>A <em>closed boundary</em> is a domain boundary where the points on the boundary belongs to the domain, and is defined using an operator that contains an equality. For example, <span class="math notranslate nohighlight">\({ x \leq 10}\)</span> and <span class="math notranslate nohighlight">\({ y = 0}\)</span> are both closed boundaries.</p>
+<p>An <em>open boundary</em> is a domain boundary which is not closed, and is defined using a strict inequality. For example, <span class="math notranslate nohighlight">\({ y &lt; 10}\)</span> is an open boundary, because <span class="math notranslate nohighlight">\(10\)</span> does not fall withing the boundary.</p>
+</div>
+<p>Now that we have a better understanding of what a boundary is, we can define the on and off points of the boundary, which are the test inputs we will choose for boundary-value testing. The inputs that are chosen depend on the type of boundary.</p>
+<div class="admonition-definition-on-and-off-points admonition">
+<p class="admonition-title">Definition – On and off points</p>
+<p>An <em>on point</em> is a point on the boundary of an equivalence class.</p>
+<p>For example, the value <span class="math notranslate nohighlight">\(10\)</span> is an on point for the boundary <span class="math notranslate nohighlight">\(x \leq 10\)</span>. Counter-intuitively, <span class="math notranslate nohighlight">\(10\)</span> is also the on point for the boundary <span class="math notranslate nohighlight">\(x &lt; 10\)</span>. Therefore, for a closed boundary, an on point will be a member of the equivalence class, and for an open boundary, it will not.</p>
+<p>An <em>off point</em> is a point just off the boundary between equivalence classes. For example, if <span class="math notranslate nohighlight">\(x\)</span> is an integer and a boundary is <span class="math notranslate nohighlight">\(x \leq 10\)</span>, then the off point is <span class="math notranslate nohighlight">\(11\)</span>. If <span class="math notranslate nohighlight">\(x\)</span> is a floating point number, the off point would be <span class="math notranslate nohighlight">\(10.001\)</span> (assuming that <span class="math notranslate nohighlight">\(0.001\)</span> is the smallest floating point on the specific architecture).</p>
+<p>For the open boundary <span class="math notranslate nohighlight">\(y &lt; 10\)</span>, the off point is <span class="math notranslate nohighlight">\(9\)</span> if <span class="math notranslate nohighlight">\(y\)</span> is an integer, and <span class="math notranslate nohighlight">\(9.999\)</span> is <span class="math notranslate nohighlight">\({ y}\)</span> is a floating point number.</p>
+<p>The reverse of the on point then holds: for a closed boundary, the off point will fall outside of the equivalence class, and for an open boundary, it will fall inside the equivalence class.</p>
+<p>Two special cases of off points are for strict equalities and non-equalities.</p>
+<p>For equalities, which are boundaries of the form <span class="math notranslate nohighlight">\(x = 10\)</span>, there is one onpoint (<span class="math notranslate nohighlight">\(10\)</span>), and there are two off points: <span class="math notranslate nohighlight">\(9\)</span> and <span class="math notranslate nohighlight">\(11\)</span>.</p>
+<p>Similarly, for non-equalities, which are boundaries of the form <span class="math notranslate nohighlight">\(x \neq 10\)</span>, there is one onpoint (<span class="math notranslate nohighlight">\(10\)</span>), and there are two off points: <span class="math notranslate nohighlight">\(9\)</span> and <span class="math notranslate nohighlight">\(11\)</span>.</p>
+</div>
+<p>Note that the on and off points for equalities and non-equalities are the same. This may seem strange. Why would the on points for <span class="math notranslate nohighlight">\(x=y\)</span> be the same as the on points for <span class="math notranslate nohighlight">\(x \neq y\)</span> when they are the opposite of each other? Clearly, the input <span class="math notranslate nohighlight">\((x=0, y=0)\)</span> is an on point for <span class="math notranslate nohighlight">\(x=y\)</span>, but wouldn’t the on point for <span class="math notranslate nohighlight">\(x \neq y\)</span> be something like <span class="math notranslate nohighlight">\((x=0,y=1)\)</span>?</p>
+<p>Not quite! What we have to remember is that we are analysing <em>boundaries</em>, not equivalence classes. For the equivalence class <span class="math notranslate nohighlight">\(x \neq y\)</span>, the boundary is at <span class="math notranslate nohighlight">\(x = y\)</span>. This is the set of inputs that we can point to on the boundary. We cannot point to a boundary <span class="math notranslate nohighlight">\(x \neq y\)</span> — there is no boundary there. It describes all of the points that do not lie on the boundary <span class="math notranslate nohighlight">\(x=y\)</span>. So, even though the points on <span class="math notranslate nohighlight">\(x=y\)</span> do not fall into the class <span class="math notranslate nohighlight">\(x \neq y\)</span>, those are the on points of the boundary.</p>
+</section>
+<section id="guidelines-for-boundary-value-analysis">
+<h2><span class="section-number">3.4. </span>Guidelines for Boundary-Value Analysis<a class="headerlink" href="#guidelines-for-boundary-value-analysis" title="Permalink to this heading">#</a></h2>
+<p>Given a set of domain boundaries to test, we can apply the following guidelines to select test cases.</p>
+<ol class="arabic simple">
+<li><p>If a boundary is a strict equality, for example <span class="math notranslate nohighlight">\({ x  = 10}\)</span> select the on point, <span class="math notranslate nohighlight">\(10\)</span>, and both off points, <span class="math notranslate nohighlight">\(9\)</span> and <span class="math notranslate nohighlight">\(11\)</span>.</p></li>
+<li><p>If a boundary is a strict non-equality, for example <span class="math notranslate nohighlight">\({ x \neq 10}\)</span> select the on point, <span class="math notranslate nohighlight">\(10\)</span>, and both off points, <span class="math notranslate nohighlight">\(9\)</span> and <span class="math notranslate nohighlight">\(11\)</span>.</p></li>
+<li><p>For an open boundary, for example <span class="math notranslate nohighlight">\({ x &lt; 10}\)</span>, select the on point <span class="math notranslate nohighlight">\(10\)</span>, and the off point <span class="math notranslate nohighlight">\(9\)</span>.</p></li>
+<li><p>For a closed boundary, for example <span class="math notranslate nohighlight">\({ x \leq 10}\)</span>, select the on point <span class="math notranslate nohighlight">\(10\)</span>, and the off point <span class="math notranslate nohighlight">\(11\)</span>.</p></li>
+<li><p>If a boundary is an inequality with an open boundary, for example <span class="math notranslate nohighlight">\({ x &lt; 10}\)</span>, select the on point <span class="math notranslate nohighlight">\(10\)</span>, and the off point <span class="math notranslate nohighlight">\(9\)</span>.</p></li>
+<li><p>For boundaries containing unordered types, that is, types such as Booleans or strings, choose one on point and one off point. An on point is any value that is in the equivalence class, while an off point is any value that is not. For example, if the equivalence class for a string variable is “contains no spaces”, then test one string containing no spaces, and one string containing at least one space.</p></li>
+<li><p>Analyse boundaries of equivalance classes; not individual equivalence classes. If we have the equivalences classes <span class="math notranslate nohighlight">\({ x \leq 0}\)</span> and <span class="math notranslate nohighlight">\({ x &gt; 0}\)</span>, then <span class="math notranslate nohighlight">\(0\)</span> is the on point for both, so analyse that boundary not each class in isolation.</p></li>
+</ol>
+<div class="admonition-remark admonition" id="remark-on-off-points">
+<p class="admonition-title">Remark</p>
+<p>It may seem strange that the on points for the boundaries <span class="math notranslate nohighlight">\(x &lt; 10\)</span> and <span class="math notranslate nohighlight">\(x \leq 10\)</span> are both 10, but the off points are 9 and 11 respectively. Shouldn’t 10 be the <em>off point</em> for <span class="math notranslate nohighlight">\(x &lt; 10\)</span>, because it is not in the equivalence class <span class="math notranslate nohighlight">\(x &lt; 10\)</span>?</p>
+<p>Not quite! Remember that we analyse the boundaries <em>between</em> equivalence classes.</p>
+<p>If <span class="math notranslate nohighlight">\(x &lt; 10\)</span> is an equivalence class, then there must be another equivalence class on the other side of <span class="math notranslate nohighlight">\(10\)</span>; for example, <span class="math notranslate nohighlight">\(x \geq 10\)</span>. The boundary at <span class="math notranslate nohighlight">\(x &lt; 10\)</span> is the same as the boundary at <span class="math notranslate nohighlight">\(x \geq 10\)</span>. Clearly, <span class="math notranslate nohighlight">\(10\)</span> is the on point for the boundary <span class="math notranslate nohighlight">\(x \geq 10\)</span>. So, it must also be the on point for <span class="math notranslate nohighlight">\(x &lt; 10\)</span>. Whether <span class="math notranslate nohighlight">\(10\)</span> is inside the class <span class="math notranslate nohighlight">\(x &lt; 10\)</span> is irrelevant – each on point falls inside one equivalence class on the boundary, and not in any other equivalence class on that boundary.</p>
+<p>However, the <em>off points</em> for <span class="math notranslate nohighlight">\(x &lt; 10\)</span> and <span class="math notranslate nohighlight">\(x\leq 10\)</span> are different! For <span class="math notranslate nohighlight">\(x&lt; 10\)</span> the off point is <span class="math notranslate nohighlight">\(9\)</span>, while for <span class="math notranslate nohighlight">\(x \leq 10\)</span>, it is <span class="math notranslate nohighlight">\(11\)</span>. Confused? Think of it like this: the on point <span class="math notranslate nohighlight">\(10\)</span> is NOT in the equivalence class <span class="math notranslate nohighlight">\(x&lt;10\)</span>. We need to choose a value on each equivalence class either side of the boundary, which means we choose on inside <span class="math notranslate nohighlight">\(x &lt; 10\)</span>, which is <span class="math notranslate nohighlight">\(9\)</span> if <span class="math notranslate nohighlight">\(x\)</span> is an integer, and <span class="math notranslate nohighlight">\(9.9^*\)</span> is <span class="math notranslate nohighlight">\(x\)</span> is a real number.</p>
+<p>But for <span class="math notranslate nohighlight">\(x \leq 10\)</span>, the value <span class="math notranslate nohighlight">\(10\)</span> is inside the equivalence class <span class="math notranslate nohighlight">\(x \leq 10\)</span>, so we need to choose a value on the other side of the boundary, which is <span class="math notranslate nohighlight">\(11\)</span> if <span class="math notranslate nohighlight">\(x\)</span> is an integer, and <span class="math notranslate nohighlight">\(10.001\)</span> (or smaller) if <span class="math notranslate nohighlight">\(x\)</span> is a real number.</p>
+</div>
+<div class="admonition-remark admonition">
+<p class="admonition-title">Remark</p>
+<p>It is not always easy to see the boundaries between equivalence classes; boundaries may not exist in such simple forms or make sense. When they do, they give better test cases than equivalence partitioning.</p>
+</div>
+<div class="tip admonition" id="example-23">
+<p class="admonition-title">Example 23: Boundary-Value Analysis for the Triangle Program</p>
+<p>Consider again the triangle classification program from Example <a class="reference internal" href="Input-Partitioning.html#example-14"><span class="std std-ref">14</span></a>. To show the boundary-value analysis method more clearly we will change the specification slightly to input floating point numbers instead of integers.</p>
+<blockquote>
+<div><p>The program reads floating point values from the standard input. The three values are interpreted as representing the lengths of the sides of a triangle. The program then prints a message to the standard output that states whether the triangle, if it can be formed, is equilateral, isosceles, scalene, or invalid.</p>
+</div></blockquote>
+<p>Given the equivalence classes identified above using equivalence partitioning we now have the following possible boundary conditions. Let x, y and z be the three floating point numbers input to the program.</p>
+<ul>
+<li><p>For an <em>equilateral</em> triangle the sides must all be of equal length and we have only one boundary where <span class="math notranslate nohighlight">\(x = y \land x = z\)</span> and we can explore this boundary using the following test cases:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p><!-- --></p></th>
+<th class="head"><p></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\((3, ~3, ~3)\)</span></p></td>
+<td><p>(on point)</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\((2.999,~ 3,~ 3)\)</span></p></td>
+<td><p>(off point below for x)</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\((3.001,~ 3,~ 3)\)</span></p></td>
+<td><p>(off point above for x)</p></td>
+</tr>
+</tbody>
+</table>
+<p>Plus the five additional cases that correspond to <span class="math notranslate nohighlight">\(x = y \neq z\)</span> (one above, one below), <span class="math notranslate nohighlight">\(x \neq z=y\)</span> (one above, one below) and <span class="math notranslate nohighlight">\(x \neq y \neq z\)</span>.</p>
+</li>
+<li><p>For an <em>isosceles</em> triangle two sides must be equal. This gives the boundary conditions <span class="math notranslate nohighlight">\(x = y \land y \neq z\)</span>, <span class="math notranslate nohighlight">\(y = z \land z \neq x\)</span> or <span class="math notranslate nohighlight">\(x = z \land z \neq y\)</span>. The boundary <span class="math notranslate nohighlight">\(x = y \land y \neq z\)</span> can be explored using the following test cases:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p><!-- --></p></th>
+<th class="head"><p></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\((3, ~3, ~4)\)</span></p></td>
+<td><p>(on point)</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\((2.999,~ 3,~ 4)\)</span></p></td>
+<td><p>(off point below)</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\((3.001,~ 3,~ 4)\)</span></p></td>
+<td><p>(off point above)</p></td>
+</tr>
+</tbody>
+</table>
+<p>Plus four additional cases for the off points of y and z.</p>
+</li>
+<li><p>For a <em>scalene</em> triangle, all sides must be of a different length. This equivalence class is <span class="math notranslate nohighlight">\(x \neq y \land y \neq z \land z \neq x\)</span>. This can be explored using the following test cases:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p><!-- --></p></th>
+<th class="head"><p></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\((3, ~3, ~3)\)</span></p></td>
+<td><p>(on point)</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\((2.999, ~3, ~3)\)</span></p></td>
+<td><p>(off point below)</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\((3.001, ~3, ~ 3)\)</span></p></td>
+<td><p>(off point above)</p></td>
+</tr>
+</tbody>
+</table>
+<p>Plus four additional cases for the off points of y and z. However, note that all nine of these values have already been tested. The on and off points for this are the same as for the equilateral triangle.</p>
+<p>Why is <span class="math notranslate nohighlight">\((3, 3, 3)\)</span> the on point when the equivalence class is <span class="math notranslate nohighlight">\(x \neq y \land y \neq z \land z \neq x\)</span>. Shouldn’t this be the off point?</p>
+<p>No! Recall the discussion from the <a class="reference internal" href="#remark-on-off-points"><span class="std std-ref">remark about on and off points</span></a>. The boundary between equivalence classes falls at <span class="math notranslate nohighlight">\(x=y=z\)</span>, because <span class="math notranslate nohighlight">\(x=y=z\)</span> is a neighbouring equivalence class. The point <span class="math notranslate nohighlight">\((3,3,3)\)</span> just happens to be outside of the equivalence class is <span class="math notranslate nohighlight">\(x \neq y \land y \neq z \land z \neq x\)</span>.</p>
+</li>
+<li><p>For invalid triangles, we have the cases in which the sides are of size <span class="math notranslate nohighlight">\(0\)</span> or below; that is <span class="math notranslate nohighlight">\(x \leq 0\)</span>. The following test cases explore this for x:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p><!-- --></p></th>
+<th class="head"><p></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\((0, ~3, ~3)\)</span></p></td>
+<td><p>(on point)</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\((0.001, ~3, ~3)\)</span></p></td>
+<td><p>(off point)</p></td>
+</tr>
+</tbody>
+</table>
+<p>and similarly for y and z.</p>
+<p>For invalid triangles, we also have the cases in which one of the sides is at least as long as the sum of the other two. The following test cases explore the equivalence class <span class="math notranslate nohighlight">\({ x + y \leq z}\)</span>:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p><!-- --></p></th>
+<th class="head"><p></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\((1, ~2, ~3)\)</span></p></td>
+<td><p>(on point)</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\((1, ~2, ~2.999)\)</span></p></td>
+<td><p>(off point)</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</div>
+<section id="domains-with-multiple-variables">
+<h3><span class="section-number">3.4.1. </span>Domains with Multiple Variables<a class="headerlink" href="#domains-with-multiple-variables" title="Permalink to this heading">#</a></h3>
+<p>So far, we have discussed strategies for choosing on and off points for domains containing only single boundaries. However, it is common for domains to have more than one variable. In fact, the triangle program in Example <a class="reference internal" href="#example-23"><span class="std std-ref">23</span></a> does have equivalence classes with multiple variables, (for example, the invalid case of <span class="math notranslate nohighlight">\({ x + y &gt; z}\)</span>), however, we conveniently did not discuss this.</p>
+<p>First, let us consider test cases for two-dimensional linear boundaries. Consider an equivalence class made up of the following linear boundaries: <span class="math notranslate nohighlight">\({ x \geq 1}\)</span>, <span class="math notranslate nohighlight">\({ y \leq 10}\)</span>, and <span class="math notranslate nohighlight">\({ y \leq x + 5}\)</span>, in which x and y are integers. This can be visualised using the two-dimensional graph in Figure <a class="reference internal" href="#f-3-1"><span class="std std-ref">3.1</span></a>, with the shaded section identifying the equivalence class.</p>
+<figure class="align-center" id="input-domains-valid-invalid">
+<span id="f-3-1"></span><a class="reference internal image-reference" href="_images/BVA-Multiple-Variables.png"><img alt="_images/BVA-Multiple-Variables.png" src="_images/BVA-Multiple-Variables.png" style="width: 70%;" /></a>
+</figure>
+<p style="text-align: center;">Figure 3.1: On points and off points in a two-dimensional, linear boundary</p>
+<p>In this case, we have to choose on point values that satisfy all three of the linear boundaries. However, the intersections of the lines lead to fewer test cases, because they test more than one on point in a single test case. This is advantageous because it reduces the number of test cases, and gives us test cases that are more sensitive to boundary-related faults. However, it can also make it a bit more difficult to debug, since it is not clear which boundary a test refers to. In the above, we choose two on points: <span class="math notranslate nohighlight">\({ x = 1 \land y = 6}\)</span>, and <span class="math notranslate nohighlight">\({ x=5 \land y = 10}\)</span>.</p>
+<p>Similarly, the off points near intersections can reduce the numbers of test cases outside the equivalence class. In Figure <a class="reference internal" href="#f-3-1"><span class="std std-ref">3.1</span></a>, we choose the test inputs <span class="math notranslate nohighlight">\({ x = 0 \land y = 6}\)</span>, and <span class="math notranslate nohighlight">\({ x = 5 \land y = 11}\)</span>. The former is an off point for both <span class="math notranslate nohighlight">\({ x \geq 1}\)</span> as well as <span class="math notranslate nohighlight">\({ y \leq x + 5}\)</span>. The latter is an off point for <span class="math notranslate nohighlight">\({ y \leq 10}\)</span> as well as <span class="math notranslate nohighlight">\({ y \leq x + 5}\)</span>.</p>
+<div class="tip admonition" id="example-24">
+<p class="admonition-title">Example 24: The Triangle Program — Again!</p>
+<p>If we return to the triangle example again, we see that there are equivalence classes based on three variables. Therefore, we need to consider an three-dimensional boundary. This is harder to visualise (and anything above three dimensions even more so!), but selecting the on and off points is still straightforward for this particular program.</p>
+<p>If we consider the invalid case in which <span class="math notranslate nohighlight">\({ x + y \leq z}\)</span> (that is, the length of the side z is greater than the sum of the other two sides), then we need to select an on and an off point for this. Similar cases exist for when x and y are too long. The inequality, <span class="math notranslate nohighlight">\({ x + y &lt; z}\)</span>, describes a <em>plane</em> in a three-dimensional graph, rather than a line in a two-dimensional graph. To choose test inputs, we must choose three on points on the plane, and one off point.</p>
+<p>If we return to the test cases that we derived for these in Example <a class="reference internal" href="#example-23"><span class="std std-ref">23</span></a>, one can see that the test cases selected were on and off points for this plane:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p><!-- --></p></th>
+<th class="head"><p></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\((1, ~2, ~3)\)</span></p></td>
+<td><p>(on point 1)</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\((100, ~200, ~300)\)</span></p></td>
+<td><p>(on point 2)</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\((400, ~2, ~402)\)</span></p></td>
+<td><p>(on point 3)</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\((1, ~2, ~2.999)\)</span></p></td>
+<td><p>(off point)</p></td>
+</tr>
+</tbody>
+</table>
+<p>The point <span class="math notranslate nohighlight">\((1, 2, 3)\)</span> is on the plane <span class="math notranslate nohighlight">\({ x + y = z}\)</span>, while the point <span class="math notranslate nohighlight">\((1, 2, 2.999)\)</span> is just below it. However, is this enough to detected a boundary shift?</p>
+<p>We also have the following changes compared to the earlier example:</p>
+<ul>
+<li><p>Equilateral:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p><!-- --></p></th>
+<th class="head"><p></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\((3, ~3, ~3)\)</span></p></td>
+<td><p>(on point 1)</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\((100, ~100, ~100)\)</span></p></td>
+<td><p>(on point 2 – far away from on point 1)</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\((2.999,~ 3,~ 3)\)</span></p></td>
+<td><p>(off point below for x)</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\((3.001,~ 3,~ 3)\)</span></p></td>
+<td><p>(off point above for x)</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p>Isosceles:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p><!-- --></p></th>
+<th class="head"><p></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\((3, ~3, ~4)\)</span></p></td>
+<td><p>(on point 1)</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\((100, ~100, ~4)\)</span></p></td>
+<td><p>(on point 2 – far away from on point 1)</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\((2.999,~ 3,~ 4)\)</span></p></td>
+<td><p>(off point below)</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\((3.001,~ 3,~ 4)\)</span></p></td>
+<td><p>(off point above)</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p>Scalene:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p><!-- --></p></th>
+<th class="head"><p></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\((3, ~3, ~3)\)</span></p></td>
+<td><p>(on point 1)</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\((100, ~100, ~100)\)</span></p></td>
+<td><p>(on point 2 – far away from on point 1)</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\((2.999, ~3, ~3)\)</span></p></td>
+<td><p>(off point below)</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\((3.001, ~3, ~ 3)\)</span></p></td>
+<td><p>(off point above)</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</div>
+</section>
+<section id="detecting-boundary-shifts-in-inequalities">
+<h3><span class="section-number">3.4.2. </span>Detecting Boundary Shifts in Inequalities<a class="headerlink" href="#detecting-boundary-shifts-in-inequalities" title="Permalink to this heading">#</a></h3>
+<p>Figure <a class="reference internal" href="#f-3-2"><span class="std std-ref">3.2</span></a> shows a boundary with an on and an off point. The solid line represents the boundary that has been identified (for equivalence partitioning, this is the expected boundary derived from the functional requirements, while for domain testing, this is the actual boundary in the program), while the dashed line represents a shifted boundary (for equivalence partitioning, this is the boundary in the program, while for domain testing, this is the boundary derived from the functional requirements). The black dot represents the on point of the boundary, and the white dot the off point.</p>
+<figure class="align-center" id="bva-boundary-shifts">
+<span id="f-3-2"></span><a class="reference internal image-reference" href="_images/BVA-boundary-shifts.png"><img alt="_images/BVA-boundary-shifts.png" src="_images/BVA-boundary-shifts.png" style="width: 60%;" /></a>
+</figure>
+<p style="text-align: center;">Figure 3.2: Possible inequality boundaries shifts with on and off points</p>
+<p>From this figure, one can see that a boundary shift down — in other words, the equivalence class is smaller than expected — will be detected because the on point is identified as being in the wrong domain. However, for the other two, it is possible to have a boundary shift that is not identified.</p>
+<p>In the case of a shift up (the equivalence class is larger than expected), the shift has to be great enough that the off point can detect it. For example, if the boundary <span class="math notranslate nohighlight">\({ x \leq 10.0}\)</span> is identified from the functional requirements, then we would select the on point <span class="math notranslate nohighlight">\(10.0\)</span>, and the off point <span class="math notranslate nohighlight">\(10.001\)</span>. However, if this boundary is incorrectly implemented as <span class="math notranslate nohighlight">\({ x \leq 10.0000000001}\)</span> (highly unlikely I’m sure, but this is for illustrative purposes only), then the on point <span class="math notranslate nohighlight">\(10.0\)</span> still falls inside the boundary, and the off point <span class="math notranslate nohighlight">\(10.001\)</span> still falls outside the boundary. Therefore, these values will not detect the shift. This means that if the off point is a certain distance away from the boundary, then only shifts at least as big as this distance can be detected by that off point. Fortunately, as Beizer points out in his book <em>Black-Box Testing — Techniques for Functional Testing of Software and Systems</em>, faults in programs generally occur naturally, and are not the result of sabotage, so choosing an off point that is close to the boundary is almost always likely to detect boundary shifts.</p>
+<p>In the case of the tilted boundary, the given boundary and the shifted boundary intersect at some point. In the diagram above, the on point falls within the boundary, and the off point falls outside of the boundary, therefore, these cases will not detected the boundary shift.</p>
+<p>Looking at Figure <a class="reference internal" href="#f-3-2"><span class="std std-ref">3.2</span></a>, it is clear that select one on point and one off point is not sufficient to detect shifts. For the middle case, the best that can be done is to select the off point as close to the boundary as possible, which may be impossible in some domains.</p>
+<p>However, we can improve on the case of the tilted boundary in some cases. If the values that can be selected have a minimum and a maximum (the <em>extremum points</em>), then we choose both of those as on points. This guarantees that, for any tilted boundary, at least one of the points must lie outside the shift boundary. Figure <a class="reference internal" href="#f-3-3"><span class="std std-ref">3.3</span></a> demonstrates this. The position of the tilted boundary does not have an impact on this — as long as some of the boundary falls below and some above, then one of the on points will fall outside the domain. If the two on points are close together, then this reduces the chance of the boundary shift being detected.</p>
+<figure class="align-center" id="bva-tilted-boundary">
+<span id="f-3-3"></span><a class="reference internal image-reference" href="_images/BVA-tilted-boundary.png"><img alt="_images/BVA-tilted-boundary.png" src="_images/BVA-tilted-boundary.png" style="width: 50%;" /></a>
+</figure>
+<p style="text-align: center;">Figure 3.3: Tilted inequality boundary with extremum and non-extremum on points</p>
+<p>In the case that the boundary has no extremums (or only a minimum or maximum but not both) due to it being infinite, then the further away the two on points are from each other, the greater chance there is of producing a failure.</p>
+<p>Once the two on points are selected, the best off point to select is one that is as close to the middle as possible between the two on points. This is known as the centroid. Alternatively, one could select more than one off point, but this would likely have little value.</p>
+<p>If we return to Figure <a class="reference internal" href="#f-3-1"><span class="std std-ref">3.1</span></a>, this implies that we are required to add both point on the line <span class="math notranslate nohighlight">\({ y = x + 5}\)</span>, but it must be at a point where <span class="math notranslate nohighlight">\({ y &lt; 10}\)</span> to remain inside the boundary.</p>
+</section>
+<section id="detecting-boundary-shifts-in-equalities">
+<h3><span class="section-number">3.4.3. </span>Detecting Boundary Shifts in Equalities<a class="headerlink" href="#detecting-boundary-shifts-in-equalities" title="Permalink to this heading">#</a></h3>
+<p>For boundaries defined by equalities, the technique is slightly different. This is because the domain is defined by a line (in two dimensional cases) or a plane (in three dimensional cases), rather than a block. Therefore, if we consider the tilted boundary from Figure <a class="reference internal" href="#f-3-2"><span class="std std-ref">3.2</span></a>, the on point, represented by the black dot, would not fall inside the boundary, because the entire equivalence class is given by the line, rather than the area below the line.</p>
+<p>Recall from Section <a class="reference internal" href="#values-and-boundaries"><span class="std std-ref">Values and Boundaries</span></a>, that for equalities involving one variable, we select the on point, and both off points (above and below). For a boundary shift up or down, these are enough to detect the shifts larger than the distance between the on point and off points. However, if the on point chosen happens to intersect with the given and shifted boundary, as in Figure <a class="reference internal" href="#f-3-4"><span class="std std-ref">3.4</span></a>, then the tilted shift will not be detected.</p>
+<figure class="align-center" id="bva-tilted-equality">
+<span id="f-3-4"></span><a class="reference internal image-reference" href="_images/BVA-tilted-equality.png"><img alt="_images/BVA-tilted-equality.png" src="_images/BVA-tilted-equality.png" style="width: 30%;" /></a>
+</figure>
+<p style="text-align: center;">Figure 3.4: Tilted equality boundary</p>
+<p>This is similar to the problem with shifted boundaries for inequalities, and as with that problem, choosing two on points removes this. However, unlike inequality boundaries, equality boundaries are strictly equal, therefore choosing extremum on points is unnecessary. If we consider the boundary tilt in Figure <a class="reference internal" href="#f-3-4"><span class="std std-ref">3.4</span></a>, then <em>any</em> on point other than the point at the intersection will detect the boundary shift. Therefore, if we have <em>any</em> two on points, then if the given and shifted boundaries intersect, by definition, at most one of them can be at this intersection. From this, we conclude that we need to chose two arbitrary points.</p>
+<p>The same argument goes for non-equalities — that is, defined by predicates such as <span class="math notranslate nohighlight">\({ x \neq y + 10}\)</span>.</p>
+<p>From the above discussion, we conclude the following about selecting boundary values for two-dimensional boundaries:</p>
+<ul class="simple">
+<li><p>For boundaries defined by an inequality, select two on points that are as far apart as possible (or reasonable for infinite domains), and one off point as close to the middle of the two on points as possible;</p></li>
+<li><p>For boundaries defined by an equality, select two on points, and two off points (one below and one above); similarly for non-equalities; and</p></li>
+<li><p>If the off point is of distance <span class="math notranslate nohighlight">\(d\)</span>, then only boundary shifts of magnitude greater than <span class="math notranslate nohighlight">\(d\)</span> can be detected.</p></li>
+</ul>
+<p>We can generalise this idea to <span class="math notranslate nohighlight">\(N\)</span> dimensional input spaces.</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(N\)</span> on points and <span class="math notranslate nohighlight">\(1\)</span> off point are needed for boundaries based on inequalities, with the on points as far apart as possible;</p></li>
+<li><p><span class="math notranslate nohighlight">\(N\)</span> on points and <span class="math notranslate nohighlight">\(2\)</span> off points if are needed boundaries based on equalities and non-equalities.</p></li>
+<li><p>If the off point test case is a distance <span class="math notranslate nohighlight">\(d\)</span> from the boundary, then only boundary shifts of magnitude greater <span class="math notranslate nohighlight">\(d\)</span> can be detected.</p></li>
+</ul>
+</section>
+<section id="boolean-boundaries">
+<h3><span class="section-number">3.4.4. </span>Boolean Boundaries<a class="headerlink" href="#boolean-boundaries" title="Permalink to this heading">#</a></h3>
+<p>Some equivalence classes just specify a Boolean condition. For example, in input could be a Boolean or the equivalent class could just represent a “must be” situation, such as: the first character of an input must be a numeric character.</p>
+<p>In these cases, the boundary is just the true/false value of the class.</p>
+<div class="tip admonition">
+<p class="admonition-title">Example – Boolean boundaries</p>
+<p>If we recall <a class="reference internal" href="Input-Partitioning.html#example-13"><span class="std std-ref">Example 13</span></a> from the <a class="reference internal" href="Input-Partitioning.html"><span class="doc std std-doc">Input Partitioning</span></a> chapter, we have two equivalence classes:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\{s \mid {\rm the~first~character~of}~ s~{\rm is~a~numeric}\}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\{s \mid {\rm the~first~character~of}~ s~{\rm is~ not~ a~ numeric}\}\)</span></p></li>
+</ol>
+<p>The on point for class 1 is just <span class="math notranslate nohighlight">\(true\)</span> while the off point is <span class="math notranslate nohighlight">\(false\)</span></p>
+<p>For class 2, the off point is <span class="math notranslate nohighlight">\(true\)</span> while the on point is <span class="math notranslate nohighlight">\(false\)</span>.</p>
+<p>In this case, clearly the on point for each class is the off point for the other.</p>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Input-Partitioning.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">2. </span>Input Partitioning</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Coverage-Based-Testing.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">4. </span>Coverage-Based Testing</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-of-this-chapter">3.1. Learning outcomes of this chapter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-introduction">3.2. Chapter Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#values-and-boundaries">3.3. Values and Boundaries</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#guidelines-for-boundary-value-analysis">3.4. Guidelines for Boundary-Value Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#domains-with-multiple-variables">3.4.1. Domains with Multiple Variables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#detecting-boundary-shifts-in-inequalities">3.4.2. Detecting Boundary Shifts in Inequalities</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#detecting-boundary-shifts-in-equalities">3.4.3. Detecting Boundary Shifts in Equalities</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boolean-boundaries">3.4.4. Boolean Boundaries</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By SWEN90006
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

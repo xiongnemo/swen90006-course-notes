@@ -1,0 +1,977 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>5. Testing Modules &#8212; SWEN90006 Software &amp; Security Testing</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/book-style.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Testing-Modules';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="6. Property-based Testing and Test Oracles" href="Property-based-testing.html" />
+    <link rel="prev" title="4. Coverage-Based Testing" href="Coverage-Based-Testing.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/uom.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/uom.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Subject Introduction
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">LECTURE NOTES</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Introduction-to-Testing.html">1. Introduction to Software Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-Partitioning.html">2. Input Partitioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Boundary-Value.html">3. Boundary-Value Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Coverage-Based-Testing.html">4. Coverage-Based Testing</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">5. Testing Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Property-based-testing.html">6. Property-based Testing and Test Oracles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Testing-and-Integration.html">7. Testing-and-Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Security-Testing.html">8. Security Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Coverage-Guided-Fuzzing.html">9. Code Coverage-Guided Fuzzing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Symbolic-Execution.html">10. Automated test generation using symbolic execution</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">APPENDIX</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Probabilities.html">A Brief Review of Some Probability Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Maximum.html">Maximum Likelihood Estimation</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/Testing-Modules.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Testing Modules</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-of-this-chapter">5.1. Learning outcomes of this chapter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-introduction">5.2. Chapter Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#state-and-programs">5.3. State and Programs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testability-of-state-based-programs">5.4. Testability of State-Based Programs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unit-testing-with-finite-state-automata">5.5. Unit Testing with Finite State Automata</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#constructing-a-fsa">5.5.1. Constructing a FSA</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deriving-test-cases-from-a-fsa">5.5.2. Deriving Test Cases from a FSA</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#intrusively-testing-the-state-transition-diagram">5.5.3. Intrusively Testing the State Transition Diagram</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#non-intrusive-testing-the-state-transition-diagram">5.5.4. Non-intrusive Testing the State Transition Diagram</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">5.5.5. Discussion</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problems-with-state-based-testing">5.5.5.1. Problems with State Based Testing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-object-oriented-programs">5.6. Testing Object-Oriented Programs</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#object-oriented-programming-languages">5.6.1. Object-Oriented Programming Languages</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#classes-and-objects">5.6.1.1. Classes and Objects</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#inheritance">5.6.1.2. Inheritance</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#polymorphism">5.6.1.3. Polymorphism</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-with-inheritance-and-polymorphism">5.6.2. Testing with Inheritance and Polymorphism</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-inheritance-hierarchies">5.6.2.1. Testing Inheritance Hierarchies</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#building-and-testing-inheritance-hierarchies">5.6.2.2. Building and Testing Inheritance Hierarchies</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#implications-of-polymorphism">5.6.2.3. Implications of Polymorphism</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="testing-modules">
+<h1><span class="section-number">5. </span>Testing Modules<a class="headerlink" href="#testing-modules" title="Permalink to this heading">#</a></h1>
+<section id="learning-outcomes-of-this-chapter">
+<h2><span class="section-number">5.1. </span>Learning outcomes of this chapter<a class="headerlink" href="#learning-outcomes-of-this-chapter" title="Permalink to this heading">#</a></h2>
+<p>At the end of this chapter, you should be able to:</p>
+<ul class="simple">
+<li><p>Discuss the impact that observability and controllability have when testing modules.</p></li>
+<li><p>Construct a finite state automaton from the specification of a module.</p></li>
+<li><p>Derive a set of test sequences that achieve the different coverage criterion of a finite state automaton.</p></li>
+<li><p>Derive a set of test sequences from a finite state automaton that intrusively and non-intrusively test the module.</p></li>
+<li><p>Describe the pros and cons of polymorphism and inheritance in testing object-oriented programs.</p></li>
+<li><p>Derive a test suite that takes advantage of inheritance and counteracts the problems of polymorphism.</p></li>
+</ul>
+</section>
+<section id="chapter-introduction">
+<h2><span class="section-number">5.2. </span>Chapter Introduction<a class="headerlink" href="#chapter-introduction" title="Permalink to this heading">#</a></h2>
+<p>In the previous chapters, we have discussed how to select test inputs to maximise the chances of uncovering faults in a program. Examples in these chapters have been single functions, with only parameters as input, and return values as output. In this chapter, we discuss the testing of program with state; that is, testing <em>modules</em>. Modules present some different problems with regards to testing when compared to single functions.</p>
+</section>
+<section id="state-and-programs">
+<h2><span class="section-number">5.3. </span>State and Programs<a class="headerlink" href="#state-and-programs" title="Permalink to this heading">#</a></h2>
+<p>During the years proceeding the wide-spread adoption of third-generation programming languages, computer programs started becoming more and more complex. Practitioners realised that, instead of allowing any part of a program to manipulate any part of data, if access to data was provided via a clear and unambiguous interface made up of functions on that data, then complex program could be understood more readily.</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>Strictly, a module does not require a state, but can be simply a collection of related operations.</p>
+</div>
+</aside>
+<p>Typically, the data, called the <em>state</em>, is manipulated and accessed via a collection of <em>operations</em> on that state. Collectively, these are referred to as a <em>module</em> [1]. Using modules enforces a separation of interface and implementation, allowing programmers to think of these collections of operations as a black box. Specific details about the data is hidden from the user of the module, and a change in the underlying data structure has no impact on the program that uses it as long as the interface remains the same.</p>
+<p>Operations are meaningless when separated from their state and treated in isolation. For example, an operation may require the module to be in a specific state before it can be executed, and that state can only be set by another operation (or combination of operations) in the module.</p>
+<p>Object-oriented programs are special classes of state-based programs, in that multiple instances of the data can be created.</p>
+</section>
+<section id="testability-of-state-based-programs">
+<span id="id1"></span><h2><span class="section-number">5.4. </span>Testability of State-Based Programs<a class="headerlink" href="#testability-of-state-based-programs" title="Permalink to this heading">#</a></h2>
+<p>Recall from Section <a class="reference internal" href="Introduction-to-Testing.html#testability"><span class="std std-ref">Testability</span></a> that the <em>testability</em> of a program is defined by the <em>observability</em> of the program, and the <em>controllability</em> of the program. State-based programs present some issues with regards to these two measures, even for APIs.</p>
+<p>For example, consider a module that allows the manipulation of and access to a <em>stack</em>. The operations of the class allow us to push an element on to the stack, view the top of the stack, pop the top element from the stack, and check whether the stack is empty. The specification of the class is allows:</p>
+<blockquote>
+<div><p>Initially, the stack is empty — it contains no elements. When created, the calling program determines a maximum size for the stack, passed as a parameter to the constructor.</p>
+</div></blockquote>
+<blockquote>
+<div><p>An element can be <em>pushed</em> onto the stack if the size of the stack is not already equal to the maximum size, as determined when initialised. If full, pushing another element will result in the exception <code class="docutils literal notranslate"><span class="pre">StackFullException</span></code>.</p>
+</div></blockquote>
+<blockquote>
+<div><p>The top element of the stack can be <em>popped</em> from the stack provided that the stack is not empty. Pushing an element and then popping the stack will result in the stack before pushing. If the stack is empty, popping will result in the exception <code class="docutils literal notranslate"><span class="pre">StackEmptyException</span></code>.</p>
+</div></blockquote>
+<blockquote>
+<div><p>The calling program can see the value of the top of the stack, but no other parts of the stack. If the stack is empty, peeking at the top of the stack will result in the exception <code class="docutils literal notranslate"><span class="pre">StackEmptyException</span></code>.</p>
+</div></blockquote>
+<blockquote>
+<div><p>Finally, the stack can be checked to see if it is empty, and can be checked to see if it is full. These operations allowing the calling program to avoid exceptions.</p>
+</div></blockquote>
+<p>Figure <a class="reference internal" href="#f-5-1"><span class="std std-ref">5.1</span></a> shows an implementation of such a module in Java, in which the stack has a maximum size, which is determined by the calling program when creating the stack data type. The variables prefixed with an underscore (<code class="docutils literal notranslate"><span class="pre">_</span></code>) as those that are encapsulated by the class, and are not directly controllable or observable.</p>
+<div class="highlight-java notranslate" id="f-5-1"><div class="highlight"><pre><span></span><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Stack</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="n">object</span><span class="w"> </span><span class="n">_stack</span><span class="o">[]</span><span class="p">;</span>
+<span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w">    </span><span class="n">_maxsize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w">    </span><span class="n">_top</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">        </span><span class="kd">public</span><span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">Stack</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">maxsize</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">_maxsize</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">maxsize</span><span class="p">;</span>
+<span class="w">            </span><span class="n">_top</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">            </span><span class="n">_stack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Object</span><span class="o">[</span><span class="n">maxsize</span><span class="o">]</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">push</span><span class="p">(</span><span class="n">Object</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">            </span><span class="kd">throws</span><span class="w"> </span><span class="n">StackFullException</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">_top</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">_maxsize</span><span class="p">)</span>
+<span class="w">              </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">StackFullException</span><span class="p">();</span>
+<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="n">_stack</span><span class="o">[</span><span class="n">_top</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">;</span>
+<span class="w">              </span><span class="n">_top</span><span class="o">++</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span><span class="w">   </span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">pop</span><span class="p">()</span>
+<span class="w">            </span><span class="kd">throws</span><span class="w"> </span><span class="n">StackEmptyException</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">_top</span><span class="w"> </span><span class="o">=&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span>
+<span class="w">             </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">StackEmptyException</span><span class="p">();</span>
+<span class="w">          </span><span class="k">else</span>
+<span class="w">             </span><span class="n">_top</span><span class="o">--</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="nf">top</span><span class="p">()</span>
+<span class="w">            </span><span class="kd">throws</span><span class="w"> </span><span class="n">StackEmptyException</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">_stack</span><span class="o">[</span><span class="n">_top</span><span class="o">]</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isEmpty</span><span class="p">()</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">_top</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isFull</span><span class="p">()</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">_top</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">_maxsize</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+<p style="text-align: center;">Figure 5.1: A Java stack class</p>
+<p>Using the techniques discussed in the previous chapters, we can derive some test cases to test the operation that pushes an element from the stack. Any good test suite will include at least equivalence classes for an empty stack, and a stack with at least one element. After selecting values from these equivalence classes, we can derive the executable test cases.</p>
+<p>However, access to the stack data is hidden behind the interface. The <code class="docutils literal notranslate"><span class="pre">push</span></code> operation does not take a parameter for the stack, meaning that the <code class="docutils literal notranslate"><span class="pre">push</span></code> operation cannot be <em>controlled</em> via its interface. Furthermore, once an element is pushed onto the stack, we cannot directly <em>observe</em> the value of the stack. Therefore, the operations as part of the stack module are not easily controllable or observable.</p>
+<p>This reduction in controllability and observability means that unit testing in isolation is not possible for the operations of the stack module. In cases such as this, the other operations that make up the module may be required to test an operation, so we have a case in which unit testing and module testing can be considered as the same activity.</p>
+<p>One way around these testability issues is to <em>intrusively</em> test the module. That is, the tester modifies the program code to give access to the data type that is hidden, therefore breaking the information hiding aspect of the module. The program is tested, and the data type is hidden again. This has serious drawbacks:</p>
+<ul class="simple">
+<li><p>it does not test the implementation that is to be used, but an altered version of it;</p></li>
+<li><p>if the underlying data type in the module changes, then the tests must be changed as well; and</p></li>
+<li><p>it ignores the fact that operations acting on the same data as inherently linked, and must be tested together.</p></li>
+</ul>
+<p>One could argue that the inter-dependencies could be tested as well, but with modules such as the stack class, the high-level of dependency between operations implies that testing an operation in isolation would give us little benefit.</p>
+<p>Rather than intrusively testing the module, we use a <em>non-intrusive</em> method: we use the operations defined by the module to set the state of the module to test value that we want, perform the necessary test, and then use the operations again to query the result of the test. In the example of the stack class, to test the behaviour of pushing an element onto a stack containing one element, we first push an element onto an empty stack using the <code class="docutils literal notranslate"><span class="pre">push</span></code> (setting up the state for our test), then push another element for our test, then use the <code class="docutils literal notranslate"><span class="pre">top</span></code> and <code class="docutils literal notranslate"><span class="pre">pop</span></code> operations to see the state of the module.</p>
+<p>Note that many object-oriented languages provide us with constructs that are somewhat in between intrusive and non-intrusive testings. For example, in the Java programming language, variables inside classes can be declared as <em>protected</em>, which means that if we can inherit the class, then we can access the variables in the class. This allows us to passively observe the values of variables without changing the module itself. Other tools provide non-intrusive ways to observe data, such as inserting breakpoints in programs, and allowing the tester to observe the state of the program at that breakpoint.</p>
+</section>
+<section id="unit-testing-with-finite-state-automata">
+<h2><span class="section-number">5.5. </span>Unit Testing with Finite State Automata<a class="headerlink" href="#unit-testing-with-finite-state-automata" title="Permalink to this heading">#</a></h2>
+<p>The way that many modules, especially those that implement abstract data types, are abstracted is to envisage them as <em>finite state automata</em>.</p>
+<div class="admonition-definition-45 admonition">
+<p class="admonition-title">Definition 45</p>
+<p>A <em>finite state automaton</em> (FSA) or <em>finite state machine</em> is a model of behaviour consisting of a finite set of states with actions that move the automata from one state to another.</p>
+</div>
+<p>With regards to a module, each state in a FSA corresponds to a <em>set</em> of states in the module it is modelling. The transitions between states correspond to the operations in the module. Transitions can be prefixed with predicates specifying the preconditions that must hold for them to take place.</p>
+<p>FSAs are useful for modelling behaviour of programs, and can be used to derive test cases for such programs. The states of the automaton derived from subsets of the states of the data encapsulated in the module, and the transition of the automaton are the operations of the module. Test cases are selected to test sequences of transitions in this automaton.</p>
+<section id="constructing-a-fsa">
+<h3><span class="section-number">5.5.1. </span>Constructing a FSA<a class="headerlink" href="#constructing-a-fsa" title="Permalink to this heading">#</a></h3>
+<p>To construct a finite state machine, we perform the following steps.</p>
+<ul>
+<li><p><strong>Step 1</strong>: identify the states of the FSA. Each state in the FSA corresponds to a set of states in the module. Intuitively, we want to consider states with same effect on operations as being <em>equivalent</em> and collect them together into a single FSA state. The situation is analogous to the situation in equivalence partitioning where every element of an equivalence class has the same chance of finding an error. Therefore, we use the techniques described in the previous chapters to derive the states that we want to test.</p></li>
+<li><p><strong>Step 2</strong>: identify which operations are enabled in a state and which operations are not enabled in a state — an operation is enabled if it can be called safely without error in a given state.</p>
+<p>For example, the <code class="docutils literal notranslate"><span class="pre">pop</span></code> and <code class="docutils literal notranslate"><span class="pre">top</span></code> operations are not enabled if the stack is empty, and the <code class="docutils literal notranslate"><span class="pre">push</span></code> operation is not enabled if the stack is full.</p>
+<p>From this information, we identify the <em>start</em> state(s), the <em>exit</em> state(s) (those that have no enabled operations).</p>
+</li>
+<li><p><strong>Step 3</strong>: is to identify the source and target states of every operation in the model. To do this, we take every state and every operation that is enabled in that state, and calculate the state that results in applying that operation.</p></li>
+</ul>
+<p>For example, if we derive a state specifying the stack as empty (state <span class="math notranslate nohighlight">\(s_0\)</span>), and a state specifying the stack having one element (state <span class="math notranslate nohighlight">\(s_1\)</span>), then the <code class="docutils literal notranslate"><span class="pre">push</span></code> operation links <span class="math notranslate nohighlight">\(s_0\)</span> to <span class="math notranslate nohighlight">\(s_1\)</span>, the <code class="docutils literal notranslate"><span class="pre">pop</span></code> operation links <span class="math notranslate nohighlight">\(s_1\)</span> to <span class="math notranslate nohighlight">\(s_0\)</span>, and the <code class="docutils literal notranslate"><span class="pre">isEmpty</span></code> operation links both states to themselves. If modelling exceptions, then applying the <code class="docutils literal notranslate"><span class="pre">pop</span></code> operation in the empty state will result in the state <code class="docutils literal notranslate"><span class="pre">StackEmptyException</span></code>.</p>
+<div class="tip admonition">
+<p class="admonition-title">Example 46: Deriving the stack FSA</p>
+<p>As a first example, consider a simple Stack class that we wish to test. An informal specification for this is given in Section <a class="reference internal" href="#testability-of-state-based-programs"><span class="std std-ref">Testability of State-Based Programs</span></a>, and an implementation of that specification is given in Figure <a class="reference internal" href="#f-5-2"><span class="std std-ref">5.2</span></a>.</p>
+<p>Firstly, we want to derive the states of the FSA. Intuitively, we want to consider states with same effect on operations as being <em>equivalent</em> and collect them together into a single FSA state. The equivalence partitioning techniques can be used to derive this. Although equivalence partitioning is an <em>input</em> partitioning technique, the state can be considered as input to any operation that uses it, but it is input that is not passed as a parameter.</p>
+<p>Instead of looking at the input domain we look at the states of a module and ask what states can be considered equivalent if we want to find faults in the module operations. We do this for the Stack class in Table <a class="reference internal" href="#t-5-1"><span class="std std-ref">5.1</span></a>.</p>
+<table class="table" id="t-5-1">
+<thead>
+<tr class="row-odd"><th class="head"><p>State</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Enabled Operations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>State 1</p></td>
+<td><p>An undefined stack</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Stack</span></code> constructor</p></td>
+</tr>
+<tr class="row-odd"><td><p>State 2</p></td>
+<td><p>A defined stack that is empty; that is, a stack with no values</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">push</span></code>, <code class="docutils literal notranslate"><span class="pre">isEmpty</span></code>, <code class="docutils literal notranslate"><span class="pre">isFull</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>State 3</p></td>
+<td><p>A stack that is full; that is, it has the maximum number of elements</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pop</span></code>, <code class="docutils literal notranslate"><span class="pre">top</span></code>, <code class="docutils literal notranslate"><span class="pre">isEmpty</span></code>, <code class="docutils literal notranslate"><span class="pre">isFull</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>State 4</p></td>
+<td><p>A stack that is defined but is neither empty nor full</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">push</span></code>, <code class="docutils literal notranslate"><span class="pre">pop</span></code>, <code class="docutils literal notranslate"><span class="pre">top</span></code>, <code class="docutils literal notranslate"><span class="pre">isEmpty</span></code>, <code class="docutils literal notranslate"><span class="pre">isFull</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>State 5</p></td>
+<td><p>A stack that is in the <code class="docutils literal notranslate"><span class="pre">StackEmptyException</span></code>; that is, the caller has attempted to pop or see the top of an empty stack</p></td>
+<td><p>none</p></td>
+</tr>
+<tr class="row-odd"><td><p>State 6</p></td>
+<td><p>A stack that is in the <code class="docutils literal notranslate"><span class="pre">StackFullException</span></code>, that is, the caller has tried to push an element onto  a full stack</p></td>
+<td><p>none</p></td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: center;">Table 5.1: States for the Stack module</p>
+<p>The <em>initial</em> state of this module is the undefined stack. Alternatively, one could remove the undefined state, and instead specify that the initial state is the empty state. The exit states are the exception states.</p>
+<p>The exit states depend on the the specification for the module. For example, popping an empty stack throws an exception, however, an alternative specification of the stack may <em>assume</em> that the stack is not empty when elements are popped, therefore, the behaviour of popping an empty stack is undefined, and cannot be meaningfully tested. In this case, there are no exit states (there is always one operation that can be executed in any state).</p>
+<p>Finally, we derive the transitions between the states. The final FSA for the stack module is shown in Figure <a class="reference internal" href="#f-5-2"><span class="std std-ref">5.2</span></a>. The transitions of <code class="docutils literal notranslate"><span class="pre">isEmpty</span></code> and \sf <code class="docutils literal notranslate"><span class="pre">isFull</span></code> are omitted because they are enabled in all states (except the undefined state) and always loop back to the same state from which they started.</p>
+<figure class="align-center" id="f-5-2">
+<a class="reference internal image-reference" href="_images/Stack-testing-states.png"><img alt="_images/Stack-testing-states.png" src="_images/Stack-testing-states.png" style="width: 100%;" /></a>
+</figure>
+<p style="text-align: center;">Figure 5.2: Finite State Automaton for the Stack ADT</p>
+<p>In this figure, the predicate in the square brackets on the transition labels represent the conditions that must hold for that transition to take place. Note that these are not the preconditions of the operations themselves, but merely the conditions that must hold for that operation to change to the destination state.</p>
+<p>Note the <code class="docutils literal notranslate"><span class="pre">push</span></code> transition directly from the empty state to the full state, with the condition <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">==</span> <span class="pre">1</span></code>, is for when the maximum size is <span class="math notranslate nohighlight">\(1\)</span>, in which case there is no state in which the stack can be non-empty and non-full. Similarly for the reverse action: popping the stack from a full state, and for pushing onto a stack of maximum size 0, which leads to an exception state.</p>
+</div>
+</section>
+<section id="deriving-test-cases-from-a-fsa">
+<h3><span class="section-number">5.5.2. </span>Deriving Test Cases from a FSA<a class="headerlink" href="#deriving-test-cases-from-a-fsa" title="Permalink to this heading">#</a></h3>
+<p>Recall from Section <a class="reference internal" href="#testability-of-state-based-programs"><span class="std std-ref">Testability of State-Based Programs</span></a> that the observability and controllability of modules is low due to their hidden information. We discussed that fact that to set up a state for a test input of an operation may require us to execute other operations in the module.</p>
+<p>The FSA of a module gives us the information that is required to do so. If the states in the FSA represent the input states that we wish to test, then the transitions that move the state from the initial state to each state represent the operations that need to be executed.</p>
+<div class="admonition-definition admonition">
+<p class="admonition-title">Definition</p>
+<p>A <em>path</em> from a state <span class="math notranslate nohighlight">\(s_0\)</span> to a state <span class="math notranslate nohighlight">\(s_n\)</span> in the automaton is a sequence of transitions <span class="math notranslate nohighlight">\(t_1 t_2\ldots t_n\)</span> such that the source of <span class="math notranslate nohighlight">\(t_1\)</span> is <span class="math notranslate nohighlight">\(s_0\)</span> and the target of <span class="math notranslate nohighlight">\(t_n\)</span> is <span class="math notranslate nohighlight">\(s_n\)</span>.</p>
+</div>
+<p>The aim is to generate <em>test sequences</em> such that the paths in the automaton are exercised. A test case is no longer a single function call but may require a sequence of operation calls to force the module along a certain <a class="reference external" href="http://path.To">path.To</a> derive these sequences, we define <em>traversal criteria</em> for a FSA. Broadly, there are three criteria that we can use:</p>
+<ol class="arabic simple">
+<li><p>*<em>State coverage</em>: Each state in the FSA must be reached by the traversal.</p></li>
+<li><p><strong>Transition coverage</strong>: Each transition in the FSA must be traversed. This subsumes state coverage.</p></li>
+<li><p><strong>Path coverage</strong>: Each path in the FSA must be traversed. This subsumes state coverage, but is impossible to achieve for a FSA with cyclic paths.</p></li>
+</ol>
+<p>State coverage is clearly inadequate, because there are transitions in the FSA that will not be traversed, and therefore, operations that will not be tested for the test states that were derived. Path coverage is impossible for FSAs with cycles, so this is infeasible in many cases. Transition coverage is feasible, straightforward to achieve, and it tests every test state that was derived, so this is generally the most practiced traversal technique.</p>
+<p>Using transition coverage, we repeatedly derive test sequences starting at the initial node until all transitions have been covered at least once. In some cases, this can be done using one long sequence, but in others, this is not possible; for example, the stack FSA as two exit states, and one of these has two input transitions, which together imply that there must be at least three sequences. Often, it is more efficient to derive many short sequences than a few long sequences.</p>
+</section>
+<section id="intrusively-testing-the-state-transition-diagram">
+<h3><span class="section-number">5.5.3. </span>Intrusively Testing the State Transition Diagram<a class="headerlink" href="#intrusively-testing-the-state-transition-diagram" title="Permalink to this heading">#</a></h3>
+<p>Now we an look at intrusive and non-intrusive methods for testing an automaton.</p>
+<p>As discussed earlier, <em>intrusive testing</em>, in these notes at least, will mean adding testing code to the module to measure and monitor the internal states of the module as it is tested. The problem with this kind of testing is that it breaks encapsulation.</p>
+<p>The points at which to insert testing code into a module are to observe the values of private state variables, observe the values of private operation calls and even observe intermediate states in module operations.</p>
+<p>In an object-oriented programming language, this is not as obvious as it sounds because of the problem of inheritance. Consider the class Node for implementing a doubly linked list in the following example.</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Node</span><span class="w"> </span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span>
+<span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="n">_data</span><span class="p">;</span>
+<span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="n">Node</span><span class="w">   </span><span class="n">_previous</span><span class="p">,</span><span class="w"> </span><span class="n">_next</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+</pre></div>
+</div>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>[2]: In the case of the type Object in Java this can mean a large number of classes in theory, but in practice it is not often that large.</p>
+</div>
+</aside>
+<p>To observe the state of Node we need to get access to the values of the <code class="docutils literal notranslate"><span class="pre">_data</span></code> instance variable. However, because <code class="docutils literal notranslate"><span class="pre">_data</span></code> is an instance of the <code class="docutils literal notranslate"><span class="pre">Object</span></code> class, this means that we need to ensure that there are operations to access the private state elements of all the objects in the system that inherit from Object[2]; that is, we would need to extend all elements of the hierarchy with testing code. In this case there is a great deal of additional code to write which may well further impact the properties of the entire system.</p>
+<p>In languages like C and C++ we can use the pre-processor to compile test code into the executable when required, or to omit the testing code when the program is to be released.</p>
+<p>As a result of these problems, systematic intrusive testing is difficult to achieve, in fact, it is often impossible for some languages if we do not have access to the source. Many of the solutions are hacks that give the testers some benefit that outweighs the breaking of the encapsulation.</p>
+<p>The best cases are languages that provide semi-private access, such as the <code class="docutils literal notranslate"><span class="pre">protected</span></code> keyword in Java, or the <code class="docutils literal notranslate"><span class="pre">friend</span></code> keyword in C++. These give testers the ability to read and write to the variables without changing the program-under-test.</p>
+</section>
+<section id="non-intrusive-testing-the-state-transition-diagram">
+<h3><span class="section-number">5.5.4. </span>Non-intrusive Testing the State Transition Diagram<a class="headerlink" href="#non-intrusive-testing-the-state-transition-diagram" title="Permalink to this heading">#</a></h3>
+<p>There will be occasions when we simply do not have access to the internal structure of a module or its hierarchy. In this case, or in the case where you simply need to test a module without adding code to a module, then we have <em>non-intrusive</em> testing.</p>
+<p>The idea is to test each of the transitions in the testing automaton implicitly by using other operations in the module to examine the results of a transition. Lets start by dividing up the operations in a module as follows:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Transition type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Initialisers</p></td>
+<td><p>The operations that initialise the module, such as the <code class="docutils literal notranslate"><span class="pre">Stack</span></code> constructor</p></td>
+</tr>
+<tr class="row-odd"><td><p>Transformers</p></td>
+<td><p>Operations to change the state of the module, such as <code class="docutils literal notranslate"><span class="pre">pop</span></code> operation in the stack example.</p></td>
+</tr>
+<tr class="row-even"><td><p>Observers</p></td>
+<td><p>Operations to observe the module state, such as the <code class="docutils literal notranslate"><span class="pre">isEmpty</span></code> and top operations in the stack example</p></td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: center;">Table 5.2: One classification of the operations of a module.</p>
+<p>Recall that in the FSA for the stack module, shown in Figure <a class="reference internal" href="#f-5-1"><span class="std std-ref">5.1</span></a>, the  <code class="docutils literal notranslate"><span class="pre">IsEmpty</span></code>,  <code class="docutils literal notranslate"><span class="pre">isFull</span></code>, and  <code class="docutils literal notranslate"><span class="pre">top</span></code> operations were omitted because they do not move the automaton to a new state. This is because these operations are <em>observers</em> — with the exception of  top moving to the  StackEmptyException state.</p>
+<p>The technique for testing involves deriving test sequences, using initialisers and transformers, to move the automaton to the required state. At each state, observe the value of the module using the observer operations. The only case where the observer operations are not used is in the exception states, because the execution of the module is considered to have terminated. Alternatively, and depending on the programming language, these exception states could be remove from the FSA, and considered as observer behaviour. Many programming languages support the catching of exceptions, thereby allowing the execution to continue.</p>
+<div class="tip admonition">
+<p class="admonition-title">Example 47: Traversing the stack FSA</p>
+<p>For the stack automaton in Figure <a class="reference internal" href="#f-5-2"><span class="std std-ref">5.2</span></a>, we can obtain transition coverage using the following test sequences:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Sequence</p></th>
+<th class="head"><p>End State</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\({Stack(0) ; push(o)}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\({StackFullException}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\({Stack(1) ; push(o) ; pop(); pop() }\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\({StackEmptyException}\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\({Stack(k) ; top()}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\({StackEmptyException}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\({Stack(k) ; push(o)^k ; pop()^k ; push(o)^k ; push()}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\({StackFullException}\)</span></p></td>
+</tr>
+</tbody>
+</table>
+<p>in which the notation <span class="math notranslate nohighlight">\({op()^k}\)</span> is shorthand for executing <span class="math notranslate nohighlight">\({op()}\)</span> in sequence <span class="math notranslate nohighlight">\({k}\)</span> times, and <span class="math notranslate nohighlight">\({k &gt; 1}\)</span>.</p>
+<p>Regarding observer operations, there are several places that these can be tested:</p>
+<ol class="arabic simple">
+<li><p>all observer operations could be used to observe the state after a call to any initialiser or transformer operation;</p></li>
+<li><p>all observer operations could be used to observe the state any time a transition takes us to another state in the FSA; or</p></li>
+<li><p>all observer operations could be used to observe the state when an FSA state is being visited for the first time.</p></li>
+</ol>
+<p>The first of these seems like overkill, and would lead to a high number of test cases. The second is more reasonable, but considering that each FSA state represents many module states, and each of these is representative of the equivalence class to which is belong, then it seems reasonable to only test the observer operations when an FSA state is being visited for the first time. For the stack example, this gives us the following test sequences, which we instantiate into actual test cases:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Sequence</p></th>
+<th class="head"><p>End State</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\({\sf Stack(0) ; (isEmpty() == true); (isFull() == true) ; push(o)}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\({\sf StackFullException}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\({\sf Stack(1) ; push(1) ; (isEmpty() == false); (isFull() == true) ; (top() == 1) ; pop(); pop() }\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\({\sf StackEmptyException}\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\({\sf Stack(2) ; top()}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\({\sf StackEmptyException}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\({\sf Stack(2) ; push(1) ; push(2) ; (isEmpty() == false); (isFull() (top() == 2) ; pop() ; pop() ; push(1) ; push(2); push(3) }\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\({\sf StackFullException}\)</span></p></td>
+</tr>
+</tbody>
+</table>
+<p>The additional calls to the observer operations, and the checking of their values, is equivalent to adding them into the FSA as transitions from a node to itself.</p>
+<div class="admonition-remark admonition">
+<p class="admonition-title">Remark</p>
+<ol class="arabic simple">
+<li><p>Each of the test cases above consists of a sequence of operation calls rather than just a single call.</p></li>
+<li><p>It is possible that a test case may consist of an equality between two sequences of operation calls, for example,</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[(Stack() ; push(o) ; pop())  == Stack()\]</div>
+<p>if such a test for equality can be made.</p>
+<ol class="arabic simple" start="3">
+<li><p>If operations exist for forcing a module into one of the testing states then this can make testing long sequences of operation calls easier.</p></li>
+</ol>
+</div>
+</div>
+</section>
+<section id="discussion">
+<h3><span class="section-number">5.5.5. </span>Discussion<a class="headerlink" href="#discussion" title="Permalink to this heading">#</a></h3>
+<p>The design of state-based systems is an important part of testing. This section has outlined that it is important to define the interface of a module to make as testable (controllable and observable) as possible. Designing for testability is as important as designing to meet requirements, even though there may be conflicts between the two.</p>
+<p>Fortunately, many modular design notations that are part of design methodologies resembled FSAs. For example, UML uses state charts precisely for the purpose of specifying and understanding the legal sequences of operations on a class instance, and the states that result from these sequences.</p>
+<section id="problems-with-state-based-testing">
+<h4><span class="section-number">5.5.5.1. </span>Problems with State Based Testing<a class="headerlink" href="#problems-with-state-based-testing" title="Permalink to this heading">#</a></h4>
+<p>Of course there are some problems with FSA-based testing:</p>
+<ul>
+<li><p>It may take a lengthy sequence of operations to get an object into some desired state.</p></li>
+<li><p>FSA-based testing may not be useful if the module is designed to accept any possible sequence of operation calls. This would result in a FSA with little structure, and require a prohibitively large number of test sequences to cover.</p></li>
+<li><p>State control may be distributed over an entire application with operations from other modules referencing the state of the module under test.</p>
+<p>System-wide control makes it difficult to verify a module in isolation and requires that we identify module <em>hierarchies</em> that collaborate to achieve a particular functionality. Here the collaboration and behaviour diagrams are the most useful.</p>
+</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="testing-object-oriented-programs">
+<h2><span class="section-number">5.6. </span>Testing Object-Oriented Programs<a class="headerlink" href="#testing-object-oriented-programs" title="Permalink to this heading">#</a></h2>
+<p>Object-oriented programs pose some new and interesting challenges to unit, integration and systems testing. One can view an object-oriented system can be viewed as a modular system, and therefore can test an object-oriented system by applying the techniques already discussed in this chapter. In this case, the modules are <em>classes</em>, and the operations are <em>methods</em>.</p>
+<p>However, there are certain properties of object-oriented languages that make testing more difficult than for other imperative languages such as C. In this section, we discuss these differences and present techniques to minimise their impact.</p>
+<section id="object-oriented-programming-languages">
+<h3><span class="section-number">5.6.1. </span>Object-Oriented Programming Languages<a class="headerlink" href="#object-oriented-programming-languages" title="Permalink to this heading">#</a></h3>
+<p>Object-oriented programming languages support a number of features that are aimed at making the design, maintenance and reuse of code much easier. We will not go into detail but will briefly review the major features and start to think about them from a <em>testing</em> viewpoint.</p>
+<p>The idea in object-oriented programming languages is that the language provides constructs to support encapsulation and structuring. The key elements that languages such as Java and C++ provide are:</p>
+<ol class="arabic simple">
+<li><p><em>Classes and objects</em> which provide the main units for structuring.</p></li>
+<li><p><em>Inheritance</em>, which provides the one of the key structuring mechanisms for object-oriented design and implementation.</p></li>
+<li><p><em>Dynamic Binding or Polymorphism</em>, which provides a way of choosing which object to use at run-time.</p></li>
+</ol>
+<section id="classes-and-objects">
+<h4><span class="section-number">5.6.1.1. </span>Classes and Objects<a class="headerlink" href="#classes-and-objects" title="Permalink to this heading">#</a></h4>
+<p>Classes are used as templates for creating objects. The objects do the work while the class just shows you the what sets of objects are active in the program. The common view is that a class declaration introduces a new <em>type</em> while the objects are the elements of that type. Whenever a new object is created it is an <em>instance</em>, or element, of that type. Every object in the class has:</p>
+<ul class="simple">
+<li><p>The <em>methods</em> defined by the class; and</p></li>
+<li><p>The <em>instance variables</em> (or <em>attributes</em>) defined by the class;</p></li>
+</ul>
+<p>There can be any number of objects that are instances of a class, each with different values for their instance variables but no matter what the specific values are the object will still have the attributes and methods specified by the class. This is one thing that we can rely on in testing.</p>
+<p>For example, the class Shape in Figure <a class="reference internal" href="#f-5-3"><span class="std std-ref">5.3</span></a> defines a type where each object of that type contains a private hidden instance variable origin and a publicly visible method area().</p>
+<figure class="align-center" id="f-5-3">
+<a class="reference internal image-reference" href="_images/Shape-Model.png"><img alt="_images/Shape-Model.png" src="_images/Shape-Model.png" style="width: 100%;" /></a>
+</figure>
+<p style="text-align: center;">Figure 5.3: Inheritance and polymorphism.</p>
+<p>Classes and objects do not present any major obstacles in testing on top of the encapsulation problems in testing modules. In fact, for the purpose of testing a class in isolation, one can consider an instance of a class as simply a record type, in which we have variables bound to values, and a method call to an object as simply an operation call, but with the object as an input/output value.</p>
+</section>
+<section id="inheritance">
+<h4><span class="section-number">5.6.1.2. </span>Inheritance<a class="headerlink" href="#inheritance" title="Permalink to this heading">#</a></h4>
+<p><em>Inheritance</em>, or <em>generalisation</em>, relationships exist between classes. The parent is the more general class providing fewer methods or more general methods while the child <em>specialises</em> the parent. A child class inherits all of the properties of its parent, but the child class may <em>override</em> operations in the parent and <em>extend</em> the parent by adding more attributes and operations.</p>
+<p>In particular, generalisation means that the objects of the child class can be used anywhere that the objects of the parent class can be used — but not the converse. Some languages, such as Java, support only <em>single inheritance</em>, in which a class may only inherit from at most one parent class. Others, such as C++, support <em>multiple inheritance</em>, in which a class may inherit from one or more parent classes. The parent class is called the <em>superclass</em> and the child is called the <em>subclass</em>.</p>
+<p>This idea translates to instances as well — every instance of the child class is also an instance of the parent class. Every instance the child class has the same attributes and methods as the parent — however, the child may use a different implementation of a method to that of the parent.</p>
+<p>Inheritance is found only in object-oriented programming languages, but does not pose any immediate problems in testing. The techniques presented so far in this chapter are sufficient, however, the most immediate consequence of inheritance is that it effects the structuring of test suites.</p>
+</section>
+<section id="polymorphism">
+<h4><span class="section-number">5.6.1.3. </span>Polymorphism<a class="headerlink" href="#polymorphism" title="Permalink to this heading">#</a></h4>
+<p>Figure <a class="reference internal" href="#f-5-3"><span class="std std-ref">5.3</span></a> shows an inheritance hierarchy with the class Shape as the base class in the hierarchy. Any of the classes that have Shape as the superclass can be used anywhere that Shape can be used. For example, the class Client has a method called clientFunction that takes an object of type Shape as a parameter. However, the actual parameter can be an object of type Shape, an object of type Polygon, an object of type Circle or indeed an object of any type that has Shape as one of its ancestors.</p>
+<p>This is the essence of <em>dynamic binding</em>, or as it is often called, <em>polymorphism</em> in object-oriented languages. The combination of inheritance and dynamic binding is extremely powerful for designing reusable and extendable programs. Dynamic binding and polymorphism are both found in some non-object-oriented languages, however, this is uncommon, whereas they are the essence of object-oriented languages.</p>
+<p>The combination of inheritance and dynamic binding creates some real headaches for testers, or at least the combination of polymorphism and inheritance must be taken into account.</p>
+</section>
+</section>
+<section id="testing-with-inheritance-and-polymorphism">
+<h3><span class="section-number">5.6.2. </span>Testing with Inheritance and Polymorphism<a class="headerlink" href="#testing-with-inheritance-and-polymorphism" title="Permalink to this heading">#</a></h3>
+<p>In object-oriented testing the view is that classes are:</p>
+<div class="math notranslate nohighlight">
+\[\rm class~=~object~state~+~set~of~methods\]</div>
+<p>The internal states of the object become relevant to the testing. What this means in testing is that the correctness of an object depends on the internal state of the object as well as the output returned by a method call.</p>
+<p>This is the same idea of modules being a state and a set of operations, so classes are thus the natural unit for testing object-oriented programs.</p>
+<p>However, once this choice is made then we will need to explore the effects of object-oriented testing in the presence of inheritance/generalisation and polymorphism.</p>
+<section id="testing-inheritance-hierarchies">
+<h4><span class="section-number">5.6.2.1. </span>Testing Inheritance Hierarchies<a class="headerlink" href="#testing-inheritance-hierarchies" title="Permalink to this heading">#</a></h4>
+<p>Inherited features require re-testing, because every time a class inherits from its parent the state and operations of the parent are placed into new context — the context of the child. Multiple inheritance complicates this situation by increasing the number of contexts to test.</p>
+<p>Ideally, an inheritance relationship should correspond to a problem domain specialisation, for example, from Figure <a class="reference internal" href="#f-5-3"><span class="std std-ref">5.3</span></a> a Polygon is a special kind of Shape, a Rectangle is a special kind of Polygon and so on. The re-usability of superclass test cases depends on this idea. Unfortunately, many inheritance relationships do not respect this rule and simply inherit from classes when they want to use library functions.</p>
+<p><em>Which functions must be tested in a subclass</em>?</p>
+<p>Figure 5.4 shows a simple parent-child inheritance hierarchy.</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="kd">class</span> <span class="nc">Parent</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="nf">number</span><span class="p">()</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kt">float</span><span class="w"> </span><span class="nf">divide</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">x</span><span class="o">/</span><span class="n">number</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">class</span> <span class="nc">Child</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">Parent</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="nf">number</span><span class="p">()</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Parent is at the top of an inheritance hierarchy, so we derive test cases for this class first, and test it. When testing the Child class, we need to retest the number() method because this has been modified directly. However, we also need to retest the divide() method because it directly references number(), which has changed.</p>
+<p><em>Can tests for a parent class be reused for a child class</em>?</p>
+<p>First we need to observe that parent.number() and child.number() are two different functions with different implementations. They may or may not have the same specification (there is no specification for this example); for example, the specification may say that the method must return a number between 0 and 10, but with no constraints as to which number — thus making the specification <em>non-deterministic</em>.</p>
+<p>Test cases that are generated for these two different functions, however, are likely to be similar because the functions are similar. Thus, if we minimise the overloading by using principles such as the <em>open/closed principle</em> in our design, then there is a much greater chance that the inherited methods will not need new test cases in the context of the child class.</p>
+<p>Clearly, new tests that are necessary will be those for which the <em>requirements</em> of the overridden methods change.</p>
+</section>
+<section id="building-and-testing-inheritance-hierarchies">
+<h4><span class="section-number">5.6.2.2. </span>Building and Testing Inheritance Hierarchies<a class="headerlink" href="#building-and-testing-inheritance-hierarchies" title="Permalink to this heading">#</a></h4>
+<p>When dealing with inheritance hierarchies it is important to consider both testing and building at the same time. There are two key reasons for this:</p>
+<ol class="arabic simple">
+<li><p>the first is to keep control of the number of test cases and test harnesses that need to be written; and</p></li>
+<li><p>the second is to make sure that we know where faults occur within the inheritance hierarchy as much as possible.</p></li>
+</ol>
+<p>A first approach to inheritance testing involves <em>flattening the inheritance hierarchy</em>. In effect each subclass is tested as if all inherited features were newly defined in the class under test — so we make absolutely no assumptions about the methods and attributes inherited from parent classes. Test cases for parent classes may be re-used after analysis but many test cases will be redundant and many test cases will need to be newly defined.</p>
+<p>A second approach to testing and building is <em>incremental inheritance-based testing</em>. Incremental building and testing proceeds as follows:</p>
+<p><strong>Step 1:</strong> First test each base class by:</p>
+<ul class="simple">
+<li><p>Testing each method using a suitable test case selection technique; and</p></li>
+<li><p>Testing interactions among methods by using the techniques discussed earlier in this chapter.</p></li>
+</ul>
+<p><strong>Step 2:</strong> Then, consider all sub-classes that inherit or use (via composition or association) only those classes that have already been tested.</p>
+<p>A child inherits the parent’s test suite which is used as a basis for test planning. We only develop new test cases for those entities that are directly, or indirectly, changed.</p>
+<p>Incremental inheritance-based testing does reduce the size of test suites, but there is an overhead in the analysis of what tests need to be changed. It certainly reduces the number of test cases that need to be selected over a flattened hierarchy. If the test suite is structured correctly, test cases can be reused via inheritance as well, which provides the same benefits for conceptualisation and maintenance for test suite implementations as it does for product implementations.</p>
+<p>Inheritance-based testing can also be considered to be a form of regression testing where the aim is to minimise the number of test cases needed to test a class modified by inheritance.</p>
+</section>
+<section id="implications-of-polymorphism">
+<h4><span class="section-number">5.6.2.3. </span>Implications of Polymorphism<a class="headerlink" href="#implications-of-polymorphism" title="Permalink to this heading">#</a></h4>
+<p>Consider the inheritance hierarchy in Figure <a class="reference internal" href="#f-5-3"><span class="std std-ref">5.3</span></a>. The implementation of area() that actually gets called will depend on the state of the client object and the runtime environment.</p>
+<p>In procedural programming, procedure calls are <em>statically</em> bound — we know exactly what function will be called at compile time — and further, the implementation of functions do not change (well, not unless there is some particularly perverse programming) at runtime.</p>
+<p>In the case of object-oriented programming, each possible binding of a polymorphic class requires a separate set of test cases. The problem for testing is to find all such bindings – after-all the exact binding used in a particular object instance will only be known at run-time.</p>
+<p>Dynamic binding also complicates integration planning. Many service and library classes may need to be built and tested before they can be integrated to test a client class.</p>
+<p>There are a number of possible approaches to handling the explosion of possible bindings for a variable. One approach is to try and determine the number of possible bindings through a combination of static and dynamic program analysis.</p>
+<p>Consider the Client class in Figure <a class="reference internal" href="#f-5-3"><span class="std std-ref">5.3</span></a>. The problem from a testing point of view is to know which actual Shape object gets called at run-time. If an instance of Square is bound to the variable s in clientFunction then we would expect a different result for the area() computation than if that instance Circle was bound to s.</p>
+<p>If we instrumented the code for Shape and all of its descendants to reveal the types of the actual objects that are bound to S then we could use that information to determine the subset of the class hierarchy that is actually used by the method clientFunction. The subset can then be covered more thoroughly with test cases. For example, it may be the case that Polygon hierarchy is used by the client function while Curve hierarchy is not. If that is the case the testing clientFunction and the classes in the Polygon hierarchy makes sense but testing the classes in the curve hierarchy makes less sense.</p>
+<p>Beware however, this approach is not foolproof and is biased heavily towards the data used to generate the bindings.</p>
+</section>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Coverage-Based-Testing.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">4. </span>Coverage-Based Testing</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Property-based-testing.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">6. </span>Property-based Testing and Test Oracles</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-of-this-chapter">5.1. Learning outcomes of this chapter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-introduction">5.2. Chapter Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#state-and-programs">5.3. State and Programs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testability-of-state-based-programs">5.4. Testability of State-Based Programs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unit-testing-with-finite-state-automata">5.5. Unit Testing with Finite State Automata</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#constructing-a-fsa">5.5.1. Constructing a FSA</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deriving-test-cases-from-a-fsa">5.5.2. Deriving Test Cases from a FSA</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#intrusively-testing-the-state-transition-diagram">5.5.3. Intrusively Testing the State Transition Diagram</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#non-intrusive-testing-the-state-transition-diagram">5.5.4. Non-intrusive Testing the State Transition Diagram</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">5.5.5. Discussion</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#problems-with-state-based-testing">5.5.5.1. Problems with State Based Testing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-object-oriented-programs">5.6. Testing Object-Oriented Programs</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#object-oriented-programming-languages">5.6.1. Object-Oriented Programming Languages</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#classes-and-objects">5.6.1.1. Classes and Objects</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#inheritance">5.6.1.2. Inheritance</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#polymorphism">5.6.1.3. Polymorphism</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-with-inheritance-and-polymorphism">5.6.2. Testing with Inheritance and Polymorphism</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-inheritance-hierarchies">5.6.2.1. Testing Inheritance Hierarchies</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#building-and-testing-inheritance-hierarchies">5.6.2.2. Building and Testing Inheritance Hierarchies</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#implications-of-polymorphism">5.6.2.3. Implications of Polymorphism</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By SWEN90006
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

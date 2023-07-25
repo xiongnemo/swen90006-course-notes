@@ -1,0 +1,987 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>1. Introduction to Software Testing &#8212; SWEN90006 Software &amp; Security Testing</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/book-style.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Introduction-to-Testing';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="2. Input Partitioning" href="Input-Partitioning.html" />
+    <link rel="prev" title="Subject Introduction" href="intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/uom.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/uom.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Subject Introduction
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">LECTURE NOTES</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">1. Introduction to Software Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-Partitioning.html">2. Input Partitioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Boundary-Value.html">3. Boundary-Value Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Coverage-Based-Testing.html">4. Coverage-Based Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Testing-Modules.html">5. Testing Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Property-based-testing.html">6. Property-based Testing and Test Oracles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Testing-and-Integration.html">7. Testing-and-Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Security-Testing.html">8. Security Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Coverage-Guided-Fuzzing.html">9. Code Coverage-Guided Fuzzing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Symbolic-Execution.html">10. Automated test generation using symbolic execution</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">APPENDIX</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Probabilities.html">A Brief Review of Some Probability Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Maximum.html">Maximum Likelihood Estimation</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/Introduction-to-Testing.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Introduction to Software Testing</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-of-this-chapter">1.1. Learning outcomes of this chapter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-introduction">1.2. Chapter Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#programs">1.3. Programs</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-software-testing">1.3.1. What is software testing?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-purpose-of-testing">1.3.2. The Purpose of Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-language-of-failures-faults-and-errors">1.3.3. The Language of Failures, Faults, and Errors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-activities">1.3.4. Test Activities</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#test-case-selection">1.3.4.1. Test Case Selection</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#test-execution">1.3.4.2. Test Execution</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#test-evaluation">1.3.4.3. Test Evaluation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#test-reporting">1.3.4.4. Test Reporting</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-planning">1.3.5. Test Planning</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#testability">1.3.6. Testability</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-psychology-of-software-testing">1.4. The Psychology of Software Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-purpose-of-software-testing">1.4.1. The purpose of software testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-a-successful-test-case">1.4.2. What is a “successful” test case?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#principles-of-software-testing-psychology">1.4.3. Principles of software testing psychology</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#input-domains">1.5. Input Domains</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#black-box-and-white-box-testing">1.6. Black-Box and White-Box Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#error-guessing">1.7. Error Guessing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#some-testing-laws">1.8. Some Testing Laws</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bibliography">1.9. Bibliography</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="introduction-to-software-testing">
+<h1><span class="section-number">1. </span>Introduction to Software Testing<a class="headerlink" href="#introduction-to-software-testing" title="Permalink to this heading">#</a></h1>
+<section id="learning-outcomes-of-this-chapter">
+<h2><span class="section-number">1.1. </span>Learning outcomes of this chapter<a class="headerlink" href="#learning-outcomes-of-this-chapter" title="Permalink to this heading">#</a></h2>
+<p>At the end of this chapter, you should be able to:</p>
+<ul class="simple">
+<li><p>Discuss the purpose of software testing.</p></li>
+<li><p>Present an argument for why you think software testing is useful or not.</p></li>
+<li><p>Discuss how software testing achieves its goals.</p></li>
+<li><p>Define faults and failures.</p></li>
+<li><p>Specify the input domain of a program.</p></li>
+</ul>
+</section>
+<section id="chapter-introduction">
+<h2><span class="section-number">1.2. </span>Chapter Introduction<a class="headerlink" href="#chapter-introduction" title="Permalink to this heading">#</a></h2>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>[1]: Recall from <em>Software Processes and Management</em> that the word <em>assurance</em> means having confidence that a program or document or some other artifact is fit for purpose. Later in these notes we will  try and translate the informal and vague notion of <em>confidence</em> into a measure of probability or strict bounds.</p>
+</div>
+</aside>
+<p>Testing is an integral part of the process of <em>assuring</em>[1] that a system, program or program module is suitable for the purpose for which it was built. In most textbooks on software engineering, <em>testing</em> is described as part of the process of <em>validation</em> and <em>verification</em>. The definitions of validation and verification as described in <em>IEEE-Std. 610.12-1990</em> are briefly described below.</p>
+<div class="admonition-definition admonition">
+<p class="admonition-title">Definition</p>
+<p><strong>Validation</strong> is the process of evaluating a system or component during or at the end of the development process to determine if it satisfies the requirements of the system. In other words, validation aims to answer the question:</p>
+<center>
+Are we building the correct system?
+</center>
+<p><strong>Verification</strong> is the process of evaluating a system or component at the end of a phase to determine if it satisfies the conditions imposed at the start of that phase. In other words, verification aims to answer the question:</p>
+<center>
+Are we building the system correctly?
+</center>
+</div>
+<p>In this subject, testing will be used for much more than just validating and verifying that a program is fit for purpose. We will use testing, and especially random testing methods, to <em>measure</em> the attributes of programs. <strong>Note</strong> that not all attributes of a program can be quantified.</p>
+<p>Some attributes, like reliability, performance measures, and availability are straightforward to measure. Others, such as usability or safety must be estimated using the engineer’s judgement using data gathered from other sources. For example, we may estimate the safety of a computer control system for automated braking from the reliability of the braking computers and their software.</p>
+<p>Before looking at testing techniques we will need to understand something of the <em>semantics</em> of programs as well as the <em>processes</em> by which software systems are developed.</p>
+<p>It is necessary to understand the <em>semantics</em> of programs so that, as a tester, we can be more confident that we have explored the program thoroughly. We discuss programs briefly in Section <a class="reference internal" href="#programs"><span class="std std-ref">Programs</span></a>.</p>
+</section>
+<section id="programs">
+<span id="id1"></span><h2><span class="section-number">1.3. </span>Programs<a class="headerlink" href="#programs" title="Permalink to this heading">#</a></h2>
+<p>To be a good tester, it is important to have a sound conceptual understanding of the <em>semantics of programs</em>. When it comes to software there are a number of possibilities, each of which has its own set of complications.</p>
+<p>Firstly, lets consider the simple function given in Figures <a class="reference internal" href="#f-1-1"><span class="std std-ref">1.1</span></a> written in an imperative programming language like C.</p>
+<div class="highlight-c notranslate" id="f-1-1"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">squeeze</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">s</span><span class="p">[],</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">c</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="sc">&#39;\0&#39;</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    		</span><span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="o">++</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">    	</span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">&#39;\0&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p style="text-align: center;">Figure 1.1: The squeeze function from Kernighan and Ritchie implemented in C.</p>
+<p>The function <strong>squeeze</strong> removes any occurrence of the character denoted by the variable <strong>c</strong> from the array <strong>s</strong>, and squeezes the resulting array together. The semantics of C are such that integers and characters are somewhat interchangeable, in that an element of the type <strong>int</strong> can be treated as a <strong>char</strong>, and vice-versa.</p>
+<p>If the squeeze function were written in Haskell then its type would be</p>
+<p><span class="math notranslate nohighlight">\(squeeze ~:~ string \times char - string\)</span></p>
+<p>The input type is <span class="math notranslate nohighlight">\(string \times char\)</span> and the output type is string. The output type is implicit because the parameter to squeeze is a call by reference parameter.</p>
+<p>The set of values in the input type is called the <em>input domain</em> and the set of values in the output type is called the <em>output domain</em>. For functions like the squeeze function, the input domain is the set of values in the input type, and the output domain is the set of values in the output type.</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>[2]: The Fibonacci numbers is a sequence of numbers given by <span class="math notranslate nohighlight">\(1~1~2~3~5~\ldots~f_{n}~\ldots\)</span> where <span class="math notranslate nohighlight">\(\sf f_n = f_{n-1}+f_{n-2}\)</span>.</p>
+</div>
+</aside>
+<p>The fibonacci function, shown in Figure <a class="reference internal" href="#f-1-2"><span class="std std-ref">1.2</span></a>, takes an integer N and returns the sum of the first N Fibonacci numbers [2].</p>
+<div class="highlight-c notranslate" id="f-1-2"><div class="highlight"><pre><span></span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">fibonacci</span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">N</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">	</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">	</span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">N</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+<span class="w">		</span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
+<span class="w">		</span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">;</span>
+<span class="w">		</span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">		</span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="n">sum</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p style="text-align: center;">Figure 1.2: A function to sum the first N Fibonacci numbers implemented in C.</p>
+<p>Again, if the fibonacci function were written in Haskell its type would be
+<span class="math notranslate nohighlight">\(\sf fibonacci ~:~ unsigned\ int - unsigned\ int\)</span></p>
+<p>and so the input domain for the <strong>fibonacci</strong> function is the set of values of type <strong>unsigned int</strong>. Likewise, the output domain for the <strong>fibonacci</strong> function is also the set of values of type <strong>unsigned int</strong>.</p>
+<p>The <em>input domain</em> to a program is the set of values that are accepted by the program as inputs. For example, if we look at the parameters for the squeeze function they define the set of all pairs <span class="math notranslate nohighlight">\(\sf (s,~c)\)</span> where s has type array of char and c has type int.</p>
+<p>Not all elements of an input domain are relevant to the specification. For example, consider a program that divides a integer by another. If the denominator is 0, then the behaviour is undefined, because a number cannot be divided by 0.</p>
+<p><strong>Note</strong> The input domain can vary on different machines. For example, the input domain to the fibonacci function is the set of values of type unsigned int but this can certainly vary on different machines. Table <a class="reference internal" href="#t-1-1"><span class="std std-ref">1.1</span></a> shows how the set of values for parameters of type unsigned int and int respectively differ for different machine word sizes.</p>
+<table class="table" id="t-1-1">
+<thead>
+<tr class="row-odd"><th class="head"><p>Word Size</p></th>
+<th class="head"><p>unsigned int Set of Values</p></th>
+<th class="head"><p>int Set of Values</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>8 Bit Integers</p></td>
+<td><p>0 .. 255</p></td>
+<td><p>-127 .. 128</p></td>
+</tr>
+<tr class="row-odd"><td><p>16 Bit Integers</p></td>
+<td><p>0 .. 65,535</p></td>
+<td><p>-32,767 .. 32,768</p></td>
+</tr>
+<tr class="row-even"><td><p>32 Bit Integers</p></td>
+<td><p>0 .. 4,294,967,295</p></td>
+<td><p>-2,147,483,647 ..  2,147,483,648</p></td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: center;">Table 1.1: The set of values for different word sizes.</p>
+<p>The output domain for the <strong>fibonacci</strong> function is identical. The design specification of the <strong>fibonacci</strong> function should specify the range of integers that are <em>legal</em> inputs to the function.</p>
+<p>Determining the input and output domains of a program, or function is not as easy as it looks, but it is a skill that is vital for effectively selecting test cases. That is why we will spend a good deal of time on input/output domain analysis.</p>
+<p>Notice also that in the squeeze and <strong>fibonacci</strong> functions, for any input to the function (an element in the input domain) there exists a unique output (element output domain) computed by the function.</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>[3]: Recall that the property that for all inputs there exists a unique output is the defining property of a mathematical function.</p>
+</div>
+</aside>
+<p>The function in question is <em>deterministic</em>. A function is deterministic if for every input to the function there is a unique output — the output is completely determined by the input[3]. In this case it is easier to test the program because if we choose an input there is only one output to check.</p>
+<p><strong>BUT</strong>, we do not always have deterministic programs. If a program can return one of a number of possible outputs for any given input then it is <em>non-deterministic</em>. Concurrent and distributed programs are often non-deterministic. Non-deterministic programs are harder to check because for a given input there is a set of outputs to check.</p>
+<p>Programs may <em>terminate</em> or <em>not terminate</em>. The squeeze and <strong>fibonacci</strong> functions both terminate. In the case of <strong>fibonacci</strong> an output is returned to the calling program and so to test <strong>fibonacci</strong> we can simply execute it and examine the returned value. The function squeeze returns a void value so even if it terminates we must still examine the array that was passed as input, because its value may change.</p>
+<p>On the other hand a classic example of a non-terminating program is a control loop for an interactive program or an embedded system. Control loops effectively execute until the system is shutdown. In the same way as the squeeze function and the <strong>fibonacci</strong> function a non-terminating program may:</p>
+<ul class="simple">
+<li><p>generate observable outputs; or</p></li>
+<li><p>not generate any observable outputs at all.</p></li>
+</ul>
+<p>In the former case we can test the program or function by testing that the sequence of values that it produces is what we expect. In the second case we need to examine the internal state somehow.</p>
+<section id="what-is-software-testing">
+<span id="id2"></span><h3><span class="section-number">1.3.1. </span>What is software testing?<a class="headerlink" href="#what-is-software-testing" title="Permalink to this heading">#</a></h3>
+<p>Testing, at least in the context of these notes, means <em>executing</em> a program in order to measure its attributes. Measuring a program’s attributes means that we want to work out if the program <em>fails</em> in some way, work out its response time or through-put for certain data sets, its mean time to failure (MTTF), or the speed and accuracy with which users complete their designated tasks.</p>
+<p>Our point of view is closest to that of IEEE-Std. 610.12-1990, but there are some different points of view. For comparison we mention these now.</p>
+<ul class="simple">
+<li><p>Establishing confidence that a program does what it is supposed to
+do (W. Hetzel, <em>Program Test Methods</em>, Prentice-Hall)</p></li>
+<li><p>The process of executing a program with the intent of finding errors
+(G.J. Myers, <em>The Art of Software Testing</em>, John-Wiley)</p></li>
+<li><p>The process of analysing a software item to detect the difference
+between existing and required conditions (that is, bugs) and to
+evaluate the features of the software item (IEEE Standard for
+Software Test Documentation, IEEE Std 829-1983)</p></li>
+<li><p>The process of operating a system or component under specified
+conditions, observing or recording the results, and making an
+evaluation of some aspect of the system or component (IEEE Standard
+Glossary of Software Engineering Terminology, IEEE Std 610.12-1990)</p></li>
+</ul>
+<p>The viewpoint in these notes is deliberately chosen to be the broadest of the definitions above, that is, the last item in the list above. The theme for this subject is that testing is not just about detecting the presence of faults, but that testing is about <em>evaluating attributes of system and its components</em>. This means software testing methods are used to <em>evaluate</em> and <em>assure</em> that a program meets all of its requirements, both functional and non-functional.</p>
+<p>To be more specific, software testing means executing a program or its components in order to assure:</p>
+<ol class="arabic simple">
+<li><p>The correctness of software with respect to requirements or intent;</p></li>
+<li><p>The performance of software under various conditions;</p></li>
+<li><p>The robustness of software, that is, its ability to handle erroneous inputs and unanticipated conditions;</p></li>
+<li><p>The security of software, that is, the absence of vulnerabilities and its robustness against different kinds of attack;</p></li>
+<li><p>The usability of software under various conditions;</p></li>
+<li><p>The reliability, availability, survivability or other dependability measures of software; or</p></li>
+<li><p>Installability and other facets of a software release.</p></li>
+</ol>
+<div class="admonition-remark admonition">
+<p class="admonition-title">Remark</p>
+<ul class="simple">
+<li><p>Testing is based on <em>executing</em> a program, or its components. Therefore, testing can only be done when parts (at least) of the system have been built.</p></li>
+<li><p>Some authors include V&amp;V activities such as audits, technical reviews, inspections and walk-throughs as part of testing. We do not take this view of testing and consider reviews, inspections, walk-throughs and audits as part of the V&amp;V process but not part of testing.</p></li>
+</ul>
+</div>
+</section>
+<section id="the-purpose-of-testing">
+<h3><span class="section-number">1.3.2. </span>The Purpose of Testing<a class="headerlink" href="#the-purpose-of-testing" title="Permalink to this heading">#</a></h3>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>[4]: In <em>Notes on Structured Programming</em>.</p>
+</div>
+</aside>
+<blockquote>
+<div><p>“<em>Program testing can be used to show the presence of bugs, but never to show their absence!</em>”</p>
+<p>— Edsger W. Dijkstra[4]</p>
+</div></blockquote>
+<p>This quote states that the purpose of testing it to demonstrate that their is a discrepancy between an implementation and its specification, and that it cannot be used to show that the implementation is correct. The aim of most testing methods is to systematically and actively find these discrepancies in the program.</p>
+<p><em>Testing and debugging are NOT the same activity</em>. <em>Debugging</em> is the activity of: (1) determining the exact nature and location of a suspected fault within the program; and (2) fixing that fault. Usually, debugging begins with some indication of the existence of an fault. The purpose of debugging is to locate fault and fix them.</p>
+<p>Therefore, we say that the aim of testing is to demonstrate that there is faults in a program, while the aim of debugging is to locate the cause of these faults, and remove or repair them.</p>
+<p>The aim of <em>program proving</em> (aka <em>formal program verification</em>) is to show that the program does not contain any faults. The problem with program proving is that most programmers and quality assurance people are not equipped with the necessary skills to prove programs correct.</p>
+</section>
+<section id="the-language-of-failures-faults-and-errors">
+<span id="id3"></span><h3><span class="section-number">1.3.3. </span>The Language of Failures, Faults, and Errors<a class="headerlink" href="#the-language-of-failures-faults-and-errors" title="Permalink to this heading">#</a></h3>
+<p>To begin, we need to understand the language of <em>failures</em>, <em>faults</em> and
+<em>errors</em>.</p>
+<div class="admonition-definition admonition">
+<p class="admonition-title">Definition</p>
+<ul class="simple">
+<li><p><strong>Fault:</strong> A fault is an incorrect step, process, or data definition in a computer program. In systems it can be more complicated and may be the result of an incorrect design step or a problem in manufacture.</p></li>
+<li><p><strong>Failure:</strong> A failure occurs when there is a deviation of the observed behaviour of a program, or a system, from its specification. A failure can also occur if the observed behaviour of a system, or program, deviates from its intended behaviour which may not be captured in any specification .</p></li>
+<li><p><strong>Error:</strong> An incorrect internal state that is the result of some fault. An error may not result in a failure – it is possible that an internal state is incorrect but that it does not affect the output.</p></li>
+</ul>
+</div>
+<p><em>Failures and errors are the result of faults</em> – a fault in a program can trigger a failure and/or an error under the right circumstances. In normal language, software faults are usually referred to as “bugs”, but the term “bug” is ambiguous and can mean to faults, failures, or errors; as such, as will avoid this term.</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>[5]: We will not worry about the range just yet.</p>
+</div>
+</aside>
+<p>Consider the following simple program specification: for any integer [5] n, <span class="math notranslate nohighlight">\(square(n) = n*n\)</span>; and an (incorrect) implementation of this specification in Figure 1.3</p>
+<div class="highlight-c notranslate" id="f-1-3"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">square</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="p">{</span><span class="w"> </span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="n">x</span><span class="o">*</span><span class="mi">2</span><span class="p">;</span><span class="w"> </span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p style="text-align: center;">Figure 1.3: A faulty squaring function written C.</p>
+<p>Executing square(3) results in 6 – a <em>failure</em> – because our specification demands that the computed answer should be <span class="math notranslate nohighlight">\(9\)</span>. The <em>fault</em> leading to failure occurs in the statement return x*2 and the first <em>error</em> occurs when the expression x*2 is calculated.</p>
+<p>However, executing square(2) would not have resulted in a failure even though the program still contains the same fault. This is because the behaviour of the <strong>square</strong> function of under the input 2 behaves correctly. This is called <em>coincidental correctness</em>. If <span class="math notranslate nohighlight">\(2\)</span> was chosen as the test input, then by <em>coincidence</em>, this happens to exhibit the correct behaviour, even though the function is implemented incorrectly.</p>
+<p>The point here is there are some inputs that reveal faults and some that do not. While the above example is trivial, any non-trivial piece of software will display coincidental correctness for many test inputs.</p>
+<p><em>In testing we can only ever detect failures</em>. Our ability to find and remove <em>faults</em> in testing is closely tied to our ability to detect failures. The discussion above leads naturally to the following three steps when testing and debugging software components.</p>
+<ul class="simple">
+<li><p>Detect system failures by choosing test inputs carefully;</p></li>
+<li><p>Determine the faults leading to the failures detected;</p></li>
+<li><p>Repair and remove the faults leading to the failures detected; and</p></li>
+<li><p>Test the system or software component again.</p></li>
+</ul>
+<p>This process is itself error-prone. We must not only guard against errors that can be made at steps (2) and (3) but also note that new faults can be introduced at step (3). It is important to realise here that steps (2) and (3) must be subject to the same quality assurance activities that one may use to develop code.</p>
+</section>
+<section id="test-activities">
+<h3><span class="section-number">1.3.4. </span>Test Activities<a class="headerlink" href="#test-activities" title="Permalink to this heading">#</a></h3>
+<p>Ultimately, testing comes down to the selecting and executing <em>test cases</em>. A test case for a specific component consists of three essential pieces of information:</p>
+<ul class="simple">
+<li><p>a set of test inputs, or if the program under test is non-terminating, a set of sequences of test inputs;</p></li>
+<li><p>the expected results when the inputs are executed; and</p></li>
+<li><p>the execution conditions or execution environment in which the inputs are to be executed.</p></li>
+</ul>
+<p>A collection of test cases is a <em>test suite</em>.</p>
+<p>As part of the process of testing, there are several steps that need to be performed. These steps remain the same from unit testing to system testing.</p>
+<section id="test-case-selection">
+<h4><span class="section-number">1.3.4.1. </span>Test Case Selection<a class="headerlink" href="#test-case-selection" title="Permalink to this heading">#</a></h4>
+<p>Given the above definition of a test case, there are two generic steps to test case selection. Firstly, one must select the test inputs. This is typically performed using a <em>test input select technique</em>, which aims to achieve some form of <em>coverage criterion</em>. Test input selection is covered in Chapters 2–5 of these notes.</p>
+<p>Secondly, one must provide the expected behaviour of every test input that is generated. This is referred to as the <em>oracle</em> problem. In many cases, this oracle can be derived in a straightforward manner from the requirements of the program being tested. For example, a test case that assesses performance of a system may be related to a specific requirement about performance in the requirements specification of that system.</p>
+<p>Despite the amount of research activity on software testing, the oracle problem remains a difficult problem, and it is difficult to automate oracles or to assess their quality.</p>
+<p>Like any good software engineering process, test case selection is typically performed at a high level to produce abstract test case, and these are then refined into executable test cases.</p>
+</section>
+<section id="test-execution">
+<h4><span class="section-number">1.3.4.2. </span>Test Execution<a class="headerlink" href="#test-execution" title="Permalink to this heading">#</a></h4>
+<p>Once executable test cases are prepared, the next step is to execute the test inputs on the program-under-test, and record the actual behaviour of the software. For example, record the output produced by a functional test input, or measure the time taken to execute a performance test input.</p>
+<p>Test execution is one step of the testing process that is generally able to be automated. This not only saves the tester time, but allows for regression testing to be performed at minimal case.</p>
+</section>
+<section id="test-evaluation">
+<h4><span class="section-number">1.3.4.3. </span>Test Evaluation<a class="headerlink" href="#test-evaluation" title="Permalink to this heading">#</a></h4>
+<p>Compare the actual behaviour of the program under the test input with the expected behaviour of the program under that test input, and determine whether the actual behaviour satisfies the requirements. For example, in the case of performance testing, determine whether the time taken to run a test is less than the required threshold.</p>
+<p>As with test execution, test evaluation can generally be automated.</p>
+</section>
+<section id="test-reporting">
+<h4><span class="section-number">1.3.4.4. </span>Test Reporting<a class="headerlink" href="#test-reporting" title="Permalink to this heading">#</a></h4>
+<p>The final step is the report the outcome of the testing. This report may be returned to developers so they can fix the faults that relate to the failures, or it may be to a manager to inform them that this stage of the testing process is complete.</p>
+<p>Again, certain aspects of test reporting can be automated, depending on the requirements of the report.</p>
+</section>
+</section>
+<section id="test-planning">
+<h3><span class="section-number">1.3.5. </span>Test Planning<a class="headerlink" href="#test-planning" title="Permalink to this heading">#</a></h3>
+<p>Testing is part of quality assurance for a software system, and as such, testing must be <em>planned</em> like any other activity of software engineering. A <em>test plan</em> allows review of the adequacy and feasibility of the testing process, and review of the quality of the test cases, as well as providing support for maintenance. As a minimum requirement, a test plan should be written for every artifact being tested at every level, and should contain at least the following information:</p>
+<ul class="simple">
+<li><p><em>Purpose</em>: identifies what artifact is being tested, and for what purpose; for example, for functional correctness;</p></li>
+<li><p><em>Assumptions</em>: any assumptions made about the program being tested;</p></li>
+<li><p><em>Strategy</em>: the strategy for test case selection;</p></li>
+<li><p><em>Supporting artifacts</em>: a specification of any of the supporting
+artifacts, such as test stubs or drivers; and</p></li>
+<li><p><em>Test Cases</em>: an description of the abstract test cases, and how they
+were derived.</p></li>
+</ul>
+<p>Other information can be included in a test plan, such as the estimate of the amount of resources required to perform the testing.</p>
+</section>
+<section id="testability">
+<span id="id4"></span><h3><span class="section-number">1.3.6. </span>Testability<a class="headerlink" href="#testability" title="Permalink to this heading">#</a></h3>
+<p>The <em>testability</em> of software can have a large impact on the amount of testing that is performed, as well as the amount of time that must be spent on the testing process to achieve certain test requirements, such as achieving a coverage criterion.</p>
+<p>Testability is composed of two measures: <em>controllability</em> and <em>observability</em>.</p>
+<div class="admonition-definition-controllability-and-observability admonition">
+<p class="admonition-title">Definition: <em>Controllability</em> and <em>Observability</em></p>
+<ol class="arabic simple">
+<li><p>The <em>controllability</em> of a software artifact is the degree to which a tester can provide test inputs to the software.</p></li>
+<li><p>The <em>observability</em> of a software artifact is the degree to which a tester can observe the behaviour of a software artifact, such as its outputs and its effect on its environment.</p></li>
+</ol>
+</div>
+<p>For example, the squeeze from Figure 1.1 highly controllable and observable. It is a function whose inputs are restricted to parameters, and whose output is restricted to a return value. This can be controlled and observed using another piece of software.</p>
+<p>Software with a user interface, on the other hand, is generally more difficult to control and observe. Test automation software exists to <em>record</em> and <em>playback</em> test cases for graphical user interfaces, however, the first run of the tests must be performed manually, and expected outputs observed manually. In addition, the record and playback is often unreliable due to the low observability and controllability.</p>
+<p>Embedded software is generally less controllable and observable than software with user interfaces. A piece of embedded software that receives inputs from sensors and produces outputs to actuators is likely to be difficult to monitor in such an environment — typically much more difficult than via other software or via a keyboard and screen. While the embedded software may be able to be extracted from its environment and tested as a stand-alone component, testing software in its production environment is still necessary.</p>
+<p>Controllability and observability are properties that are difficult to measure, and are aspects that must be considered during the design of software — in other words, software designers must consider <em>designing for testability</em>.</p>
+</section>
+</section>
+<section id="the-psychology-of-software-testing">
+<h2><span class="section-number">1.4. </span>The Psychology of Software Testing<a class="headerlink" href="#the-psychology-of-software-testing" title="Permalink to this heading">#</a></h2>
+<p>Testing is more an art form than a science. In this subject, we look at techniques to make it as scientific as possible, but skill, experience, intuition and psychology all play an important part of software testing.</p>
+<p>Psychology? How does this impact software testing?</p>
+<p>We will look at two things related to psychology: (1) the purpose of software testing; and (2) what a successful test case is.</p>
+<section id="the-purpose-of-software-testing">
+<h3><span class="section-number">1.4.1. </span>The purpose of software testing<a class="headerlink" href="#the-purpose-of-software-testing" title="Permalink to this heading">#</a></h3>
+<p>In Section <a class="reference internal" href="#what-is-software-testing"><span class="std std-ref">What is software testing?</span></a>, we defined testing and looked at its purpose. The famous Dijkstra quote that testing shows the presence of faults, but not their absence, is important.</p>
+<p>What are some other commonly stated goals of software testing?:</p>
+<ul class="simple">
+<li><p>To show that our software is correct.</p></li>
+<li><p>To find ALL the faults in our software.</p></li>
+<li><p>The prove that our software meets its specification.</p></li>
+</ul>
+<p>These may seem like great things to achieve, but should they be our goal
+in software testing?</p>
+<p>Let’s face some facts about software. <em>Software is complex – exceedingly complex</em>. Even medium-scale software applications are so much more complex than the very largest of other engineering projects. As such, every piece of software has faults. Even the most trivial programs contains faults; perhaps not ones that are likely to occur or have a large impact, but they do. Consider the standard binary search algorithm that we use in lectures throughout the semester. This algorithm was printed in textbooks, used, discussed, and presented for over four decades before it was noted that it contained a fault. The program contains about 10 logical lines of code! It is naive to think that modern web applications could have less than hundreds if not thousands of faults that the developers don’t know about.</p>
+<p>Further to this, another fact is that almost every program has an infinite number of possible inputs. Think of a program that parses HTML documents: there are an infinite number of HTML documents, but it needs to parse them ALL. No matter how many tests were run on this program, there is no guarantee that the very next test will not fail. As such, Dijkstra’s quote is clear: we cannot test every possible input except for the most trivial program (even then, a program that takes two integers as input will take several years to test every combination), so, we cannot <em>prove</em> that a program is correct with testing. All we can do is prove that faults are in the software by running tests that fail. Then, we find and fix the faults, trying not to introduce new faults in the process, and hopefully the quality of our software has increased.</p>
+<p>Why does psychology matter here? Let’s take these two points: (1) <em>we can’t prove a program is correct with testing</em>; and (2) <em>any program we test will have faults, and will continue to after we finish testing</em>.</p>
+<p>If our goal is to find all faults or to show our program has no faults, then we are destined to fail at our goal. What is the point of aiming for a goal that we know that we cannot achieve? Psychologically, we know that people perform poorly when asked to do things they know are impossible.</p>
+<p>If you task a team to “show that your software is fault free”, what would the response be? Most likely, they would select tests that they know pass. This does not improve software quality at all. Quality is only improved when we find faults and fix them.</p>
+<p>Psychologically, a much better goal is: <em>try to break our program</em>. If we assume that there are faults in the program and set out to find them, we will do a much better job of our goal. Further to this, we will be motivated each time we find a fault, because that was our goal.</p>
+<p><em>Testing should improve quality. By finding no faults, quality is not improved.</em></p>
+<p>Testing is a <em>destructive</em> process. We try to break our program.</p>
+<p>Testing is <strong>NOT</strong> proof.</p>
+<p><em>Summary</em>: We must aim to find the faults are present. If we test to show correctness, we will subconsciously steer towards this goal. In addition, we will fail, because testing to show correctness is impossible.</p>
+</section>
+<section id="what-is-a-successful-test-case">
+<h3><span class="section-number">1.4.2. </span>What is a “successful” test case?<a class="headerlink" href="#what-is-a-successful-test-case" title="Permalink to this heading">#</a></h3>
+<p>This is an interesting question. Our first response may be: “a test is successful if it passes”.</p>
+<p>But given what we have just learnt, I hope you agree that: <em>a test is successful if is fails</em>.</p>
+<p>Any test that does not find a fault is almost a waste. Of course, this is an exaggeration. If we are doing a good job of testing and trying to break our program, a passed test gives us some confidence that our program is working for some inputs. Further, we can keep our tests and run them later after debugging to make sure we do not introduce any new faults. This is called <em>regression testing</em> (Section 7.3).</p>
+<p>Any test that fails (that is, any test that finds a fault), is a chance to improve quality. This is a successful test. A successful test is a more valuable investment than an unsuccessful test. Much of this subject deals with the question: how do we select tests that are more likely to fail than others.</p>
+<p>Consider an analogy of medical diagnosis. If a patient feels unwell, and a doctor runs some tests, the successful test is one that diagnosis the problem. Anything that does not reveal a problem is not valuable. We must consider programs as sick patients – they contain faults whether we want them to or not!</p>
+<p><em>Summary</em>: A successful test is one that fails. This is how testing can be used to improve quality. Psychologically, we should be pleased when a test fails. It is not a bad thing when a test fails. The fault was there before the test was run, the test just found it!</p>
+</section>
+<section id="principles-of-software-testing-psychology">
+<h3><span class="section-number">1.4.3. </span>Principles of software testing psychology<a class="headerlink" href="#principles-of-software-testing-psychology" title="Permalink to this heading">#</a></h3>
+<p>In the <em>The Art of Software Testing</em> (see reference below), Myers lists 10 principles of software testing. In this section, we will discuss three of these principles, as they are related to the psychology of software testing.</p>
+<p><strong>Principle 1</strong> — A necessary part of a test case is a definition of
+the expected output or result.</p>
+<p>This means that a test case is not just an input. <em>Before</em> we run the test, we must also know what the expected output should be. It is not sufficient to run the test, see the output, and only then decide whether that output is correct.</p>
+<p>Why not? Psychologically, we run into a problem. An erroneous result can be interpreted as correct because the mind sees what it wants to see. We may have a desire to see the correct behaviour because we don’t want to do any debugging. Or, we may consider that the person who wrote the code is much smarter than us, so surely they wouldn’t have made this error. Or, we may just convince ourselves that this is the correct answer somehow.</p>
+<p>On the other hand, if we have the expected output before the test, we compare the actual output with the expected output, and now whether the test fails or not is completely objective. Either the observed output is the same as the expected, or it is not.</p>
+<p>Of course, the expected output may be incorrect itself – we make mistakes in testing too. But at the very least, we will now check both the expected output and the program to see which is incorrect.</p>
+<p><strong>Principle 2</strong> — A programmer should avoid attempting to test his or her own program.</p>
+<p>This is perhaps the most important of all principles!</p>
+<p>First, let me say that I completely disagree with this principle. <em>A programmer should absolutely test their own code</em>! They should not be committing code to repositories that has never been testing. However, what the principle really means is: a programmer should avoid being the <em>only</em> person to test his or her own program.</p>
+<p>Why? There are three main reasons for this; all linked to the psychology of software testing:</p>
+<ul>
+<li><p>If a programmer missed important things when coding, such as failing to consider a null pointer, or failing to check a divide by zero, then it is quite likely they will also not think of these during testing.</p>
+<p>However, another person is less likely to make exactly the same mistakes. So, this duplication helps to find these types of ‘oversight’ faults.</p>
+</li>
+<li><p>If a programmer misunderstands the specification they are programming to (e.g. they misunderstand a user requirement), they will implement incorrect code. When it comes to testing, they will still misunderstand the specification, and will therefore write an incorrect test using this misunderstanding. Both the code and the test are wrong, and in the same way. To the test will pass.</p>
+<p>However, another person brings an opportunity to interpret the specification correctly. Of course, they may interpret it incorrectly in the same way, but it is less likely that both people will do this rather than just one.</p>
+</li>
+<li><p>Finally, recall that testing is a <em>destructive</em> process. We aim to find faults; that is, showing that the software is ‘broken’.However, programming is a a <em>constructive</em> process. We create the software and we try to make it correct.</p>
+<p>As a programmer, once we create something that we work so hard on, we do not then want to turn around a break it! Consider some programming assignments that you have worked on. When you were running tests for it, did you hope they pass, or did you hope they fail? Now consider that you were running tests on someone else’s assignment. Would you care so much whether they pass or fail?</p>
+<p>Put simply: someone testing their own code will struggle to switch from the constructive process of coding to the destructive process of testing if the code is their own. Psychologically, they will semi-consciously try to avoid testing parts of the code they think are faulty.</p>
+</li>
+</ul>
+<p>This principle works on a team level too. I have talked with software engineering teams in an organisation who test each others code. They take it competitively! They get great pleasure at breaking other teams’ code. They are motivated to find as many problems as possible. Could a team be so pleased at breaking their own code? I would say not.</p>
+<p><strong>Principle 8</strong> — The probability of the existence of more errors in a section of a program is proportional to the numbers already found in that section.</p>
+<p>Faults seem to come in clusters. This is for several reasons: complex bits of code are harder to get right, some parts of code are written hurriedly due to time constraints, and just some software engineers are not as good as others, so their parts will be more faulty.</p>
+<p>What does this mean? It means that as we test, we find many faults in one part of a program and fix them, and find comparatively fewer in another part and fix them. We should then invest our time in the more faulty regions.</p>
+<p>This <em>may</em> seem counter-intuitive. After all, if we find only 1-2 faults in one section, there must be so many more out there than in the section we find 25! However, empirical evidence suggests this is not the case. Therefore, best investment is made in these error/fault-prone sections.</p>
+</section>
+</section>
+<section id="input-domains">
+<span id="id5"></span><h2><span class="section-number">1.5. </span>Input Domains<a class="headerlink" href="#input-domains" title="Permalink to this heading">#</a></h2>
+<p>To perform an analysis of the inputs to a program you will need to work out the sets of values making up the input domain. There are essentially two sources where you can get this information:</p>
+<ul class="simple">
+<li><p>the software requirements and design specifications; and</p></li>
+<li><p>the external variables of the program you are testing.</p></li>
+</ul>
+<p>In the case of white box testing, where we have the program available to us, the input domain can be constructed from the following sources.</p>
+<ul class="simple">
+<li><p>Inputs passed in as parameters;</p></li>
+<li><p>Inputs entered by the user via the program interface;</p></li>
+<li><p>Inputs that are read in from files;</p></li>
+<li><p>Inputs that are constants and precomputed values;</p></li>
+<li><p>Aspects of the global system state including:</p>
+<ul>
+<li><p>Variables and data structures shared between programs or components;</p></li>
+<li><p>Operating system variables and data structures, for example, the state of the scheduler or the process stack;</p></li>
+<li><p>The state of files in the file system;</p></li>
+<li><p>Saved data from interrupts and interrupt handlers.</p></li>
+</ul>
+</li>
+</ul>
+<p>In general, the inputs to a program or a function are stored in <em>program
+variables</em>. A program variable may be:</p>
+<ul class="simple">
+<li><p>A variable declared in a program as in the <em>C</em>  declarations</p></li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="w">	</span><span class="kt">int</span><span class="w"> </span><span class="n">base</span><span class="p">;</span><span class="w"> </span>
+<span class="w">	</span><span class="kt">char</span><span class="w"> </span><span class="n">s</span><span class="p">[];</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Resulting from a read statement or similar interaction with the environment, for example,</p></li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="w">	</span><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Variables that are inputs to a function under test can be:</p>
+<ul class="simple">
+<li><p><em>atomic data</em> such as integers and floating point numbers;</p></li>
+<li><p><em>structured data</em> such as linked lists, files or trees;</p></li>
+<li><p>a reference or a value parameter as in the declaration of a function; or</p></li>
+<li><p>constants declared in an enclosing scope of the function under test, for example:</p></li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define PI 3.14159</span>
+
+<span class="kt">double</span><span class="w"> </span><span class="nf">circumference</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">radius</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="mi">2</span><span class="o">*</span><span class="n">PI</span><span class="o">*</span><span class="n">radius</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>We all try running our programs on a few test values to make sure that we have not missed anything obvious, but if that is all that we do then we have simply not covered the full input domain with test cases. Systematic testing aims to cover the full input domain with test cases so that we have assurance – confidence in the result – that we have not missed testing a relevant subset of inputs.</p>
+</section>
+<section id="black-box-and-white-box-testing">
+<span id="id6"></span><h2><span class="section-number">1.6. </span>Black-Box and White-Box Testing<a class="headerlink" href="#black-box-and-white-box-testing" title="Permalink to this heading">#</a></h2>
+<p>If we do have a clear requirements or design specification then we choose test cases using the specification. Strategies for choosing test cases from a program or function’s specification are referred to as <em>specification-based</em> test case selection strategies. Both of the following are specification-based testing strategies.</p>
+<p><strong>Black-box Testing</strong> where test cases are derived from the functional specification of the
+system; and</p>
+<p><strong>White-box Testing</strong>  where test cases are derived from the internal design specifications or actual code for the program (sometimes referred to as <em>glass-box</em>).</p>
+<p>Black-box test case selection can be done without any reference to the program design or the program code. Black-Box test cases test only the functionality and features of the program but not any of its internal operations.</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="tip admonition">
+<p class="admonition-title">Footnotes</p>
+<p>[6]: COTS stands for <strong>C</strong>ommercial <strong>O</strong>ff <strong>T</strong>he <strong>S</strong>helf</p>
+</div>
+</aside>
+<ul>
+<li><p>The real advantage of black-box test case selection is that it can be done <em>before</em> the implementation of a program. This means that black-box test cases can help in getting the design and coding correct with respect to the specification.</p>
+<p>Black-box testing methods are good at testing for missing functions and program behaviour that deviates from the specification. They are ideal for evaluating products that you intend to use in a system such as COTS [6] products and third party software (including open source software).</p>
+</li>
+<li><p>The main disadvantage of black-box testing is that black-box test cases cannot detect additional functions or features that have been added to the code. This is especially important for systems that are safety critical (additional code may interfere with the safety of the system) or need to be secure (additional code may be used to break security).</p></li>
+</ul>
+<p>White-box test cases are selected using requirements and design specifications and the code of the program under test. This means that the testing team needs access to the internal designs and code for the program.</p>
+<p>The chief advantage of white-box testing is that it tests the internal details of the code and tries to check all the paths that a program can execute to determine if a problem occurs. As a result of this white-box test cases can check any additional code that has been implemented but not specified.</p>
+<p>The main disadvantages of white-box testing is that you must wait until after designing and coding the program under test in order to select test cases. In addition, if some functionality of a system is not implemented, using white-box testing may not detect this.</p>
+<p>The term “black-box testing” and “white-box testing” are becoming increasingly blurred. For example, many of the white-box testing techniques that have been used on programs, such as control-flow analysis and mutation analysis, are now being applied to the specifications of programs. That is, given a formal specification of a program, white-box testing techniques are being used on that specification to derive test cases for the program under test. Such an approach is clearly black-box, because test cases are selected from the specified behaviour rather than the program, however, the techniques come from the theory of white-box testing.</p>
+<p>In these notes, we deliberately blur the distinctions between black-box and white-box testing for this reason.</p>
+</section>
+<section id="error-guessing">
+<h2><span class="section-number">1.7. </span>Error Guessing<a class="headerlink" href="#error-guessing" title="Permalink to this heading">#</a></h2>
+<p>Before we dive into the world of systematic software testing, it is worth mentioning one highly-effective test strategy that is always valuable when combined with any other strategy in these notes. This technique is known as <em>error guessing</em>.</p>
+<p>Error guessing is an <em>ad-hoc</em> approach based on intuition and experience. The idea is to identify test cases that are considered likely to expose errors.</p>
+<p>The general technique is to make a list, or better a taxonomy (a hierarchy), of possible errors or error-prone situations and then develop test cases based on the list.</p>
+<p>The idea is to document common error-prone or error-causing situations and create a defect history. We use the defect history to derive test cases for new programs or systems. There are a number of possible sources for such a defect history, for example:</p>
+<ul class="simple">
+<li><p><strong>The Testing History of Previous Programs</strong> — develop a list of faults detected in previous programs together with their frequency;</p></li>
+<li><p><strong>The Results of Code Reviews and Inspections</strong> — inspections are not the same as code reviews because they require much more detailed defect tracking than code reviews; use the data from inspections to create</p></li>
+</ul>
+<p>Some examples of common faults include test cases for empty or null strings, array bounds and array arithmetic expressions (such as attempting to divide by zero), and blank values, control characters, or null characters in strings.</p>
+<p>Error guessing is not a testing technique that can be assessed for usefulness or effectiveness, because it relies heavily on the person doing the guessing. However, it takes advantage of the fact that programmers and testers both generally have extensive experience in locating and fixing the kinds of faults that are introduced into programs, and can use their knowledge to guess the test inputs that are likely to uncover faults for specific types of data and algorithm.</p>
+<p>Error guessing is ad-hoc, and therefore, not <em>systematic</em>. The rest of the techniques described in these notes are systematic, and can therefore be used more effectively as quality assurance activities.</p>
+</section>
+<section id="some-testing-laws">
+<h2><span class="section-number">1.8. </span>Some Testing Laws<a class="headerlink" href="#some-testing-laws" title="Permalink to this heading">#</a></h2>
+<p>Here are some interesting “laws” about software testing. They are not really laws per se, but rules of thumb that can be useful for software testing.</p>
+<p><strong>Dijkstra’s Law:</strong> Testing can only be used to show the presence of errors, but never the absence of errors</p>
+<p><strong>Hetzel-Myers Law:</strong> A combination of different V&amp;V methods out-performs and single method alone.</p>
+<p><strong>Weinberg’s Law:</strong> A developer is unsuited to test their own code.</p>
+<p><strong>Pareto-Zipf principal:</strong> Approximately 80% of the errors are found in 20% of the code.</p>
+<p><strong>Gutjar’s Hypothesis:</strong> Partition testing, that is, methods that partition the input domain or the program and test according to those partitions, is better than random testing.</p>
+<p><strong>Weyuker’s Hypothesis:</strong>   The adequacy of a test suite for coverage criterion can only be defined intuitively.</p>
+</section>
+<section id="bibliography">
+<h2><span class="section-number">1.9. </span>Bibliography<a class="headerlink" href="#bibliography" title="Permalink to this heading">#</a></h2>
+<p>G.J. Myers, <em>The Art of Software Testing</em>,  John Wiley &amp; Sons, 1979.</p>
+<p>D.E. Knuth, <em>The Art of Computer Programming, vol. 2: Semi-numerical Algorithms</em>, 2nd Ed., Addison Wesley, 1981.</p>
+<p>B. Beizer, <em>Software Testing Techniques</em>, 2nd ed., van Nostrand Reinhold, 1990.</p>
+<p>E. Kit, <em>Software Testing in the Real World</em>, Addison-Wesley, 1995.</p>
+<p>R. Hamlet, Random Testing, In <em>Encyclopedia of Software Engineering</em>, J. Marciniak ed., pp. 970–978, Wiley, 1994.</p>
+<p>A. Endres and D. Rombach, <em>A Handbook of Software and Systems Engineering</em>, Addison-Wesley, 2003.</p>
+<p>J. A. Whittaker, <em>How to Break Software: A Practical Guide to Testing</em>, Addison-Wesley, 2002.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Subject Introduction</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Input-Partitioning.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">2. </span>Input Partitioning</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-of-this-chapter">1.1. Learning outcomes of this chapter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-introduction">1.2. Chapter Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#programs">1.3. Programs</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-software-testing">1.3.1. What is software testing?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-purpose-of-testing">1.3.2. The Purpose of Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-language-of-failures-faults-and-errors">1.3.3. The Language of Failures, Faults, and Errors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-activities">1.3.4. Test Activities</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#test-case-selection">1.3.4.1. Test Case Selection</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#test-execution">1.3.4.2. Test Execution</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#test-evaluation">1.3.4.3. Test Evaluation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#test-reporting">1.3.4.4. Test Reporting</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-planning">1.3.5. Test Planning</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#testability">1.3.6. Testability</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-psychology-of-software-testing">1.4. The Psychology of Software Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-purpose-of-software-testing">1.4.1. The purpose of software testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-a-successful-test-case">1.4.2. What is a “successful” test case?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#principles-of-software-testing-psychology">1.4.3. Principles of software testing psychology</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#input-domains">1.5. Input Domains</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#black-box-and-white-box-testing">1.6. Black-Box and White-Box Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#error-guessing">1.7. Error Guessing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#some-testing-laws">1.8. Some Testing Laws</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bibliography">1.9. Bibliography</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By SWEN90006
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
