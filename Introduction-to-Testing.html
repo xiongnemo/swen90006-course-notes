@@ -380,23 +380,23 @@ document.write(`
 <p class="sidebar-title"></p>
 <div class="tip admonition">
 <p class="admonition-title">Footnotes</p>
-<p>[1]: Recall from <em>Software Processes and Management</em> that the word <em>assurance</em> means having confidence that a program or document or some other artifact is fit for purpose. Later in these notes we will  try and translate the informal and vague notion of <em>confidence</em> into a measure of probability or strict bounds.</p>
+<p>[1]: Recall from the course <em>Software Processes and Management</em> that the word <em>assurance</em> means having confidence that a program or document or some other artifact is fit for purpose. Later in these notes, we will try and translate the informal and vague notion of <em>confidence</em> into a measure of probability or strict bounds.</p>
 </div>
 </aside>
 <p>Testing is an integral part of the process of <em>assuring</em>[1] that a system, program or program module is suitable for the purpose for which it was built. In most textbooks on software engineering, <em>testing</em> is described as part of the process of <em>validation</em> and <em>verification</em>. The definitions of validation and verification as described in <em>IEEE-Std. 610.12-1990</em> are briefly described below.</p>
 <div class="admonition-definition admonition">
 <p class="admonition-title">Definition</p>
-<p><strong>Validation</strong> is the process of evaluating a system or component during or at the end of the development process to determine if it satisfies the requirements of the system. In other words, validation aims to answer the question:</p>
+<p><strong>Validation</strong> is the process of evaluating a system or a component during or at the end of the development process to determine whether it satisfies specified requirements. Essentially, validation checks whether the system meets the user’s needs and the intended use. Validation aims to answer the question:</p>
 <center>
 Are we building the correct system?
 </center>
-<p><strong>Verification</strong> is the process of evaluating a system or component at the end of a phase to determine if it satisfies the conditions imposed at the start of that phase. In other words, verification aims to answer the question:</p>
+<p><strong>Verification</strong>,on the other hand, involves evaluating a system or a component to determine whether it meets the conditions imposed at the start of the development phase. This process checks if the system correctly implements the specified functionality. Verification aims to answer the question:</p>
 <center>
 Are we building the system correctly?
 </center>
 </div>
 <p>In this subject, testing will be used for much more than just validating and verifying that a program is fit for purpose. We will use testing, and especially random testing methods, to <em>measure</em> the attributes of programs. <strong>Note</strong> that not all attributes of a program can be quantified.</p>
-<p>Some attributes, like reliability, performance measures, and availability are straightforward to measure. Others, such as usability or safety must be estimated using the engineer’s judgement using data gathered from other sources. For example, we may estimate the safety of a computer control system for automated braking from the reliability of the braking computers and their software.</p>
+<p>Some attributes, such as reliability, performance measures, and availability, can be directly measured. However, evaluating other attributes like usability or safety requires reliance on the engineer’s judgment, supplemented by data collected from external sources. For example, to assess the safety of a computer-controlled system for automated braking, we might derive estimates based on the known reliability of the braking computers and their software.</p>
 <p>Before looking at testing techniques we will need to understand something of the <em>semantics</em> of programs as well as the <em>processes</em> by which software systems are developed.</p>
 <p>It is necessary to understand the <em>semantics</em> of programs so that, as a tester, we can be more confident that we have explored the program thoroughly. We discuss programs briefly in Section <a class="reference internal" href="#programs"><span class="std std-ref">Programs</span></a>.</p>
 </section>
@@ -543,9 +543,9 @@ Glossary of Software Engineering Terminology, IEEE Std 610.12-1990)</p></li>
 <div><p>“<em>Program testing can be used to show the presence of bugs, but never to show their absence!</em>”</p>
 <p>— Edsger W. Dijkstra[4]</p>
 </div></blockquote>
-<p>This quote states that the purpose of testing it to demonstrate that their is a discrepancy between an implementation and its specification, and that it cannot be used to show that the implementation is correct. The aim of most testing methods is to systematically and actively find these discrepancies in the program.</p>
-<p><em>Testing and debugging are NOT the same activity</em>. <em>Debugging</em> is the activity of: (1) determining the exact nature and location of a suspected fault within the program; and (2) fixing that fault. Usually, debugging begins with some indication of the existence of an fault. The purpose of debugging is to locate fault and fix them.</p>
-<p>Therefore, we say that the aim of testing is to demonstrate that there is faults in a program, while the aim of debugging is to locate the cause of these faults, and remove or repair them.</p>
+<p>This quote states that the purpose of testing it to demonstrate that there is a discrepancy between an implementation and its specification, and that it cannot be used to show that the implementation is correct. The aim of most testing methods is to systematically and actively find these discrepancies in the program.</p>
+<p><em>Testing and debugging are NOT the same activity</em>. <em>Debugging</em> is the activity of: (1) determining the exact nature and location of a suspected fault within the program; and (2) fixing that fault. Usually, debugging begins with some indication of the existence of a fault. The purpose of debugging is to locate faults and fix them.</p>
+<p>Therefore, we say that the aim of testing is to demonstrate that there are faults in a program, while the aim of debugging is to locate the cause of these faults, and remove or repair them.</p>
 <p>The aim of <em>program proving</em> (aka <em>formal program verification</em>) is to show that the program does not contain any faults. The problem with program proving is that most programmers and quality assurance people are not equipped with the necessary skills to prove programs correct.</p>
 </section>
 <section id="the-language-of-failures-faults-and-errors">
@@ -586,7 +586,7 @@ Glossary of Software Engineering Terminology, IEEE Std 610.12-1990)</p></li>
 <li><p>Repair and remove the faults leading to the failures detected; and</p></li>
 <li><p>Test the system or software component again.</p></li>
 </ul>
-<p>This process is itself error-prone. We must not only guard against errors that can be made at steps (2) and (3) but also note that new faults can be introduced at step (3). It is important to realise here that steps (2) and (3) must be subject to the same quality assurance activities that one may use to develop code.</p>
+<p>This process is itself error-prone. We must not only guard against errors that can be made at steps (2) and (3) but also note that new faults can be introduced at step (3). It is important to realise here that steps (2) and (3) must be subjected to the same quality assurance activities that one may use to develop code.</p>
 </section>
 <section id="test-activities">
 <h3><span class="section-number">1.3.4. </span>Test Activities<a class="headerlink" href="#test-activities" title="Permalink to this heading">#</a></h3>
@@ -630,7 +630,7 @@ Glossary of Software Engineering Terminology, IEEE Std 610.12-1990)</p></li>
 <li><p><em>Strategy</em>: the strategy for test case selection;</p></li>
 <li><p><em>Supporting artifacts</em>: a specification of any of the supporting
 artifacts, such as test stubs or drivers; and</p></li>
-<li><p><em>Test Cases</em>: an description of the abstract test cases, and how they
+<li><p><em>Test Cases</em>: a description of the abstract test cases, and how they
 were derived.</p></li>
 </ul>
 <p>Other information can be included in a test plan, such as the estimate of the amount of resources required to perform the testing.</p>
@@ -646,7 +646,7 @@ were derived.</p></li>
 <li><p>The <em>observability</em> of a software artifact is the degree to which a tester can observe the behaviour of a software artifact, such as its outputs and its effect on its environment.</p></li>
 </ol>
 </div>
-<p>For example, the squeeze from Figure 1.1 highly controllable and observable. It is a function whose inputs are restricted to parameters, and whose output is restricted to a return value. This can be controlled and observed using another piece of software.</p>
+<p>For example, the squeeze function from Figure 1.1 is highly controllable and observable. It is a function whose inputs are restricted to parameters, and whose output is restricted to a return value. This can be controlled and observed using another piece of software.</p>
 <p>Software with a user interface, on the other hand, is generally more difficult to control and observe. Test automation software exists to <em>record</em> and <em>playback</em> test cases for graphical user interfaces, however, the first run of the tests must be performed manually, and expected outputs observed manually. In addition, the record and playback is often unreliable due to the low observability and controllability.</p>
 <p>Embedded software is generally less controllable and observable than software with user interfaces. A piece of embedded software that receives inputs from sensors and produces outputs to actuators is likely to be difficult to monitor in such an environment — typically much more difficult than via other software or via a keyboard and screen. While the embedded software may be able to be extracted from its environment and tested as a stand-alone component, testing software in its production environment is still necessary.</p>
 <p>Controllability and observability are properties that are difficult to measure, and are aspects that must be considered during the design of software — in other words, software designers must consider <em>designing for testability</em>.</p>
